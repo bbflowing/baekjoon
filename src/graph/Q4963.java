@@ -39,8 +39,6 @@ public class Q4963 {
                 }
                 System.out.println(counter);
             }
-
-
         }
     }
 

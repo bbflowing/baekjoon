@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Q2583 {
+    /*
     public static int input [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -43,8 +44,11 @@ public class Q2583 {
 
 
     }
+
+     */
 }
 
+/*
 class Coordinate {
     int startX;
     int startY;
@@ -58,3 +62,4 @@ class Coordinate {
         this.endY = endY;
     }
 }
+ */
