@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Q3190 {
+    /*
     public static char input [][];
     public static Queue<Movement> moves;
     public static Deque snake;
@@ -136,8 +137,9 @@ public class Q3190 {
         }
         return false;
     }
+    */
 }
-
+/*
 class Movement {
     int time;
     String direction;
@@ -157,6 +159,7 @@ class Coordinate {
         this.y = y;
     }
 }
+*/
 
 
 
