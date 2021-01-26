@@ -1,135 +1,125 @@
 package simulation;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
-public class Q16236 {
-    public static int input [][];
-    public static int sharkX;
-    public static int sharkY;
-    public static int sharkSize;
-    public static ArrayList<Fish> list;
-    public static void main (String args[]) throws IOException {
+public class Q16236{
+
+    public static final int max_val = 401, max_int = 21;
+    public static int n, shark_x, shark_y, min_dist, min_x, min_y, result, eat_cnt = 0, shark_size = 2;
+    public static int [][] a, check;
+    public static int [] dx = {0, 0, 1, -1}, dy = {-1, 1, 0, 0};
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        int INF = 987_654_321;
-        StringTokenizer st;
-        input = new int [N][N];
-        list = new ArrayList<>();
-        for (int i=0; i<N; ++i) {
-            st = new StringTokenizer(br.readLine());
-            for (int j=0; j<N; ++j) {
-                input[i][j] = Integer.parseInt(st.nextToken());
-                if (input[i][j] == 9) {
-                    sharkX = i; sharkY = j;
-                } else if (input[i][j] != 0) {
-                    list.add(new Fish(i, j, input[i][j], INF));
+
+        n = Integer.parseInt(br.readLine());
+        a = new int[n + 1][n + 1];
+        check = new int[n+1][n+1];
+
+        for(int i=1; i<=n; i++){
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for(int j=1; j<=n; j++){
+                a[i][j] = Integer.parseInt(st.nextToken());
+
+                if(a[i][j] == 9){
+                    shark_x = i;
+                    shark_y = j;
+                    a[i][j] = 0;
                 }
             }
         }
-        int answer = 0; int sizeTrack = 0; sharkSize = 2;
 
-        while (list.size() != 0) {
-            boolean flag = false;
-            int size = list.size();
-            for (int i=0; i<size; ++i) {
-                Fish next = list.remove(0);
-                bfs(N, next);
-            }
+        while(true){
+            init_check();
 
-            Collections.sort(list, new sort());
+            bfs(shark_x, shark_y);
 
+            if(min_x != max_int && min_y != max_int){
+                result += check[min_x][min_y];
 
-            for (int i=0; i<list.size(); ++i) {
-                if (sharkSize > list.get(i).size) {
-                    ++sizeTrack;
-                    answer += list.get(i).time;
-                    input[sharkX][sharkY] = 0;
-                    sharkX = list.get(i).x;
-                    sharkY = list.get(i).y;
-                    input[sharkX][sharkY] = 9;
-                    list.remove(i);
-                    flag = true;
+                eat_cnt++;
 
-                    if (sizeTrack == sharkSize) {
-                        ++sharkSize;
-                        sizeTrack = 0;
-                    }
-                    break;
+                if(eat_cnt == shark_size){
+                    shark_size++;
+                    eat_cnt = 0;
                 }
+
+                a[min_x][min_y] = 0;
+
+                shark_x = min_x;
+                shark_y = min_y;
             }
 
-            if (!flag) {
+            else{
                 break;
             }
         }
-        System.out.println(answer);
+
+        System.out.println(result);
     }
 
-    public static void bfs (int N, Fish dst) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-        Queue<Fish> temp = new LinkedList<>();
-        temp.add(new Fish (sharkX, sharkY, sharkSize, 0));
-        boolean check [][] = new boolean [N][N];
-        while (!temp.isEmpty()) {
-            Fish next = temp.poll();
-            check[next.x][next.y] = true;
-            for (int i=0; i<4; ++i) {
-                int newX = next.x + dx[i]; int newY = next.y + dy[i]; int newTime = next.time + 1;
-                if (newX == dst.x && newY == dst.y) {
-                    list.add(new Fish(dst.x, dst.y, dst.size, newTime));
-                    return;
-                }
+    public static void init_check(){
+        min_dist = max_val;
+        min_x = max_int;
+        min_y = max_int;
 
-                if (newX < 0 || N <= newX || newY < 0 || N <= newY) {
-                    continue;
-                }
-
-                if (!check[newX][newY] && input[newX][newY] <= sharkSize) {
-                    temp.add(new Fish (newX, newY, sharkSize, newTime));
-                }
+        for(int i=1; i<=n; i++){
+            for(int j=1; j<=n; j++){
+                check[i][j] = -1;
             }
         }
-        list.add(new Fish(dst.x, dst.y, dst.size, dst.time));
+    }
+
+    public static void bfs(int x, int y){
+        Queue<info> q = new LinkedList<info>();
+        check[x][y] = 0;
+        q.add(new info(x, y));
+
+        while(!q.isEmpty()){
+            info cur = q.poll();
+            x = cur.x;
+            y = cur.y;
+
+            for(int i=0; i<4; i++){
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+
+                if(nx < 1 || nx > n || ny < 1 || ny > n) continue;
+                if(check[nx][ny] != -1 || a[nx][ny] > shark_size) continue;
+
+                check[nx][ny] = check[x][y] + 1;
+
+                if(a[nx][ny] != 0 && a[nx][ny] < shark_size){
+
+                    if(min_dist > check[nx][ny]){
+                        min_x = nx;
+                        min_y = ny;
+                        min_dist = check[nx][ny];
+                    }
+                    else if(min_dist == check[nx][ny]){
+                        if(min_x == nx){
+                            if(min_y > ny){
+                                min_x = nx;
+                                min_y = ny;
+                            }
+                        }else if(min_x > nx){
+                            min_x = nx;
+                            min_y = ny;
+                        }
+                    }
+                }
+                q.add(new info(nx, ny));
+            }
+        }
+
     }
 }
 
-class Fish {
-    int x;
-    int y;
-    int size;
-    int time;
+class info{
+    int x, y;
 
-    Fish (int x, int y, int size, int time) {
+    info(int x, int y){
         this.x = x;
         this.y = y;
-        this.size = size;
-        this.time = time;
     }
-}
-
-class sort implements Comparator<Fish> {
-    @Override
-    public int compare(Fish f1, Fish f2) {
-        if (f1.time > f2.time) {
-            return 1;
-        } else if (f1.time == f2.time) {
-            if (f1.x > f2.x) {
-                return 1;
-            } else if (f1.x == f2.x) {
-                if (f1.y > f2.y) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            } else {
-                return -1;
-            }
-        } else {
-            return -1;
-        }
-    }
-}
+};
