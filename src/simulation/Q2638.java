@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q2638 {
+    /*
     public static int input [][];
     public static int total;
     public static void main (String args[]) throws IOException {
@@ -65,8 +66,11 @@ public class Q2638 {
             }
         }
     }
+
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -75,3 +79,4 @@ class Coordinate {
         this.y = y;
     }
 }
+ */
