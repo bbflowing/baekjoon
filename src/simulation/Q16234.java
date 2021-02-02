@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q16234 {
+    /*
     public static int input [][];
     public static int check [][];
     public static int dx [] = {-1, 1, 0, 0};
@@ -85,8 +86,10 @@ public class Q16234 {
             }
         }
     }
+    */
 }
 
+/*
 class Pair {
     int x;
     int y;
@@ -98,3 +101,4 @@ class Pair {
         this.value = value;
     }
 }
+ */

@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q7569 {
+    /*
     public static int input [][][];
     public static int N;
     public static int M;
@@ -89,8 +90,10 @@ public class Q7569 {
             }
         }
     }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -101,3 +104,4 @@ class Coordinate {
         this.z = z;
     }
 }
+ */

@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Q2665 {
+    /*
     public static char input [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -49,8 +50,10 @@ public class Q2665 {
         }
         System.out.println(check[N][N]);
     }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -59,3 +62,4 @@ class Coordinate {
         this.y = y;
     }
 }
+ */

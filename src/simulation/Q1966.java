@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q1966 {
+    /*
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int T = Integer.parseInt(br.readLine());
@@ -17,9 +18,7 @@ public class Q1966 {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int N = Integer.parseInt(st.nextToken());
             int M = Integer.parseInt(st.nextToken());
-            //System.out.println("N: "+N+", M: "+M);
             int check [] = new int [10];
-            int target = 0;
             st = new StringTokenizer(br.readLine());
             for (int i=0; i<N; ++i) {
                 int value = Integer.parseInt(st.nextToken());
@@ -60,8 +59,10 @@ public class Q1966 {
             }
         }
     }
+    */
 }
 
+/*
 class Pair {
     int index;
     int value;
@@ -71,3 +72,4 @@ class Pair {
         this.value = value;
     }
 }
+ */
