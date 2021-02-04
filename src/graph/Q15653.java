@@ -8,9 +8,8 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q15653 {
+    /*
     public static char input [][];
-    public static int holeX;
-    public static int holeY;
     public static int dx [] = {-1, 1, 0, 0};
     public static int dy [] = {0, 0, -1, 1}; // 0: north, 1: south, 2: west, 3: east
     public static void main (String args[]) throws IOException {
@@ -29,8 +28,6 @@ public class Q15653 {
                     blueX = i; blueY = j;
                 } else if (input[i][j] == 'R') {
                     redX = i; redY = j;
-                } else if (input[i][j] == 'O') {
-                    holeX = i; holeY = j;
                 }
             }
         }
@@ -122,7 +119,9 @@ public class Q15653 {
         }
         return new Coordinate (nx, ny);
     }
+     */
 }
+/*
 class Coordinate {
     int x;
     int y;
@@ -145,3 +144,4 @@ class Coordinate {
         this.time = time;
     }
 }
+ */
