@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q14502 {
+    /*
     public static int input[][];
     public static boolean visited[][];
 
@@ -128,8 +129,10 @@ public class Q14502 {
         }
         return counter;
     }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -139,3 +142,4 @@ class Coordinate {
         this.y = y;
     }
 }
+ */
