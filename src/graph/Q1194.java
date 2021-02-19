@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q1194 {
+    /*
     public static char input [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -84,7 +85,9 @@ public class Q1194 {
         System.out.println(-1);
 
     }
+    */
 }
+/*
 class Coordinate {
     int x;
     int y;
@@ -99,4 +102,6 @@ class Coordinate {
     }
 
 }
+
+     */
 
