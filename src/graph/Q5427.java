@@ -3,110 +3,135 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
-public class Q5427{
-    static int R, C;
-    static int[] xdir = {-1,1,0,0};
-    static int[] ydir = {0,0,-1,1};
-    static int min;
-    public static void main(String[] args) throws IOException{
+public class Q5427 {
+    /*
+    public static char map[][];
+
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+        String answer = "";
         int T = Integer.parseInt(br.readLine());
-        for(int tc=1; tc<=T; tc++) {
-            String[] temp = br.readLine().split(" ");
-            R = Integer.parseInt(temp[1]);
-            C = Integer.parseInt(temp[0]);
-            Pos person = null;
-            Queue<Pos> fires = new LinkedList<>();
-            int[][] visited = new int[R+2][C+2];
-
-            for(int i=1; i<R+1; i++){
-                String s = br.readLine();
-                for(int j=1; j<C+1; j++){
-                    char c = s.charAt(j-1);
-                    if(c == '*'){
-                        fires.offer(new Pos(i,j));
-                        visited[i][j] = -1;
+        for (int t = 0; t < T; ++t) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int W = Integer.parseInt(st.nextToken());
+            int H = Integer.parseInt(st.nextToken());
+            map = new char[H][W];
+            Coordinate start = null;
+            Queue<Coordinate> fireQ = new LinkedList<>();
+            Queue<Coordinate> sangQ = new LinkedList<>();
+            boolean[][] fireV = new boolean[H][W];
+            boolean[][] sangV = new boolean[H][W];
+            for (int i = 0; i < H; ++i) {
+                String line = br.readLine();
+                for (int j = 0; j < W; ++j) {
+                    map[i][j] = line.charAt(j);
+                    if (map[i][j] == '@') {
+                        sangQ.add(new Coordinate(i, j, 0));
+                        sangV[i][j] = true;
+                    } else if (map[i][j] == '*') {
+                        fireQ.add(new Coordinate(i, j));
+                        fireV[i][j] = true;
                     }
-                    else if(c == '@')
-                        person = new Pos(i,j,0);
-                    else if(c == '#')
-                        visited[i][j] = -1;
                 }
             }
-
-            min = Integer.MAX_VALUE;
-            bfs(person, fires, visited);
-            if(min != Integer.MAX_VALUE)
-                System.out.println(min);
-            else
-                System.out.println("IMPOSSIBLE");
+            answer += bfs(fireQ, sangQ, fireV, sangV, W, H)+"\n";
         }
+        System.out.println(answer);
     }
 
-    private static void bfs(Pos person, Queue<Pos> fires, int[][] visited){
-        Queue<Pos> q = new LinkedList<>();
-        visited[person.x][person.y] = 1;
-        q.offer(person);
-        while(!q.isEmpty()) {
-            for(int i=0, end=fires.size(); i<end; i++){
-                Pos f = fires.poll();
-                int fx = f.x;
-                int fy = f.y;
+    public static String bfs(Queue<Coordinate> fireQ, Queue<Coordinate> sangQ, boolean[][] fireV,
+                           boolean[][] sangV, int W, int H) {
+        int dx[] = {-1, 1, 0, 0};
+        int dy[] = {0, 0, -1, 1};
+        String answer = "";
+        boolean success = false;
 
-                for(int j=0; j<4; j++){
-                    int dfx = fx + xdir[j];
-                    int dfy = fy + ydir[j];
-                    if(dfx > 0 && dfy > 0 && dfx < R+1 && dfy < C+1 && visited[dfx][dfy] != -1){
-                        visited[dfx][dfy] = -1;
-                        fires.offer(new Pos(dfx, dfy));
+        while (true) {
+            int fireSize = fireQ.size();
+            for (int i = 0; i < fireSize; ++i) {
+                Coordinate fire = fireQ.poll();
+                for (int j = 0; j < 4; ++j) {
+                    int nx = fire.x + dx[j];
+                    int ny = fire.y + dy[j];
+
+                    if (nx < 0 || H <= nx || ny < 0 || W <= ny) {
+                        continue;
                     }
+                    if (fireV[nx][ny]) {
+                        continue;
+                    }
+                    if (map[nx][ny] == '#') {
+                        continue;
+                    }
+                    fireQ.add(new Coordinate(nx, ny));
+                    fireV[nx][ny] = true;
                 }
             }
 
-            for(int i=0, end=q.size(); i<end; i++) {
-                Pos p = q.poll();
-                int x = p.x;
-                int y = p.y;
-                int time = p.time;
+            int sangSize = sangQ.size();
+            for (int i = 0; i < sangSize; ++i) {
+                Coordinate sang = sangQ.poll();
+                for (int j=0; j<4; ++j) {
+                    int nx = sang.x + dx[j];
+                    int ny = sang.y + dy[j];
+                    //System.out.println(nx+","+ny);
 
+                    if (nx<0 || H<=nx || ny<0 || W<=ny) {
+                        success = true;
+                        answer = String.valueOf(sang.times+1);
+                        break;
 
-                if(x == 0 || y == 0 || x == R+1 || y == C+1){
-                    min = min > time ? time : min;
-                    continue;
-                }
-
-                for(int j=0; j<4; j++){
-                    int dx = x + xdir[j];
-                    int dy = y + ydir[j];
-
-                    if(dx >= 0 && dy >= 0 && dx <= R+1 && dy <= C+1){
-                        if(visited[dx][dy] != -1 && visited[dx][dy] != 1) {
-                            q.offer(new Pos(dx, dy, time+1));
-                            visited[dx][dy] = 1;
-                        }
                     }
+                    if (sangV[nx][ny] || fireV[nx][ny]) {
+                        continue;
+                    }
+                    if (map[nx][ny] == '#') {
+                        continue;
+                    }
+                    sangV[nx][ny] = true;
+                    sangQ.add(new Coordinate(nx, ny, sang.times+1));
                 }
+                if (success) {
+                    break;
+                }
+            }
+            if (success) {
+                break;
+            }
+            if (sangQ.size() == 0) {
+                break;
             }
         }
+
+        if (success) {
+            return answer;
+        } else {
+            return "IMPOSSIBLE";
+        }
     }
+     */
 }
-class Pos{
+
+/*
+class Coordinate {
     int x;
     int y;
-    int time;
+    int times;
 
-    Pos(int x, int y){
+    Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    Pos(int x, int y, int time){
+    Coordinate(int x, int y, int times) {
         this.x = x;
         this.y = y;
-        this.time = time;
+        this.times = times;
     }
 }
+ */
