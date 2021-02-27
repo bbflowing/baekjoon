@@ -16,92 +16,96 @@ public class Q1194 {
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
         input = new char [N][M];
-        int startX = 0; int startY = 0;
-        int count = 0;
+        Coordinate start = null;
+
         for (int i=0; i<N; ++i) {
             String line = br.readLine();
             for (int j=0; j<M; ++j) {
                 input[i][j] = line.charAt(j);
                 if (input[i][j] == '0') {
-                    startX = i;
-                    startY = j;
-                } else if ('A'<=input[i][j] && input[i][j] <= 'F') {
-                    ++count;
+                    start = new Coordinate(i, j);
+                    input[i][j] = '.';
                 }
             }
         }
-        bfs(startX, startY, N, M, count);
+        bfs(start, N, M);
     }
 
-    public static void bfs (int startX, int startY, int N, int M, int count) {
+    public static void bfs (Coordinate start, int N, int M) {
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(startX, startY, 0, 0));
         boolean visited [][][] = new boolean [N][M][1<<6];
-        visited[startX][startY][0] = true;
+        Queue<Coordinate> queue = new LinkedList<>();
+        queue.add(new Coordinate(start.x, start.y, 0, 0));
+        visited[start.x][start.y][0] = true;
+        boolean success = false;
 
         while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            int nkey = current.key;
-            int ndistance = current.distance;
-
-            if (input[current.x][current.y] == '1') {
-                System.out.println(ndistance);
-                return;
-            }
+            Coordinate c = queue.poll();
 
             for (int i=0; i<4; ++i) {
-                int nx = current.x + dx[i];
-                int ny = current.y + dy[i];
+                int nx = c.x + dx[i];
+                int ny = c.y + dy[i];
+                //System.out.println(c.x+","+c.y+"->"+nx+","+ny+","+Integer.toBinaryString(c.key));
 
-                if (nx<0 || nx>=N || ny<0 || ny>=M) {
+                if (nx<0 || N<=nx || ny<0 || M<=ny) {
                     continue;
                 }
-                if (input[nx][ny] == '#' || visited[nx][ny][nkey]) {
+                if (visited[nx][ny][c.key]) {
                     continue;
                 }
-
+                if ('A' <= input[nx][ny] && input[nx][ny] <= 'F') {
+                    int tempKey = c.key & 1<<(input[nx][ny]-'A');
+                    if (tempKey > 0) { //key already exists
+                        queue.add(new Coordinate(nx, ny, c.key, c.times+1));
+                        visited[nx][ny][c.key] = true;
+                    }
+                }
                 if ('a' <= input[nx][ny] && input[nx][ny] <= 'f') {
-                    int tempKey = nkey | 1<< (input[nx][ny] - 'a');
-                    if (!visited[nx][ny][tempKey]) {
-                        visited[nx][ny][tempKey] = true;
-                        visited[nx][ny][nkey] = true;
-                        queue.add(new Coordinate(nx, ny, tempKey, ndistance+1));
-                    }
-                }  else if ('A' <= input[nx][ny] && input[nx][ny] <= 'F') {
-                    int tempDoor = nkey & 1 << (input[nx][ny]-'a');
-                    if (tempDoor > 0) { // key exists
-                        visited[nx][ny][nkey] = true;
-                        queue.add(new Coordinate(nx, ny, nkey, ndistance+1));
-                    }
-                } else {
+                    int nkey = c.key | 1<<(input[nx][ny]-'a');
+                    visited[nx][ny][c.key] = true;
                     visited[nx][ny][nkey] = true;
-                    queue.add(new Coordinate(nx, ny, nkey, ndistance+1));
+                    queue.add(new Coordinate(nx, ny, nkey, c.times+1));
                 }
-                //System.out.println(nx+", "+ny+","+nkey+","+nbefore+","+ndistance);
+                if (input[nx][ny] == '.') {
+                    queue.add(new Coordinate(nx, ny, c.key, c.times+1));
+                    visited[nx][ny][c.key] = true;
+                }
+                if (input[nx][ny] == '1') {
+                    System.out.println(c.times+1);
+                    success = true;
+                    break;
+                }
+            }
+            if (success) {
+                break;
             }
         }
-        System.out.println(-1);
-
+        if (!success) {
+            System.out.println(-1);
+        }
     }
-    */
+     */
 }
+
 /*
 class Coordinate {
     int x;
     int y;
     int key;
-    int distance;
+    int times;
 
-    Coordinate (int x, int y, int key, int distance) {
+    Coordinate (int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    Coordinate (int x, int y, int key, int times) {
         this.x = x;
         this.y = y;
         this.key = key;
-        this.distance = distance;
+        this.times = times;
     }
-
 }
-
-     */
+ */
 
