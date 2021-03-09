@@ -11,17 +11,15 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q16920 {
-
-
+    /*
     static int r,c,p;
-
     static int dx[] = { 1, -1, 0, 0 };
     static int dy[] = { 0, 0, 1, -1 };
-
     static int player[];
     static int[][] map;
-
     static Queue<Node> q[];
+
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -94,7 +92,6 @@ public class Q16920 {
 
             }
 
-
         }//while loop
 
         //print
@@ -113,9 +110,10 @@ public class Q16920 {
 //		} // test_case
 
     }// main
-
+*/
 }// class
 
+/*
 class Node{
     int x,y;
 
@@ -126,6 +124,6 @@ class Node{
     }
 
 }
-
+*/
 
 
