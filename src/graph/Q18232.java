@@ -9,7 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q18232 {
-
+    /*
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -66,8 +66,10 @@ public class Q18232 {
             }
         }
     }
+     */
 }
 
+/*
 class Pair {
     int point;
     int distance;
@@ -77,4 +79,4 @@ class Pair {
         this.distance = distance;
     }
 }
-
+ */
