@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q11370 {
+    /*
     public static char map [][];
     public static String answer;
     public static void main (String args[]) throws IOException {
@@ -76,8 +77,10 @@ public class Q11370 {
             answer+="\n";
         }
     }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -87,3 +90,5 @@ class Coordinate {
         this.y = y;
     }
 }
+
+ */
