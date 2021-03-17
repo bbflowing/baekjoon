@@ -6,66 +6,52 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Q1987 {
-    /*
-    public static char input [][];
+    public static char map [][];
+    public static boolean check [];
+    public static int max, R, C;
+    public static int dx [] = {-1, 1, 0, 0};
+    public static int dy [] = {0, 0, -1, 1};
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int R = Integer.parseInt(st.nextToken());
-        int C = Integer.parseInt(st.nextToken());
-        input = new char [R][C];
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        map = new char [R][C];
         for (int i=0; i<R; ++i) {
-            String temp = br.readLine();
+            String line = br.readLine();
             for (int j=0; j<C; ++j) {
-                input[i][j] = temp.charAt(j);
+                map[i][j] = line.charAt(j);
             }
         }
-        boolean check [] = new boolean [26];
-        char current = input[0][0];
-        check[current-'A'] = true;
-        bfs(0, 0, check, R, C);
-    }
-    public static void bfs (int x, int y, boolean [] check, int R, int C) {
-        Queue <Pair> queue = new LinkedList<>();
-        int counter = 0;
-        queue.add(new Pair(x, y, counter));
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-        int max = 0;
-        while (!queue.isEmpty()) {
-            Pair next = queue.poll();
-            counter = next.counter + 1;
-            check[input[next.x][next.y]-'A'] = true;
-            if (counter > max) {
-                max = counter;
-            }
-
-            for (int i=0; i<4; ++i) {
-                int newX = next.x + dx[i];
-                int newY = next.y + dy[i];
-                if (newX < 0 || R <= newX  || newY < 0 || C <= newY) {
-                    continue;
-                }
-                if (!check[input[newX][newY]-'A']) {
-                    queue.add(new Pair(newX, newY, counter));
-                }
-            }
-        }
+        check = new boolean [26];
+        check[map[0][0]-'A'] = true;
+        max = -1;
+        dfs(0, 0, 1);
         System.out.println(max);
     }
-    */
-}
 
-/*
-class Pair {
-    int x;
-    int y;
-    int counter;
-    Pair (int x, int y, int counter) {
-        this.x = x;
-        this.y = y;
-        this.counter = counter;
+    public static void dfs (int x, int y, int distance) {
+        if (max < distance) {
+            max = distance;
+        }
+
+        if (max == 26) {
+            return;
+        }
+
+        for (int i=0; i<4; ++i) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            if (nx<0 || R<=nx || ny<0 || C<=ny) {
+                continue;
+            }
+            if (check[map[nx][ny]-'A']) {
+                continue;
+            }
+            check[map[nx][ny]-'A'] = true;
+            dfs(nx, ny, distance+1);
+            check[map[nx][ny]-'A'] = false;
+        }
     }
 }
-
-     */
