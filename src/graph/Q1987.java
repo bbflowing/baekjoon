@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Q1987 {
+    /*
     public static char map [][];
     public static boolean check [];
     public static int max, R, C;
@@ -54,4 +55,5 @@ public class Q1987 {
             check[map[nx][ny]-'A'] = false;
         }
     }
+     */
 }
