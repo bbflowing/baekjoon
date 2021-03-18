@@ -3,8 +3,7 @@ package backtracking;
 import java.io.*;
 import java.util.StringTokenizer;
 
-public class Q15651 {
-    /*
+public class Q15652 {
     public static BufferedWriter bw;
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,11 +16,11 @@ public class Q15651 {
         bw.flush();
     }
 
-    public static void solve (int N, int M, int depth, int result []) throws IOException {
-        if (depth == M) {
+    public static void solve (int N, int M, int index, int [] result) throws IOException {
+        if (index == M) {
             String answer = "";
             for (int i=0; i<M; ++i) {
-                answer += result[i] + " ";
+                answer += result[i]+" ";
             }
             bw.append(answer);
             bw.newLine();
@@ -29,9 +28,16 @@ public class Q15651 {
         }
 
         for (int i=1; i<=N; ++i) {
-            result [depth] = i;
-            solve(N, M, depth+1, result);
+            if (1 <= index) {
+                if (result[index - 1] <= i) {
+                    result[index] = i;
+                    solve(N, M, index+1, result);
+                }
+            } else if (index == 0) {
+                result[index] = i;
+                solve(N, M, index+1, result);
+            }
+
         }
     }
-     */
 }
