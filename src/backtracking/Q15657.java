@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Q15657 {
-
+    /*
     public static BufferedWriter bw;
     public static int input [];
     public static void main (String args[]) throws IOException {
@@ -48,5 +48,5 @@ public class Q15657 {
             }
         }
     }
-
+     */
 }
