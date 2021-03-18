@@ -5,38 +5,37 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class Q15649 {
-    /*
-    public static boolean visited [];
+public class Q15650 {
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-
-        visited = new boolean [N];
         int result [] = new int [M];
-        backtracking(N, M, visited,0, result);
+        int input [] = new int [N];
+        for (int i=0; i<N; ++i) {
+            input[i] = i+1;
+        }
+        combination(input, N, M,0, 0, result);
+
     }
 
-    public static void backtracking (int N, int M, boolean [] visited, int index, int [] result) {
-        if (index == M) {
+    public static void combination (int [] input, int N, int R, int index, int start, int [] result) {
+        if (index == R) {
             String answer = "";
-            for (int i=0; i<result.length; ++i) {
-                answer += result[i] +" ";
+            for (int i=0; i<R; ++i) {
+                answer += result[i] + " ";
             }
             System.out.println(answer);
             return;
         }
 
-        for (int i=0; i<N; ++i) {
-            if (!visited[i]) {
-                visited[i] = true;
-                result[index] = i+1;
-                backtracking(N, M, visited, index+1, result);
-                visited[i] = false;
-            }
+        if (start == N) {
+            return;
         }
+
+        result[index] = input[start];
+        combination(input, N, R, index+1, start+1, result);
+        combination(input, N, R, index, start+1, result);
     }
-    */
 }
