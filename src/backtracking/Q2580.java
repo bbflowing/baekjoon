@@ -48,7 +48,7 @@ public class Q2580 {
             puzzle[x][y] = 0;
             return;
         }
-        solve(x, y+1);
+        solve(x, y+1); //not zero
     }
 
     public static boolean isPossible(int x, int y, int value) {
