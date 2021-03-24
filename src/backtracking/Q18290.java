@@ -19,63 +19,66 @@ public class Q18290 {
         K = Integer.parseInt(st.nextToken());
         map = new int [N][M];
         visited = new boolean [N][M];
+        max = -40001;
         for (int i=0; i<N; ++i) {
             st = new StringTokenizer(br.readLine());
             for (int j=0; j<M; ++j) {
                 map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        max = -40001;
+
         solve(0, 0, 0, 0);
         System.out.println(max);
     }
 
-    public static void solve (int x, int y, int sum, int selected) {
-        if (selected == K) {
+    public static void solve (int x, int y, int count, int sum) {
+        if (count == K) {
             if (max < sum) {
                 max = sum;
             }
             return;
         }
-        if (y == M) {
-            solve(x+1, 0, sum, selected);
-            return;
-        }
+
         if (x == N) {
             return;
         }
 
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
+        if (y >= M) {
+            solve(x + 1, 0, count, sum);
+            return;
+        }
+
+        int dx[] = {-1, 1, 0, 0};
+        int dy[] = {0, 0, -1, 1};
 
         if (!visited[x][y]) {
-            solve(x, y+1, sum, selected);
-            visited[x][y] = true;
-            int nselected = selected+1;
-            int nsum = sum + map[x][y];
-            ArrayList<Coordinate> check = new ArrayList<>();
-            for (int i=0; i<4; ++i) {
+            solve(x, y + 1, count, sum); // map[x][y] possible but unselected
+            ArrayList<Coordinate> list = new ArrayList<>();
+            for (int i = 0; i < 4; ++i) {
                 int nx = x + dx[i];
                 int ny = y + dy[i];
 
-                if (nx<0 || N<=nx || ny<0 || M<=ny) {
+                if (nx < 0 || N <= nx || ny < 0 || M <= ny) {
                     continue;
                 }
-                if (!visited[nx][ny]) {
-                    check.add(new Coordinate(nx,ny));
-                    visited[nx][ny] = true;
+                if (visited[nx][ny]) {
+                    continue;
                 }
+
+                list.add(new Coordinate(nx, ny));
+                visited[nx][ny] = true;
             }
-            solve(x, y+1, nsum, nselected);
+            visited[x][y] = true;
+            solve(x, y + 2, count + 1, sum + map[x][y]);
             visited[x][y] = false;
-            if (check.size() != 0) {
-                for (int i = 0; i < check.size(); ++i) {
-                    Coordinate next = check.get(i);
-                    visited[next.x][next.y] = false;
+            if (list.size() != 0) {
+                for (int i = 0; i < list.size(); ++i) {
+                    Coordinate target = list.get(i);
+                    visited[target.x][target.y] = false;
                 }
             }
         } else {
-            solve(x, y+1, sum, selected);
+            solve(x, y + 1, count, sum);
         }
     }
      */
