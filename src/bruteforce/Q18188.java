@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Q18188 {
+    /*
     public static char hill [][];
     public static char instructions [][];
     public static boolean visited [][];
@@ -108,8 +109,10 @@ public class Q18188 {
             solve(nx, ny, times+1, route+nroute);
         }
     }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -119,3 +122,4 @@ class Coordinate {
         this.y = y;
     }
 }
+ */
