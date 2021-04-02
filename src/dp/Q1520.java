@@ -1,17 +1,18 @@
 package dp;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Q1520 {
     /*
-    public static int map [][];
-    public static int dp [][];
-    public static int M, N;
+    public static int [][] map;
+    public static int [][] dp;
     public static int dx [] = {-1, 1, 0, 0};
     public static int dy [] = {0, 0, -1, 1};
+    public static int M, N;
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -45,10 +46,9 @@ public class Q1520 {
             if (nx<0 || M<=nx || ny<0 || N<=ny) {
                 continue;
             }
-            if (map[x][y] <= map[nx][ny]) {
-                continue;
+            if (map[nx][ny] < map[x][y]) {
+                dp[x][y] += solve(nx, ny);
             }
-            dp[x][y] += solve(nx,ny);
         }
         return dp[x][y];
     }
