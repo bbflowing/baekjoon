@@ -7,11 +7,12 @@ import java.util.StringTokenizer;
 
 public class Q11055 {
     /*
+    public static int input [];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
+        input = new int [N];
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int input [] = new int [N];
         for (int i=0; i<N; ++i) {
             input[i] = Integer.parseInt(st.nextToken());
         }
@@ -26,7 +27,7 @@ public class Q11055 {
             }
         }
         int max = sum[0];
-        for (int i=1; i<N; ++i) {
+        for (int i=0; i<N; ++i) {
             if (max < sum[i]) {
                 max = sum[i];
             }
