@@ -8,85 +8,53 @@ import java.util.Collections;
 
 public class Q2667 {
     /*
-    public static int map [][];
+    public static int N, size;
+    public static char map [][];
     public static boolean visited [][];
-    public static int size;
+    public static int dx [] = {-1, 1, 0, 0};
+    public static int dy [] = {0, 0, -1, 1};
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        map = new int [N][N];
+        N = Integer.parseInt(br.readLine());
+        map = new char [N][N];
         for (int i=0; i<N; ++i) {
             String line = br.readLine();
             for (int j=0; j<N; ++j) {
-                map[i][j] = line.charAt(j)-'0';
+                map[i][j] = line.charAt(j);
             }
         }
         visited = new boolean [N][N];
-        int counter = 0;
-        ArrayList<Pair> result = new ArrayList<>();
+        ArrayList<Integer> result = new ArrayList<>();
         for (int i=0; i<N; ++i) {
             for (int j=0; j<N; ++j) {
-                if (!visited[i][j] && map[i][j] == 1) {
-                    ++counter;
-                    size = 1;
+                if (map[i][j] == '1' && !visited[i][j]) {
                     visited[i][j] = true;
-                    map[i][j] = counter;
-                    dfs(i, j, N, counter);
-                    result.add(new Pair(counter, size));
+                    size = 1;
+                    dfs(i, j);
+                    result.add(size);
                 }
             }
         }
         Collections.sort(result);
         System.out.println(result.size());
-        for (int i=0; i<result.size(); ++i) {
-            System.out.println(result.get(i).size);
+        for (int i:result) {
+            System.out.println(i);
         }
     }
 
-    public static void dfs (int x, int y, int N, int counter) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-
+    public static void dfs (int x, int y) {
         for (int i=0; i<4; ++i) {
             int nx = x + dx[i];
             int ny = y + dy[i];
 
-            if (nx<0 || N<=nx || ny<0 || N<=ny) {
-                continue;
+            if (0 <= nx && nx < N && 0 <= ny && ny < N) {
+                if (!visited[nx][ny] && map[nx][ny] == '1') {
+                    visited[nx][ny] = true;
+                    ++size;
+                    dfs(nx, ny);
+                }
             }
-            if (visited[nx][ny]) {
-                continue;
-            }
-            if (map[nx][ny] == 0) {
-                continue;
-            }
-            map[nx][ny] = counter;
-            visited[nx][ny] = true;
-            ++size;
-            dfs(nx, ny, N, counter);
         }
     }
      */
 }
-
-/*
-class Pair implements Comparable<Pair>{
-    int counter;
-    int size;
-
-    Pair (int counter, int size) {
-        this.counter = counter;
-        this.size = size;
-    }
-
-    public int compareTo (Pair p) {
-        if (this.size > p.size) {
-            return 1;
-        } else if (this.size == p.size) {
-            return 0;
-        } else {
-            return -1;
-        }
-    }
-}
- */
