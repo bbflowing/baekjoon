@@ -7,9 +7,9 @@ import java.util.*;
 
 public class Q1987 {
     /*
-    public static char map [][];
-    public static boolean check [];
-    public static int max, R, C;
+    public static int R, C, max;
+    public static char board [][];
+    public static boolean words [];
     public static int dx [] = {-1, 1, 0, 0};
     public static int dy [] = {0, 0, -1, 1};
     public static void main (String args[]) throws IOException {
@@ -17,26 +17,27 @@ public class Q1987 {
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        map = new char [R][C];
-        for (int i=0; i<R; ++i) {
+        board = new char [R+1][C+1];
+        for (int i=1; i<=R; ++i) {
             String line = br.readLine();
-            for (int j=0; j<C; ++j) {
-                map[i][j] = line.charAt(j);
+            for (int j=1; j<=C; ++j) {
+                board[i][j] = line.charAt(j-1);
             }
         }
-        check = new boolean [26];
-        check[map[0][0]-'A'] = true;
+        words = new boolean [26];
+        words [board[1][1]-'A'] = true;
         max = -1;
-        dfs(0, 0, 1);
+        solve(1, 1, 1);
         System.out.println(max);
     }
 
-    public static void dfs (int x, int y, int distance) {
+    public static void solve (int x, int y, int distance) {
         if (max < distance) {
             max = distance;
         }
 
-        if (max == 26) {
+        if (distance == 26) {
+            max = distance;
             return;
         }
 
@@ -44,15 +45,13 @@ public class Q1987 {
             int nx = x + dx[i];
             int ny = y + dy[i];
 
-            if (nx<0 || R<=nx || ny<0 || C<=ny) {
-                continue;
+            if (0 < nx && nx <= R && 0 < ny && ny <= C) {
+                if (!words[board[nx][ny]-'A']) {
+                    words[board[nx][ny]-'A'] = true;
+                    solve(nx, ny, distance+1);
+                    words[board[nx][ny]-'A'] = false;
+                }
             }
-            if (check[map[nx][ny]-'A']) {
-                continue;
-            }
-            check[map[nx][ny]-'A'] = true;
-            dfs(nx, ny, distance+1);
-            check[map[nx][ny]-'A'] = false;
         }
     }
      */
