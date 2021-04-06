@@ -8,66 +8,64 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q16929 {
-    public static char input [][];
+    /*
+    1. dfs
+    2. found a visited spot & reached using a direction different from the direction right before -> cycle
+       found a visited spot & used the same direction -> not a cycle
+    3. no more same character -> no cycle (cancel all the routes)
+
+    public static int N, M;
+    public static char game [][];
     public static boolean visited [][];
+    public static int dx [] = {-1, 1, 0, 0};
+    public static int dy [] = {0, 0, -1, 1};
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        input = new char [N][M];
-
-
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        game = new char [N][M];
+        visited = new boolean [N][M];
         for (int i=0; i<N; ++i) {
             String line = br.readLine();
             for (int j=0; j<M; ++j) {
-                input[i][j] = line.charAt(j);
+                game[i][j] = line.charAt(j);
             }
         }
-        visited = new boolean [N][M];
         for (int i=0; i<N; ++i) {
             for (int j=0; j<M; ++j) {
-               if (!visited[i][j]) {
-                   visited[i][j] = true;
-                   dfs(i, j, -1, -1, N, M, 1);
-               }
+                if (!visited[i][j]) {
+                    visited[i][j] = true;
+                    findCycle(i, j, -1);
+                    visited[i][j] = false;
+                }
             }
         }
         System.out.println("No");
     }
 
-    public static boolean dfs (int x, int y, int bx, int by, int N, int M, int counter) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-
+    public static void findCycle(int x, int y, int before) {
         for (int i=0; i<4; ++i) {
             int nx = x + dx[i];
             int ny = y + dy[i];
 
-            if (nx<0 || N<=nx || ny<0 || M<=ny) {
-                continue;
+            if (0 <= nx && nx < N && 0 <= ny && ny < M) {
+                if (!visited[nx][ny] && game[nx][ny] == game[x][y]) {
+                    visited [nx][ny] = true;
+                    //System.out.println(nx+","+ny);
+                    findCycle(nx, ny, i);
+                    visited[nx][ny] = false;
+                } else if (visited[nx][ny] && game[nx][ny] == game[x][y]) {
+                    if ((before == 0 && i == 1) || (before == 1 && i == 0) ||
+                            (before == 2 && i == 3) || (before == 3 && i == 2)) {
+                        continue;
+                    } else {
+                        System.out.println("Yes");
+                        System.exit(0);
+                    }
+                }
             }
-
-            if (bx == nx && by == ny) {
-                continue;
-            }
-
-            if (visited[nx][ny] && input[nx][ny] == input[x][y]) {
-                System.out.println("Yes");
-                System.exit(0);
-            }
-
-            if (input[nx][ny] != input[x][y]) {
-                continue;
-            }
-
-            if (visited[nx][ny]) {
-                continue;
-            }
-            visited[nx][ny] = true;
-            ++counter;
-            dfs(nx, ny, x, y, N, M, counter);
         }
-        return false;
     }
+     */
 }
