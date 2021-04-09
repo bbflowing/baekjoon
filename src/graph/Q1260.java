@@ -6,70 +6,63 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Q1260 {
-    public static ArrayList<ArrayList<Integer>> edges;
-    public static int N;
-    public static String answer;
-    public static boolean [] check;
+    public static boolean check [];
+    public static String route;
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        edges = new ArrayList<>();
-        N = Integer.parseInt(st.nextToken()); // number of vertices
-        int M = Integer.parseInt(st.nextToken()); // number of edges
-        int V = Integer.parseInt(st.nextToken()); // starting vertex
-
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+        int V = Integer.parseInt(st.nextToken());
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
         for (int i=0; i<=N; ++i) {
-            edges.add(new ArrayList<>());
+            list.add(new ArrayList<>());
         }
-
+        check = new boolean [N+1];
         for (int i=0; i<M; ++i) {
             st = new StringTokenizer(br.readLine());
-            int first = Integer.parseInt(st.nextToken());
-            int second = Integer.parseInt(st.nextToken());
-            edges.get(first).add(second);
-            edges.get(second).add(first);
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
+            list.get(start).add(end);
+            list.get(end).add(start);
         }
-
         for (int i=0; i<=N; ++i) {
-            Collections.sort(edges.get(i));
+            Collections.sort(list.get(i));
         }
-        answer = "";
-        check = new boolean [N+1];
-        dfs(V);
-        System.out.println(answer);
-
-        bfs(V);
+        route = "";
+        dfs(list, V, N);
+        System.out.println(route);
+        bfs(list, V, N);
 
     }
 
-    public static void dfs(int start) {
-        check[start]= true;
-        answer += start + " ";
-        for (int i=0; i<edges.get(start).size(); ++i) {
-            int visited = edges.get(start).get(i);
-            if (!check [visited]) {
-                dfs(visited);
-            }
-        }
-    }
-
-    public static void bfs(int start) {
+    public static void bfs(ArrayList<ArrayList<Integer> >list, int start, int N) {
         Queue<Integer> queue = new LinkedList<>();
-        boolean put [] = new boolean [N+1];
         queue.add(start);
-        put [start] = true;
+        boolean check [] = new boolean [N+1];
+        check[start] = true;
         String answer = "";
         while (!queue.isEmpty()) {
-            int visited = queue.poll();
-            answer += visited + " ";
-            for (int i=0; i<edges.get(visited).size(); ++i) {
-                if (!put[edges.get(visited).get(i)]) {
-                    queue.add(edges.get(visited).get(i));
-                    put[edges.get(visited).get(i)] = true;
+            int current = queue.poll();
+            answer += current + " ";
+            for (int i=0; i<list.get(current).size(); ++i) {
+                if (!check[list.get(current).get(i)]) {
+                    queue.add(list.get(current).get(i));
+                    check[list.get(current).get(i)] = true;
                 }
             }
-
         }
         System.out.println(answer);
+    }
+
+    public static void dfs(ArrayList<ArrayList<Integer>> list, int start, int N) {
+        check[start] = true;
+        route += start + " ";
+        for (int i=0; i<list.get(start).size(); ++i) {
+            if (!check[list.get(start).get(i)]) {
+                //route += list.get(start).get(i) + " ";
+                dfs(list, list.get(start).get(i), N);
+            }
+        }
     }
 }

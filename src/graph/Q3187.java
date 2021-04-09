@@ -7,86 +7,79 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Q3187 {
-    public static char input [][];
-    public static int temp [][];
-    public static boolean check [][];
-    public static int dx [] = {-1, 1, 0, 0};
-    public static int dy [] = {0, 0, -1, 1};
+    /*
+    public static int R, C;
+    public static char [][] fence;
+    public static int [][] area;
+    public static boolean [][] visited;
+    public static int [] dx = {-1, 1, 0, 0};
+    public static int [] dy = {0, 0, -1, 1};
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        input = new char [N][M];
-        for (int i=0; i<N; ++i) {
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        fence = new char [R][C];
+        for (int i=0; i<R; ++i) {
             String line = br.readLine();
-            for (int j=0; j<M; ++j) {
-                input[i][j] = line.charAt(j);
+            for (int j=0; j<C; ++j) {
+                fence[i][j] = line.charAt(j);
             }
         }
-        temp = new int [N][M];
-        for (int i=0; i<N; ++i) {
-            Arrays.fill(temp[i], -1);
-        }
-        check = new boolean [N][M];
-        int counter = 1;
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<M; ++j) {
-                if (input[i][j] != '#' && !check[i][j]) {
-                    dfs(i, j, N, M, counter);
+        visited = new boolean [R][C];
+        area = new int [R][C];
+        int counter = 0;
+        for (int i=0; i<R; ++i) {
+            for (int j=0; j<C; ++j) {
+                if (!visited[i][j] && fence[i][j] != '#') {
                     ++counter;
+                    visited[i][j] = true;
+                    area[i][j] = counter;
+                    dfs(i, j, counter);
                 }
             }
         }
-        /*
-        for (int i=0; i<N; ++i) {
-            System.out.println(Arrays.toString(temp[i]));
-        }
-
-         */
-        int wolves [] = new int [counter];
-        int sheep [] = new int [counter];
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<M; ++j) {
-                if (input[i][j] == 'v') { //wolf
-                    ++wolves[temp[i][j]];
-                } else if (input[i][j] == 'k') { //sheep
-                    ++sheep[temp[i][j]];
+        int result [][] = new int [counter][2];
+        for (int i=0; i<R; ++i) {
+            for (int j=0; j<C; ++j) {
+                if (fence[i][j] == 'v') { //wolf
+                    ++result[area[i][j]-1][0];
+                } else if (fence[i][j] == 'k') { //sheep
+                    ++result[area[i][j]-1][1];
                 }
             }
         }
-        //System.out.println(Arrays.toString(wolves));
-        //System.out.println(Arrays.toString(sheep));
+        int sheep = 0;
+        int wolf = 0;
 
-        int s = 0; int w = 0;
-
-        for (int i=1; i<counter; ++i) {
-            if (sheep[i] > wolves[i]) {
-                s += sheep[i];
-            } else {
-                w += wolves[i];
+        for (int i=0; i<counter; ++i) {;
+            if (result[i][1] - result[i][0] > 0) { // more sheep
+                sheep += result[i][1];
+            } else { // same or more wolf
+                wolf += result[i][0];
             }
         }
-        System.out.println(s+" "+w);
+        System.out.println(sheep+" "+wolf);
     }
-    public static void dfs(int x, int y, int N, int M, int counter) {
-        check[x][y] = true;
-        temp[x][y] = counter;
+
+    public static void dfs (int x, int y, int counter) {
         for (int i=0; i<4; ++i) {
             int nx = x + dx[i];
             int ny = y + dy[i];
 
-            if (nx < 0 || N <= nx || ny < 0 || M <= ny) {
+            if (nx<0 || R<=nx || ny<0 || C<=ny) {
                 continue;
             }
-            if (check[nx][ny]) {
+            if (visited[nx][ny]) {
                 continue;
             }
-            if (input[nx][ny] != '#') {
-                temp [nx][ny] = counter;
-                check[nx][ny] = true;
-                dfs(nx, ny, N, M, counter);
+            if (fence[nx][ny] == '#') {
+                continue;
             }
+            visited[nx][ny] = true;
+            area[nx][ny] = counter;
+            dfs(nx, ny, counter);
         }
     }
+     */
 }

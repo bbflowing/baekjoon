@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q5014 {
+    /*
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -48,8 +49,10 @@ public class Q5014 {
         }
         System.out.println("use the stairs");
     }
+     */
 }
 
+/*
 class Pair {
     int location;
     int count;
@@ -59,3 +62,4 @@ class Pair {
         this.count = count;
     }
 }
+ */

@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q5931 {
+    /*
     public static char input [][];
     public static boolean visited [][];
     public static void main (String args[]) throws IOException {
@@ -105,8 +106,10 @@ public class Q5931 {
             dfs(nx, ny, counter, N, M);
         }
     }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -118,3 +121,4 @@ class Coordinate {
         this.bridge = bridge;
     }
 }
+ */

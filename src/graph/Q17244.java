@@ -1,165 +1,136 @@
 package graph;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q17244 {
-    public static char input [][];
-    public static boolean check [];
-    public static Coordinate start, end;
-    public static int N, M, answer;
+    /*
+    public static int C, R, answer;
+    public static char [][] house;
+    public static int distances [][];
+    public static ArrayList<Coordinate> list;
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        input = new char [M][N];
-        start = null; end = null;
-        answer = 987_654_321;
-        ArrayList<Coordinate> list = new ArrayList<>();
-        int things = 0;
-
-        for (int i=0; i<M; ++i) {
+        C = Integer.parseInt(st.nextToken());
+        R = Integer.parseInt(st.nextToken());
+        house = new char [R][C];
+        int startX = 0; int startY = 0;
+        int endX = 0; int endY = 0;
+        list = new ArrayList<>();
+        int count = 2;
+        for (int i=0; i<R; ++i) {
             String line = br.readLine();
-            for (int j=0; j<N; ++j) {
-                input[i][j] = line.charAt(j);
-                if (input[i][j] == 'S') {
-                    start = new Coordinate(i, j);
-                } else if (input[i][j] == 'X') {
-                    ++things;
+            for (int j=0; j<C; ++j) {
+                house[i][j] = line.charAt(j);
+                if (house[i][j] == 'S') {
+                    startX = i; startY = j;
+                } else if (house[i][j] == 'E') {
+                    endX = i; endY = j;
+                } else if (house[i][j] == 'X') {
                     list.add(new Coordinate(i, j));
-                } else if (input[i][j] == 'E') {
-                    end = new Coordinate(i, j);
+                    ++count;
                 }
             }
         }
-        if (things > 0) {
-            check = new boolean[things];
-            Coordinate[] result = new Coordinate[things];
-            permutation(0, things, list, result);
-            System.out.println(answer);
-        } else {
-            solve();
+        list.add(0, new Coordinate(startX, startY));
+        list.add(new Coordinate(endX, endY));
+        distances = new int [count][count];
+        for (int i=0; i<list.size()-1; ++i) {
+            for (int j=i+1; j<list.size(); ++j) {
+                Coordinate start = list.get(i);
+                Coordinate end = list.get(j);
+                int distance = getDistance(start, end);
+                distances[i][j] = distance;
+                distances[j][i] = distance;
+            }
+        }
+
+        count -= 2;
+        list.remove(list.size()-1);
+        list.remove(0);
+        boolean visited [] = new boolean [count];
+        int result [] = new int [count];
+        answer = 987_654_321;
+        permutation(count, 0, visited, result);
+        System.out.println(answer);
+    }
+
+    public static void permutation (int N, int index, boolean [] visited, int [] result) {
+        if (index == N) {
+            int order [] = new int [N+2];
+            order[0] = 0;
+            for (int i=1; i<N+1; ++i) {
+                order[i] = result[i-1];
+            }
+            order[N+1] = N+1;
+            //System.out.println(Arrays.toString(order));
+            int total = 0;
+            for (int i=0; i<N+1; ++i) {
+                int start = order[i];
+                int end = order[i+1];
+                int distance = distances[start][end];
+                if (distance == -1) {
+                    return;
+                }
+                total += distance;
+            }
+            if (answer > total) {
+                answer = total;
+            }
+            return;
+        }
+
+        for (int i=0; i<N; ++i) {
+            if (!visited[i]) {
+                visited[i] = true;
+                result[index] = i+1;
+                permutation(N, index+1, visited, result);
+                visited[i] = false;
+            }
         }
     }
 
-    public static void solve () {
+    public static int getDistance(Coordinate start, Coordinate end) {
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
-        boolean visited [][] = new boolean [M][N];
-        visited[start.x][start.y] = true;
+        boolean visited [][] = new boolean [R][C];
         Queue<Coordinate> queue = new LinkedList<>();
         queue.add(new Coordinate(start.x, start.y, 0));
+        visited[start.x][start.y] = true;
 
         while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            if (current.x == end.x && current.y == end.y) {
-                System.out.println(current.distance);
-                break;
+            Coordinate c = queue.poll();
+            if (c.x == end.x && c.y == end.y) {
+                return c.distance;
             }
             for (int i=0; i<4; ++i) {
-                int nx = current.x + dx[i];
-                int ny = current.y + dy[i];
-                if (nx<0 || M<=nx || ny<0 || N<=ny) {
+                int nx = c.x + dx[i];
+                int ny = c.y + dy[i];
+
+                if (nx<0 || R<=nx || ny<0 || C<=ny) {
                     continue;
                 }
                 if (visited[nx][ny]) {
                     continue;
                 }
-                if (input[nx][ny] == '#') {
+                if (house[nx][ny] == '#') {
                     continue;
                 }
-                queue.add(new Coordinate(nx, ny, current.distance+1));
                 visited[nx][ny] = true;
+                queue.add(new Coordinate(nx, ny, c.distance+1));
             }
         }
+        return -1;
     }
-
-    public static void permutation (int index, int things, ArrayList<Coordinate> list, Coordinate [] result) {
-        if (index == things) {
-            bfs(result);
-            return;
-        }
-
-        for (int i=0; i<things; ++i) {
-            if (!check[i]) {
-                result[index] = list.get(i);
-                check[i] = true;
-                permutation(index+1, things, list, result);
-                check[i] = false;
-            }
-        }
-    }
-
-    public static void bfs (Coordinate [] result) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-        Coordinate begin = null;
-        int total = 0;
-
-        for (int i=0; i<=result.length; ++i) {
-
-            Queue<Coordinate> queue = new LinkedList<>();
-            boolean visited[][] = new boolean [M][N];
-
-            Coordinate dst = null;
-
-            if (i==0) {
-                begin = new Coordinate(start.x, start.y);
-                dst = result[i];
-                queue.add(begin);
-            } else if (i==result.length){
-                dst = new Coordinate (end.x, end.y);
-                queue.add(new Coordinate(begin.x, begin.y));
-            } else {
-                dst = result[i];
-                queue.add(new Coordinate(begin.x, begin.y));
-            }
-            visited[begin.x][begin.y] = true;
-            /*
-            System.out.println("begin: "+begin.x+","+begin.y);
-            System.out.println("dst: "+dst.x+","+dst.y);
-            System.out.println();
-            */
-
-            while (!queue.isEmpty()) {
-                Coordinate current = queue.poll();
-                if (current.x == dst.x && current.y == dst.y) {
-                    total += current.distance;
-                    //System.out.println(begin.x+","+begin.y+"->"+dst.x+","+dst.y+" subtotal: "+current.distance);
-                    //System.out.println(total);
-                    break;
-                }
-                for (int j=0; j<4; ++j) {
-                    int nx = current.x + dx[j];
-                    int ny = current.y + dy[j];
-
-                    if (nx<0 || M<=nx || ny<0 || N<=ny) {
-                        continue;
-                    }
-                    if (visited[nx][ny]) {
-                        continue;
-                    }
-                    if (input[nx][ny] == '#') {
-                        continue;
-                    }
-                    visited[nx][ny] = true;
-                    queue.add(new Coordinate(nx, ny, current.distance+1));
-                }
-            }
-            begin = new Coordinate(dst.x, dst.y);
-        }
-        if (answer > total) {
-            answer = total;
-        }
-    }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -176,3 +147,5 @@ class Coordinate {
         this.distance = distance;
     }
 }
+
+ */

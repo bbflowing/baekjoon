@@ -9,18 +9,19 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q17836 {
-    public static int input [][];
+    /*
+    public static int map [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
         int T = Integer.parseInt(st.nextToken());
-        input = new int [N][M];
-        for (int i=0; i<N; ++i) {
+        map = new int [N+1][M+1];
+        for (int i=1; i<=N; ++i) {
             st = new StringTokenizer(br.readLine());
-            for (int j=0; j<M; ++j) {
-                input[i][j] = Integer.parseInt(st.nextToken());
+            for (int j=1; j<=M; ++j) {
+                map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
         bfs(N, M, T);
@@ -28,58 +29,58 @@ public class Q17836 {
 
     public static void bfs (int N, int M, int T) {
         Queue<Coordinate> queue = new LinkedList<>();
+        queue.add(new Coordinate(1, 1, 0, 0));
+        boolean visited [][][] = new boolean [N+1][M+1][2];
+        visited[1][1][0] = true;
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
-        boolean check [][][] = new boolean [N][M][2];
-        queue.add(new Coordinate(0, 0, 0, 0));
-        check[0][0][0] = true;
 
         while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            if (current.distance > T) {
-                continue;
+            Coordinate c = queue.poll();
+            if (c.x == N && c.y == M && c.distance <= T) {
+                System.out.println(c.distance);
+                return;
             }
-
+            if (c.distance > T) {
+                break;
+            }
             for (int i=0; i<4; ++i) {
-                int nx = current.x + dx[i];
-                int ny = current.y + dy[i];
-                int nsword = current.sword;
-                int ndistance = current.distance;
+                int nx = c.x + dx[i];
+                int ny = c.y + dy[i];
+                int nsword = c.sword;
+                int ndistance = c.distance+1;
 
-                if (nx == N-1 && ny == M-1) {
-                    System.out.println(ndistance + 1);
-                    return;
-                }
-
-                if (nx < 0 || N <= nx || ny < 0 || M <= ny) {
+                if (nx<1 || N+1<=nx || ny<1 || M+1<=ny) {
                     continue;
                 }
-
-                if (check[nx][ny][nsword]) {
-                    continue;
-                }
-
-                if (nsword == 0) {
-                    if (input[nx][ny] == 1) {
-                        continue;
+                if (map[nx][ny] == 0) {
+                    if (!visited[nx][ny][nsword]) {
+                        visited[nx][ny][nsword] = true;
+                        queue.add(new Coordinate(nx, ny, nsword, ndistance));
                     }
-                    check[nx][ny][0] = true;
-                    if (input[nx][ny] == 0) {
-                        queue.add(new Coordinate(nx, ny, 0, ndistance + 1));
-                    } else if (input[nx][ny] == 1) {
-                        queue.add(new Coordinate(nx, ny, 1, ndistance + 1));
+                } else if (map[nx][ny] == 1) {
+                    if (nsword == 1) {
+                        if (!visited[nx][ny][nsword]) {
+                            visited[nx][ny][nsword] = true;
+                            queue.add(new Coordinate(nx, ny, nsword, ndistance));
+                        }
                     }
-
-                } else {
-                    check[nx][ny][nsword] = true;
-                    queue.add(new Coordinate(nx, ny, 1, ndistance + 1));
+                } else if (map[nx][ny] == 2) {
+                    nsword = 1;
+                    if (!visited[nx][ny][nsword]) {
+                        visited[nx][ny][nsword] = true;
+                        queue.add(new Coordinate(nx, ny, nsword, ndistance));
+                    }
                 }
             }
         }
         System.out.println("Fail");
     }
+
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -93,3 +94,5 @@ class Coordinate {
         this.distance = distance;
     }
 }
+
+ */

@@ -3,12 +3,12 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q3184 {
+    /*
     public static char input [][];
     public static int check [][];
     public static int dx [] = {-1, 1, 0, 0};
@@ -46,11 +46,11 @@ public class Q3184 {
                 }
             }
         }
-        /*
+
         for (int i=0; i<R; ++i) {
             System.out.println(Arrays.toString(check[i]));
         }
-         */
+
         int wolvesCheck [] = new int [counter];
         int sheepCheck [] = new int [counter];
 
@@ -64,10 +64,10 @@ public class Q3184 {
         }
         int surviveWolf = 0;
         int surviveSheep = 0;
-        /*
+
         System.out.println(Arrays.toString(sheepCheck));
         System.out.println(Arrays.toString(wolvesCheck));
-         */
+
         for (int i=0; i<wolvesCheck.length; ++i) {
             if (wolvesCheck[i] - sheepCheck[i] >= 0) {
                 surviveWolf += wolvesCheck[i];
@@ -76,8 +76,6 @@ public class Q3184 {
             }
         }
         System.out.println(surviveSheep+" "+surviveWolf);
-
-
     }
     public static void dfs (int x, int y, int R, int C, int counter) {
         for (int i=0; i<4; ++i) {
@@ -96,7 +94,9 @@ public class Q3184 {
             dfs(newX, newY, R, C, counter);
         }
     }
+    */
 }
+/*
 class Coordinate{
     int x;
     int y;
@@ -105,3 +105,4 @@ class Coordinate{
         this.y = y;
     }
 }
+ */

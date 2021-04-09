@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q18404 {
+    /*
     public static boolean input [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -67,8 +68,9 @@ public class Q18404 {
         }
         return map;
     }
+    */
 }
-
+/*
 class Coordinate {
     int x;
     int y;
@@ -84,3 +86,5 @@ class Coordinate {
         this.distance = distance;
     }
 }
+
+     */

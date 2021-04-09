@@ -3,64 +3,61 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q2206 {
     /*
+    public static int map [][];
+    public static int N, M;
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        char input [][] = new char [N][M];
-        for (int i=0; i<N; ++i) {
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        map = new int [N+1][M+1];
+        for (int i=1; i<=N; ++i) {
             String line = br.readLine();
-            for (int j=0; j<M; ++j) {
-                input[i][j] = line.charAt(j);
+            for (int j=1; j<=M; ++j) {
+                map[i][j] = line.charAt(j-1) - '0';
+
             }
         }
-        bfs(input, N, M);
+        bfs();
     }
-    public static void bfs (char [][] input, int N, int M) {
+
+    public static void bfs () {
+        boolean visited [][][] = new boolean [2][N+1][M+1];
         Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(0, 0, 0));
-        boolean check [][][] = new boolean [N][M][2];
+        queue.add(new Coordinate(1, 1, 1, 0));
+        visited[0][1][1] = true;
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
-        check[0][0][0] = true;
-        int distance = 0;
 
         while (!queue.isEmpty()) {
-            int size = queue.size();
-            ++distance;
-            for (int a=0; a<size; ++a) {
-                Coordinate current = queue.poll();
-                if (current.x == N-1 && current.y == M-1) {
-                    System.out.println(distance);
-                    System.exit(0);
+            Coordinate c = queue.poll();
+            if (c.x == N && c.y == M) {
+                System.out.println(c.distance);
+                return;
+            }
+            for (int i=0; i<4; ++i) {
+                int nx = c.x + dx[i];
+                int ny = c.y + dy[i];
+
+                if (nx<1 || N<nx || ny<1 || M<ny) {
+                    continue;
                 }
-                for (int i=0; i<4; ++i) {
-                    int nx = current.x + dx[i];
-                    int ny = current.y + dy[i];
-                    int ncounter = current.counter;
-                    if (nx < 0 || N <= nx || ny < 0 || M <= ny) {
-                        continue;
+                if (map[nx][ny] == 0) {
+                    if (!visited[c.broke][nx][ny]) {
+                        visited[c.broke][nx][ny] = true;
+                        queue.add(new Coordinate(nx, ny, c.distance+1, c.broke));
                     }
-                    if (check[nx][ny][ncounter]) {
-                        continue;
-                    }
-                    if (input[nx][ny] == '1') {
-                        if (ncounter == 0) {
-                            queue.add(new Coordinate(nx, ny, ncounter+1));
-                            check[nx][ny][ncounter+1] = true;
-                        } else {
-                            continue;
-                        }
-                    } else {
-                        queue.add(new Coordinate(nx, ny, ncounter));
-                        check[nx][ny][ncounter] = true;
+                } else {
+                    if (c.broke == 0 && !visited[1][nx][ny]) {
+                        visited[1][nx][ny] = true;
+                        queue.add(new Coordinate(nx, ny, c.distance+1, 1));
                     }
                 }
             }
@@ -69,16 +66,19 @@ public class Q2206 {
     }
      */
 }
+
 /*
 class Coordinate {
     int x;
     int y;
-    int counter;
+    int distance;
+    int broke;
 
-    Coordinate (int x, int y, int counter) {
+    Coordinate (int x, int y, int distance, int broke) {
         this.x = x;
         this.y = y;
-        this.counter = counter;
+        this.distance = distance;
+        this.broke = broke;
     }
 }
  */

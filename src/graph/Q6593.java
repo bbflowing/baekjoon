@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q6593 {
+    /*
     public static char building [][][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -77,8 +78,10 @@ public class Q6593 {
         }
         System.out.println("Trapped!");
     }
+     */
 }
 
+/*
 class Coordinate {
     int z;
     int x;
@@ -92,3 +95,4 @@ class Coordinate {
         this.time = time;
     }
 }
+ */

@@ -9,111 +9,113 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q1175 {
-    public static char input [][];
-    public static int counter;
-    public static ArrayList<ArrayList<Coordinate>> combinations;
+    /*
+    public static char map [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        input = new char [N][M];
-        counter = 0;
-        Coordinate start = null; Coordinate first = null; Coordinate second = null;
-        int presents = 0;
+        map = new char [N][M];
         boolean flag = false;
+        Coordinate first = null; Coordinate second = null;
+        Coordinate start = null;
         for (int i=0; i<N; ++i) {
             String line = br.readLine();
             for (int j=0; j<M; ++j) {
-                input[i][j] = line.charAt(j);
-                if (input[i][j] == 'S') {
-                    start = new Coordinate(i, j);
-                    input[i][j] = '.';
-                } else if (input[i][j] == 'C') {
-                    ++presents;
-                    input[i][j] = '.';
+                map[i][j] = line.charAt(j);
+                if (map[i][j] == 'C') {
                     if (!flag) {
                         first = new Coordinate(i, j);
                         flag = true;
                     } else {
                         second = new Coordinate(i, j);
                     }
-
+                } else if (map[i][j] == 'S') {
+                    start = new Coordinate(i, j);
                 }
             }
         }
-
-        bfs(start, first, second, N, M, presents);
+        bfs(start, first, second, N, M);
     }
 
-    public static void bfs (Coordinate start, Coordinate first, Coordinate second, int N, int M, int presents) {
-        Queue<Coordinate> queue = new LinkedList<>();
-        boolean visited [][][][] = new boolean [N][M][4][3];
-        queue.add(new Coordinate(start.x, start.y, -1, 0, 0));
-        visited[start.x][start.y][0][0] = true;
-        visited[start.x][start.y][1][0] = true;
-        visited[start.x][start.y][2][0] = true;
-        visited[start.x][start.y][3][0] = true;
+    public static void bfs (Coordinate start, Coordinate first, Coordinate second, int N, int M) {
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
+        Queue<Coordinate> queue = new LinkedList<>();
+        boolean visited [][][][] = new boolean [N][M][4][4];
+        for (int i=0; i<4; ++i) {
+            visited[start.x][start.y][i][0] = true;
+        }
+        queue.add(new Coordinate(start.x, start.y, 0, -1, 0));
+        boolean success = false;
 
         while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            int nfound = current.found;
-            if (current.x == first.x && current.y == first.y && current.found != 1) {
-                nfound += 1;
-            }
-
-            if (current.x == second.x && current.y == second.y && current.found != 2) {
-                nfound += 2;
-            }
-
-            if (nfound == 3) {
-                System.out.println(current.distance);
-                System.exit(0);
+            Coordinate c = queue.poll();
+            if (c.found == 3) {
+                System.out.println(c.time);
+                success = true;
+                break;
             }
 
             for (int i=0; i<4; ++i) {
-                if (current.direction != i) {
-                    int nx = current.x + dx[i];
-                    int ny = current.y + dy[i];
-
-                    if (nx<0 || N<=nx || ny<0 || M<=ny) {
-                        continue;
-                    }
-                    if (visited[nx][ny][i][nfound]) {
-                        continue;
-                    }
-                    if (input[nx][ny] != '.') {
-                        continue;
-                    }
-                    visited[nx][ny][i][nfound] = true;
-                    queue.add(new Coordinate(nx, ny, i, current.distance+1, nfound));
-                    //System.out.println(nx+","+ny+","+(current.distance+1));
+                int nx = c.x + dx[i];
+                int ny = c.y + dy[i];
+                int nfound = c.found;
+                if (nx<0 || N<=nx || ny<0 || M<=ny) {
+                    continue;
                 }
+                if (c.before == i) {
+                    continue;
+                }
+                if (visited[nx][ny][i][c.found]) {
+                    continue;
+                }
+                if (map[nx][ny] == '#') {
+                    continue;
+                }
+                if (nx == first.x && ny == first.y && c.found != 1) {
+                    nfound += 1;
+                    visited[nx][ny][i][nfound] = true;
+                    queue.add(new Coordinate(nx, ny, c.time+1, i, nfound));
+                } else if (nx == second.x && ny == second.y && c.found != 2) {
+                    nfound += 2;
+                    visited[nx][ny][i][nfound] = true;
+                    queue.add(new Coordinate(nx, ny, c.time+1, i, nfound));
+                } else {
+                    visited[nx][ny][i][c.found] = true;
+                    queue.add(new Coordinate(nx, ny, c.time+1, i, c.found));
+                }
+
             }
         }
-        System.out.println(-1);
+
+        if (!success) {
+            System.out.println(-1);
+        }
     }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
-    int direction;
-    int distance;
+    int time;
+    int before;
     int found;
-
-    Coordinate (int x, int y, int direction, int distance, int found) {
-        this.x = x;
-        this.y = y;
-        this.direction = direction;
-        this.distance = distance;
-        this.found = found;
-    }
 
     Coordinate (int x, int y) {
         this.x = x;
         this.y = y;
     }
+
+    Coordinate (int x, int y, int time, int before, int found) {
+        this.x = x;
+        this.y = y;
+        this.time = time;
+        this.before = before;
+        this.found = found;
+    }
 }
+ */

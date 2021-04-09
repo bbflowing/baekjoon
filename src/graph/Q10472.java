@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Q10472 {
+    /*
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int T = Integer.parseInt(br.readLine());
@@ -110,8 +111,11 @@ public class Q10472 {
         }
         return input;
     }
+
+     */
 }
 
+/*
 class Pair {
     String value;
     int count;
@@ -121,3 +125,5 @@ class Pair {
         this.count = count;
     }
 }
+
+ */

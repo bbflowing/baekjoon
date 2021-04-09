@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Q17198 {
+    /*
     public static char map [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -55,8 +56,10 @@ public class Q17198 {
             }
         }
     }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -73,3 +76,4 @@ class Coordinate {
         this.distance = distance;
     }
 }
+ */

@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q20005 {
+    /*
     public static char map [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -103,8 +104,10 @@ public class Q20005 {
         }
         return -1;
     }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -121,3 +124,5 @@ class Coordinate {
         this.time = time;
     }
 }
+
+ */

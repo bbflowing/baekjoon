@@ -8,101 +8,110 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q4179 {
-    public static char input [][];
-    public static int min;
-    public static void main (String args[]) throws IOException {
+    /*
+    public static char map [][];
+    public static void main (String args[]) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int R = Integer.parseInt(st.nextToken());
         int C = Integer.parseInt(st.nextToken());
-        input = new char [R+2][C+2];
-        Queue<Coordinate> fire = new LinkedList<>();
-        int check [][] = new int [R+2][C+2];
-        Coordinate person = null;
-        for (int i=1; i<=R; ++i) {
+        map = new char [R][C];
+        Queue<Coordinate> jQ = new LinkedList<>();
+        Queue<Coordinate> fQ = new LinkedList<>();
+        boolean [][] jV = new boolean [R][C];
+        boolean [][] fV = new boolean [R][C];
+        for (int i=0; i<R; ++i) {
             String line = br.readLine();
-            for (int j=1; j<=C; ++j) {
-                input[i][j] = line.charAt(j-1);
-                if (input[i][j] == 'F') {
-                    fire.add(new Coordinate(i, j));
-                    check[i][j] = -1;
-                } else if (input[i][j] == 'J') {
-                    person = new Coordinate(i, j, 0);
-                } else if (input[i][j] == '#') {
-                    check[i][j] = -1;
+            for (int j=0; j<C; ++j) {
+                map[i][j] = line.charAt(j);
+                if (map[i][j] == 'J') {
+                    jQ.add(new Coordinate(i, j, 0));
+                    jV[i][j] = true;
+                } else if (map[i][j] == 'F') {
+                    fQ.add(new Coordinate(i, j));
+                    fV[i][j] = true;
                 }
             }
         }
-        min = 987_654_321;
-        bfs(fire, check, person, R, C);
-        if (min == 987_654_321) {
+        int answer = bfs(jQ, fQ, jV, fV, R, C);
+        if (answer == -1) {
             System.out.println("IMPOSSIBLE");
         } else {
-            System.out.println(min);
+            System.out.println(answer);
         }
     }
-    public static void bfs (Queue<Coordinate> fire, int [][] check, Coordinate person, int R, int C) {
+
+    public static int bfs (Queue<Coordinate> jQ, Queue<Coordinate> fQ, boolean [][] jV,
+                            boolean [][] fV, int R, int C) {
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
-        Queue<Coordinate> location = new LinkedList<>();
-        location.add(person);
-        check[person.x][person.y] = 1;
 
-        while (!location.isEmpty()) {
-            for (int i=0, end = fire.size(); i<end; ++i) {
-                Coordinate currentFire = fire.poll();
+        while (true) {
+            int fSize = fQ.size();
+            for (int i=0; i<fSize; ++i) {
+                Coordinate fire = fQ.poll();
                 for (int j=0; j<4; ++j) {
-                    int nfx = currentFire.x + dx[j];
-                    int nfy = currentFire.y + dy[j];
-                    if (0 < nfx && nfx < R+1 && 0 < nfy && nfy < C+1) {
-                        if (check[nfx][nfy] == -1) {
-                            continue;
-                        } else {
-                            check[nfx][nfy] = -1;
-                            fire.add(new Coordinate(nfx, nfy));
-                        }
+                    int nx = fire.x + dx[j];
+                    int ny = fire.y + dy[j];
+
+                    if (nx<0 || R<=nx || ny<0 || C<=ny) {
+                        continue;
                     }
+                    if (fV[nx][ny]) {
+                        continue;
+                    }
+                    if (map[nx][ny] == '#') {
+                        continue;
+                    }
+                    fV[nx][ny] = true;
+                    fQ.add(new Coordinate(nx, ny));
                 }
             }
-            for (int i=0, end = location.size(); i<end; ++i) {
-                Coordinate p = location.poll();
-                if (p.x == 0 || p.x == R+1 || p.y == 0 || p.y == C+1) {
-                    if (p.time < min) {
-                        min = p.time;
-                    }
-                    continue;
-                }
-                for (int j=0; j<4; ++j) {
-                    int nx = p.x + dx[j];
-                    int ny = p.y + dy[j];
-                    if (0 <= nx && nx <= R+1 && 0 <= ny && ny <= C+1) {
 
-                        if (check[nx][ny] == -1 || check[nx][ny] == 1) {
-                            continue;
-                        } else {
-                            check[nx][ny] = 1;
-                            location.add(new Coordinate(nx, ny, p.time + 1));
-                        }
+            int jSize = jQ.size();
+            for (int i=0; i<jSize; ++i) {
+                Coordinate j = jQ.poll();
+                for (int k=0; k<4; ++k) {
+                    int nx = j.x + dx[k];
+                    int ny = j.y + dy[k];
+
+                    if (nx<0 || R<=nx || ny<0 || C<=ny) {
+                        return j.times+1;
                     }
+                    if (fV[nx][ny] || jV[nx][ny]) {
+                        continue;
+                    }
+                    if (map[nx][ny] == '#') {
+                        continue;
+                    }
+                    jV[nx][ny] = true;
+                    jQ.add(new Coordinate(nx, ny, j.times+1));
                 }
+            }
+
+            if (jQ.size() == 0) {
+                return -1;
             }
         }
     }
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
-    int time;
-
-    Coordinate (int x, int y, int time) {
-        this.x = x;
-        this.y = y;
-        this.time = time;
-    }
+    int times;
 
     Coordinate (int x, int y) {
         this.x = x;
         this.y = y;
     }
+
+    Coordinate (int x, int y, int times) {
+        this.x = x;
+        this.y = y;
+        this.times = times;
+    }
 }
+ */

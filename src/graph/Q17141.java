@@ -7,6 +7,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 public class Q17141 {
+    /*
     public static int input [][];
     public static ArrayList<Coordinate> virus;
     public static ArrayList<Coordinate []> virusCombination;
@@ -84,7 +85,7 @@ public class Q17141 {
         }
         System.out.println();
 
-         */
+
         int time = 0;
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
@@ -146,8 +147,11 @@ public class Q17141 {
             combination(set, totalVirus, M, neededVirus, index, start+1);
         }
     }
+
+     */
 }
 
+/*
 class Coordinate {
     int x;
     int y;
@@ -165,6 +169,6 @@ class Coordinate {
         this.time = time;
         this.blanks = blanks;
     }
-
 }
+ */
 

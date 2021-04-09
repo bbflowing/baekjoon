@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q11451 {
+    /*
     public static char map [][];
     public static String answer;
     public static void main (String args[]) throws IOException {
@@ -117,8 +118,10 @@ public class Q11451 {
         }
         answer += "IMPOSSIBLE";
     }
-}
 
+     */
+}
+/*
 class Coordinate {
     int x1;
     int y1;
@@ -141,3 +144,5 @@ class Coordinate {
         this.list = list;
     }
 }
+
+ */

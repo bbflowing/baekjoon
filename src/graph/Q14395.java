@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q14395 {
+    /*
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -59,8 +60,10 @@ public class Q14395 {
         }
         System.out.println(-1);
     }
+     */
 }
 
+/*
 class Pair {
     long value;
     int count;
@@ -72,3 +75,4 @@ class Pair {
         this.operations = operations;
     }
 }
+ */

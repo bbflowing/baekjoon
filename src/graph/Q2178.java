@@ -9,75 +9,70 @@ import java.util.StringTokenizer;
 
 public class Q2178 {
     /*
-    public static boolean input [][];
-    public static boolean check [][];
-
+    public static int maze [][];
+    public static int R, C;
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-
-        input = new boolean [N][M];
-        check = new boolean [N][M];
-
-
-        for (int i=0; i<N; ++i) {
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        maze = new int [R+1][C+1];
+        for (int i=1; i<=R; ++i) {
             String line = br.readLine();
-            for (int j=0; j<M; ++j) {
-                if (line.charAt(j) == '1') {
-                    input[i][j] = true;
-                } else {
-                    input[i][j] = false;
-                }
+            for (int j=1; j<=C; ++j) {
+                maze[i][j] = line.charAt(j-1)-'0';
             }
         }
-
-        bfs (0, 0, N, M);
+        bfs();
     }
 
-    public static void bfs (int x, int y, int N, int M) {
-        Queue<Coordinate> queue = new LinkedList<>();
-        int rank [][] = new int [N][M];
+    public static void bfs() {
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
-        queue.add(new Coordinate(x, y));
-        check[x][y] = true;
-        rank[x][y] = 1;
+        Queue<Coordinate> queue = new LinkedList<>();
+        boolean visited [][] = new boolean [R+1][C+1];
+        queue.add(new Coordinate(1, 1, 1));
+        visited[1][1] = true;
 
         while (!queue.isEmpty()) {
-            Coordinate visited = queue.poll();
-
+            Coordinate c = queue.poll();
+            if (c.x == R && c.y == C) {
+                System.out.println(c.distance);
+                return;
+            }
             for (int i=0; i<4; ++i) {
-                int targetX = visited.x + dx[i];
-                int targetY = visited.y + dy[i];
+                int nx = c.x + dx[i];
+                int ny = c.y + dy[i];
 
-                if (targetX == N-1 && targetY == M-1) {
-                    System.out.println(rank[visited.x][visited.y]+1);
-                    System.exit(0);
-                } else if (0 <= targetX && targetX < N && 0 <= targetY && targetY < M) {
-                    if (input[targetX][targetY] && !check[targetX][targetY]) {
-                        queue.add(new Coordinate(targetX, targetY));
-                        check[targetX][targetY] = true;
-                        rank[targetX][targetY] = rank[visited.x][visited.y] + 1;
-                    }
+                if (nx<1 || R<nx || ny<1 || C<ny) {
+                    continue;
                 }
+                if (visited[nx][ny]) {
+                    continue;
+                }
+                if (maze[nx][ny] == 0) {
+                    continue;
+                }
+
+                visited[nx][ny] = true;
+                queue.add(new Coordinate(nx, ny, c.distance+1));
             }
         }
     }
-    */
+     */
 }
-/*
 
+/*
 class Coordinate {
     int x;
     int y;
+    int distance;
 
-    Coordinate(int x, int y) {
+    Coordinate (int x, int y, int distance) {
         this.x = x;
         this.y = y;
+        this.distance = distance;
     }
 }
-*/
-
+ */
 

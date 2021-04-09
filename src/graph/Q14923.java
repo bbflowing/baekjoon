@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q14923 {
+    /*
     public static int input [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -68,8 +69,10 @@ public class Q14923 {
             System.out.println(min);
         }
     }
+     */
 }
 
+/*
 class Coordinate implements Comparable<Coordinate>{
     int x;
     int y;
@@ -88,3 +91,4 @@ class Coordinate implements Comparable<Coordinate>{
         return this.distance - o.distance;
     }
 }
+ */

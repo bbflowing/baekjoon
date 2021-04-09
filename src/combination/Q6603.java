@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Q6603 {
+    /*
     public static String answer;
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -49,4 +50,5 @@ public class Q6603 {
         combination(input, N, R, index+1, start+1, result);
         combination(input, N, R, index, start+1, result);
     }
+     */
 }
