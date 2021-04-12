@@ -11,99 +11,95 @@ import java.util.StringTokenizer;
 
 public class Q1600 {
     /*
-    public static int input [][];
+    public static int grid [][];
+    public static int R, C;
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int K = Integer.parseInt(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int W = Integer.parseInt(st.nextToken());
-        int H = Integer.parseInt(st.nextToken());
-        input = new int [H][W];
-        for (int i=0; i<H; ++i) {
+        C = Integer.parseInt(st.nextToken());
+        R = Integer.parseInt(st.nextToken());
+        grid = new int [R][C];
+        for (int i=0; i<R; ++i) {
             st = new StringTokenizer(br.readLine());
-            for (int j=0; j<W; ++j) {
-                input[i][j] = Integer.parseInt(st.nextToken());
+            for (int j=0; j<C; ++j) {
+                grid[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        bfs(K, H, W);
+        bfs(K);
     }
 
-    public static void bfs (int K, int H, int W) {
-        int knightX [] = {-2, -1, -2, -1, 1, 2, 1, 2};
-        int knightY [] = {-1, -2, 1, 2, -2, -1, 2, 1};
+    public static void bfs (int K) {
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
-        boolean check [][][] = new boolean [H][W][K+1];
+
+        int knightX [] = {-1, -2, -2, -1, +1, +2, +2, +1};
+        int knightY [] = {-2, -1, +1, +2, -2, -1, +1, +2};
+
+        boolean visited [][][] = new boolean [K+1][R][C];
         Queue<Coordinate> queue = new LinkedList<>();
         queue.add(new Coordinate(0, 0, 0, 0));
-        int min = 987_654_321;
+        visited[0][0][0] = true;
+        int answer = 987_654_321;
 
         while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            int nx = current.x; int ny = current.y;
-            if (nx == H-1 && ny == W-1) {
-                if (min > current.distance) {
-                    min = current.distance;
+            Coordinate c = queue.poll();
+            if (c.x == R - 1 && c.y == C - 1) {
+                if (c.distance < answer) {
+                    answer = c.distance;
+                }
+                continue;
+            }
+
+            for (int i = 0; i < 4; ++i) {
+                int nx = c.x + dx[i];
+                int ny = c.y + dy[i];
+
+                if (nx < 0 || R <= nx || ny < 0 || C <= ny) {
+                    continue;
+                }
+                if (!visited[c.horse][nx][ny] && grid[nx][ny] == 0) {
+                    visited[c.horse][nx][ny] = true;
+                    queue.add(new Coordinate(nx, ny, c.horse, c.distance + 1));
                 }
             }
-            int nknight = current.knight;
-            int ndistance = current.distance;
+            if (c.horse + 1 <= K) {
+                for (int i = 0; i < 8; ++i) {
+                    int nx = c.x + knightX[i];
+                    int ny = c.y + knightY[i];
 
-            if (nknight+1 <= K) {
-                for (int i=0; i<8; ++i) {
-                    nx = current.x + knightX[i];
-                    ny = current.y + knightY[i];
-
-                    if (nx < 0 || H <= nx || ny < 0 || W <= ny) {
+                    if (nx < 0 || R <= nx || ny < 0 || C <= ny) {
                         continue;
                     }
-
-                    if (input[nx][ny] == 1) {
-                        continue;
-                    }
-
-                    if (!check[nx][ny][nknight+1]) {
-                        queue.add(new Coordinate(nx, ny, nknight + 1, ndistance + 1));
-                        check[nx][ny][nknight + 1] = true;
+                    if (!visited[c.horse + 1][nx][ny] && grid[nx][ny] == 0) {
+                        visited[c.horse + 1][nx][ny] = true;
+                        queue.add(new Coordinate(nx, ny, c.horse + 1, c.distance + 1));
                     }
                 }
-            }
-            for (int i=0; i<4; ++i) {
-                nx = current.x + dx[i];
-                ny = current.y + dy[i];
-                if (nx < 0 || H <= nx || ny < 0 || W <= ny) {
-                    continue;
-                }
-                if (check[nx][ny][nknight]) {
-                    continue;
-                }
-                if (input[nx][ny] == 1) {
-                    continue;
-                }
-                queue.add(new Coordinate(nx, ny, nknight, ndistance+1));
-                check[nx][ny][nknight] = true;
             }
         }
-        if (min == 987_654_321) {
+        if (answer == 987_654_321) {
             System.out.println(-1);
         } else {
-            System.out.println(min);
+            System.out.println(answer);
         }
     }
-     */
+         */
 }
+
 /*
 class Coordinate {
     int x;
     int y;
-    int knight;
+    int horse;
     int distance;
 
-    Coordinate (int x, int y, int knight, int distance) {
+    Coordinate (int x, int y, int horse, int distance) {
         this.x = x;
         this.y = y;
-        this.knight = knight;
+        this.horse = horse;
         this.distance = distance;
     }
 }
+
  */
