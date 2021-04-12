@@ -9,47 +9,67 @@ import java.util.Queue;
 
 public class Q2665 {
     /*
-    public static char input [][];
+    public static int N;
+    public static int maze[][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        input = new char [N+1][N+1];
-        for (int i=1; i<=N; ++i) {
+        N = Integer.parseInt(br.readLine());
+        maze = new int [N][N];
+        for (int i=0; i<N; ++i) {
             String line = br.readLine();
             for (int j=0; j<N; ++j) {
-                input[i][j+1] = line.charAt(j);
+                maze[i][j] = line.charAt(j)-'0';
             }
         }
-        bfs(1, 1, N);
+        bfs();
     }
 
-    public static void bfs (int start, int end, int N) {
+    public static void bfs () {
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
         Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(start, end));
-        int check [][] = new int [N+1][N+1];
-        for (int i=1; i<=N; ++i) {
-            Arrays.fill(check[i], 987_654_321);
+        queue.add(new Coordinate(0, 0, 0));
+        int visited [][] = new int [N][N];
+        for (int i=0; i<N; ++i) {
+            Arrays.fill(visited[i], 987_654_321);
         }
-        check[start][end] = 0;
+        visited[0][0] = 0;
+        int answer = 987_654_321;
+
         while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            for (int i=0; i<4; ++i) {
-                int newX = current.x + dx[i];
-                int newY = current.y + dy[i];
-                if (1 <= newX && newX <= N && 1 <= newY && newY <= N && check[current.x][current.y] < check[newX][newY]) {
-                    if (input[newX][newY] == '1') {
-                        check[newX][newY] = check[current.x][current.y];
-                    } else {
-                        check[newX][newY] = check[current.x][current.y] + 1;
+            Coordinate c = queue.poll();
+            if (c.x == N-1 && c.y == N-1) {
+                if (answer > c.changes) {
+                    answer = c.changes;
+                }
+            }
+            for (int dir=0; dir<4; ++dir) {
+                int nx = c.x + dx[dir];
+                int ny = c.y + dy[dir];
+
+                if (nx<0 || N<=nx || ny<0 || N<=ny) {
+                    continue;
+                }
+                if (maze[nx][ny] == 0) {
+                    if (c.changes+1 < visited[nx][ny]) {
+                        visited[nx][ny] = c.changes+1;
+                        queue.add(new Coordinate(nx, ny, c.changes+1));
                     }
-                    queue.add(new Coordinate(newX, newY));
+                } else {
+                    if (c.changes < visited[nx][ny]) {
+                        visited[nx][ny] = c.changes;
+                        queue.add(new Coordinate(nx, ny, c.changes));
+                    }
                 }
             }
         }
-        System.out.println(check[N][N]);
+        if (answer == 987_654_321) {
+            System.out.println(0);
+        } else {
+            System.out.println(answer);
+        }
     }
+
      */
 }
 
@@ -57,9 +77,12 @@ public class Q2665 {
 class Coordinate {
     int x;
     int y;
-    Coordinate (int x, int y) {
+    int changes;
+
+    Coordinate(int x, int y, int changes) {
         this.x = x;
         this.y = y;
+        this.changes = changes;
     }
 }
  */
