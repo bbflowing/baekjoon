@@ -3,59 +3,65 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class Q1743 {
-    public static int input [][];
-    public static boolean check [][];
-    public static int answer;
+    /*
+    public static int R, C, size;
+    public static int map [][];
+    public static boolean visited [][];
     public static int dx [] = {-1, 1, 0, 0};
     public static int dy [] = {0, 0, -1, 1};
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
-        input = new int [N][M];
-        check = new boolean [N][M];
+        map = new int [R+1][C+1];
+        visited = new boolean [R+1][C+1];
         for (int i=0; i<K; ++i) {
             st = new StringTokenizer(br.readLine());
-            input [Integer.parseInt(st.nextToken())-1][Integer.parseInt(st.nextToken())-1] = 1;
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
+            map[x][y] = 1;
         }
-        int max = -1;
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<M; ++j) {
-                if (input[i][j] == 1 && !check[i][j]) {
-                    answer = 1;
-                    check[i][j] = true;
-                    dfs(i, j, N, M);
-                    if (max < answer) {
-                        max = answer;
-                    }
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i=1; i<=R; ++i) {
+            for (int j=1; j<=C; ++j) {
+                if (!visited[i][j] && map[i][j] == 1) {
+                    visited[i][j] = true;
+                    size = 1;
+                    solve(i, j);
+                    result.add(size);
                 }
             }
         }
-        System.out.println(max);
+        result.sort(Collections.reverseOrder());
+        System.out.println(result.get(0));
     }
 
-    public static void dfs (int x, int y, int N, int M) {
-        for (int i=0; i<4; ++i) {
-            int newX = x + dx[i];
-            int newY = y + dy[i];
+    public static void solve (int x, int y) {
+        for (int dir=0; dir<4; ++dir) {
+            int nx = x + dx[dir];
+            int ny = y + dy[dir];
 
-            if (newX < 0 || N <= newX || newY < 0 || M <= newY) {
+            if (nx<1 || R<nx || ny<1 || C<ny) {
                 continue;
             }
-            if (check[newX][newY]) {
+            if (visited[nx][ny]) {
                 continue;
             }
-            if (input[newX][newY] == 1) {
-                ++answer;
-                check[newX][newY] = true;
-                dfs(newX, newY, N, M);
+            if (map[nx][ny] == 0) {
+                continue;
             }
+            visited[nx][ny] = true;
+            ++size;
+            solve(nx, ny);
         }
     }
+     */
 }
