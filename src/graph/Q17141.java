@@ -8,146 +8,113 @@ import java.util.*;
 
 public class Q17141 {
     /*
-    public static int input [][];
+    public static int N, M, answer, blanks;
+    public static int laboratory[][];
     public static ArrayList<Coordinate> virus;
-    public static ArrayList<Coordinate []> virusCombination;
-    public static int counter;
-    public static int min;
-    public static void main (String args[]) throws IOException {
+
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        input = new int [N][N];
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        laboratory = new int[N][N];
         virus = new ArrayList<>();
-        int totalVirus = 0;
-        int blanks = 0;
-
-        for (int i=0; i<N; ++i) {
-            st =  new StringTokenizer(br.readLine());
-            for (int j=0; j<N; ++j) {
-                input[i][j] = Integer.parseInt(st.nextToken());
-                if (input[i][j] == 2) {
+        blanks = 0;
+        for (int i = 0; i < N; ++i) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < N; ++j) {
+                laboratory[i][j] = Integer.parseInt(st.nextToken());
+                if (laboratory[i][j] == 2) {
+                    laboratory[i][j] = 0;
                     virus.add(new Coordinate(i, j));
-                    ++totalVirus;
-                } else if (input[i][j] == 0) {
+                } else if (laboratory[i][j] == 0) {
                     ++blanks;
                 }
             }
         }
-        virusCombination = new ArrayList<>();
-        int combinations = calculate(totalVirus, M);
-        blanks += (totalVirus-M);
-        boolean flag = false;
-
-        for (int i=0; i<combinations; ++i) {
-            virusCombination.add(new Coordinate [totalVirus-M]);
-        }
-        Coordinate [] set = new Coordinate [totalVirus-M];
-        counter = 0;
-        combination(set, totalVirus, M, totalVirus-M,0, 0);
-        min = 987_654_321;
-        for (int i=0; i<virusCombination.size(); ++i) {
-            int temp [][] = new int [N][N];
-            for (int j=0; j<N; ++j) {
-                temp[j] = input[j].clone();
-            }
-            Coordinate target [] = virusCombination.get(i);
-            for (int j=0; j<totalVirus-M; ++j) {
-               temp[target[j].x][target[j].y] = 0;
-            }
-            int answer = bfs(temp, N, blanks);
-            if (answer != -1) {
-                flag = true;
-            }
-        }
-        if (flag) {
-            System.out.println(min);
+        blanks += virus.size()-M;
+        if (blanks == 0) {
+            System.out.println(0);
         } else {
-            System.out.println(-1);
+            int size = virus.size();
+            Coordinate result[] = new Coordinate[M];
+            answer = 987_654_321;
+            combination(size, M, 0, 0, result);
+            if (answer == 987_654_321) {
+                System.out.println(-1);
+            } else {
+                System.out.println(answer);
+            }
         }
+
     }
 
-    public static int bfs (int temp[][], int N, int blanks) {
-        Queue<Coordinate> virus = new LinkedList<>();
-        boolean visited [][] = new boolean [N][N];
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<N; ++j) {
-                if (temp[i][j] == 2) {
-                    virus.add(new Coordinate(i, j, 0, blanks));
-                    visited[i][j] = true;
-                }
-            }
-        }
-        /*
-        for (int i=0; i<N; ++i) {
-            System.out.println(Arrays.toString(temp[i]));
-        }
-        System.out.println();
-
-
+    public static int bfs(Queue<Coordinate> queue) {
+        int dx[] = {-1, 1, 0, 0};
+        int dy[] = {0, 0, -1, 1};
+        boolean visited[][] = new boolean[N][N];
+        int spaces = blanks;
         int time = 0;
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-
-        while (!virus.isEmpty()) {
-            Coordinate current = virus.poll();
-
-            for (int i=0; i<4; ++i) {
-                int nx = current.x + dx[i];
-                int ny = current.y + dy[i];
-
-                if (nx<0 || N<=nx || ny<0 || N<=ny) {
-                    continue;
-                }
-
-                if (visited[nx][ny]) {
-                    continue;
-                }
-
-                if (temp[nx][ny] == 1 || temp[nx][ny] == 2) {
-                    continue;
-                }
-
-                temp[nx][ny] = 2;
-                visited[nx][ny] = true;
-                --blanks;
-                virus.add(new Coordinate(nx, ny, current.time+1, blanks));
-            }
+        while (!queue.isEmpty()) {
             ++time;
-            if (blanks == 0) {
-                if (min > time) {
-                    min = time;
+            int size = queue.size();
+            for (int i = 0; i < size; ++i) {
+                Coordinate c = queue.poll();
+                visited[c.x][c.y] = true;
+                for (int dir = 0; dir < 4; ++dir) {
+                    int nx = c.x + dx[dir];
+                    int ny = c.y + dy[dir];
+
+                    if (nx < 0 || N <= nx || ny < 0 || N <= ny) {
+                        continue;
+                    }
+                    if (laboratory[nx][ny] == 1 || laboratory[nx][ny] == 2) {
+                        continue;
+                    }
+                    if (visited[nx][ny]) {
+                        continue;
+                    }
+                    visited[nx][ny] = true;
+                    --spaces;
+                    queue.add(new Coordinate(nx, ny));
                 }
-                return 0;
+            }
+
+            if (spaces == 0) {
+                return time;
+            } else if (queue.size() == 0) {
+                return -1;
             }
         }
         return -1;
     }
-    public static int calculate (int totalVirus, int M) {
-        int numerator = 1; int denominator = 1;
-        for (int i=0; i<M; ++i) {
-            numerator *= (totalVirus-i);
-            denominator *= (i+1);
-        }
-        return numerator/denominator;
-    }
 
-    public static void combination (Coordinate set [], int totalVirus, int M, int neededVirus, int index, int start) {
-        if (neededVirus == 0) {
-            for (int i=0; i<totalVirus-M; ++i) {
-                virusCombination.get(counter)[i] = set[i];
+    public static void combination(int N, int R, int start, int index, Coordinate[] result) {
+        if (index == R) {
+            Queue<Coordinate> queue = new LinkedList<>();
+            for (int i = 0; i < R; ++i) {
+                Coordinate target = result[i];
+                queue.add(new Coordinate(target.x, target.y));
+                laboratory[target.x][target.y] = 2;
             }
-            ++counter;
-        } else if (start == totalVirus) {
+            int time = bfs(queue);
+            if (time < answer && time != -1) {
+                answer = time;
+            }
+            for (int i = 0; i < R; ++i) {
+                Coordinate target = result[i];
+                laboratory[target.x][target.y] = 0;
+            }
             return;
-        } else {
-            set[index] = virus.get(start);
-            combination(set, totalVirus, M, neededVirus-1, index+1, start+1);
-            combination(set, totalVirus, M, neededVirus, index, start+1);
         }
-    }
 
+        if (start == N) {
+            return;
+        }
+        result[index] = virus.get(start);
+        combination(N, R, start + 1, index + 1, result);
+        combination(N, R, start + 1, index, result);
+    }
      */
 }
 
@@ -155,20 +122,10 @@ public class Q17141 {
 class Coordinate {
     int x;
     int y;
-    int time;
-    int blanks;
 
-    Coordinate (int x, int y) {
+    Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    Coordinate (int x, int y, int time, int blanks) {
-        this.x = x;
-        this.y = y;
-        this.time = time;
-        this.blanks = blanks;
     }
 }
  */
-

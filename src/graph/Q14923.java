@@ -10,85 +10,91 @@ import java.util.StringTokenizer;
 
 public class Q14923 {
     /*
-    public static int input [][];
+    public static int R, C;
+    public static int array [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken()); int M = Integer.parseInt(st.nextToken());
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        array = new int [R+1][C+1];
+        Coordinate start = null;
+        Coordinate end = null;
         st = new StringTokenizer(br.readLine());
-        int hx = Integer.parseInt(st.nextToken()); int hy = Integer.parseInt(st.nextToken());
+        start = new Coordinate(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), 0, 0);
         st = new StringTokenizer(br.readLine());
-        int ex = Integer.parseInt(st.nextToken()); int ey = Integer.parseInt(st.nextToken());
-        input = new int [N+1][M+1];
-        for (int i=1; i<=N; ++i) {
+        end = new Coordinate(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), 0, 0);
+        for (int i=1; i<=R; ++i) {
             st = new StringTokenizer(br.readLine());
-            for (int j=1; j<=M; ++j) {
-                input[i][j] = Integer.parseInt(st.nextToken());
+            for (int j=1; j<=C; ++j) {
+                array[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        bfs(hx, hy, ex, ey, N, M);
+        bfs (start, end);
     }
-    public static void bfs(int hx, int hy, int ex, int ey, int N, int M) {
-        PriorityQueue<Coordinate> queue = new PriorityQueue<>();
+
+    public static void bfs (Coordinate start, Coordinate end) {
         int dx [] = {-1, 1, 0, 0};
         int dy [] = {0, 0, -1, 1};
-        queue.add(new Coordinate(hx, hy, 0, 0));
-        int min = 987_654_321;
-        boolean check [][][] = new boolean [N+1][M+1][2];
-        check[hx][hy][0] = true;
+        Queue<Coordinate> queue = new LinkedList<>();
+        boolean visited [][][] = new boolean [2][R+1][C+1];
+        visited[0][start.x][start.y] = true;
+        queue.add(start);
 
         while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            if (current.x == ex && current.y == ey) {
-                min = current.distance;
-                break;
+            Coordinate c = queue.poll();
+            if (c.x == end.x && c.y == end.y) {
+                System.out.println(c.distance);
+                return;
             }
+            for (int dir=0; dir<4; ++dir) {
+                int nx = c.x + dx[dir];
+                int ny = c.y + dy[dir];
 
-            for (int i=0; i<4; ++i) {
-                int nx = current.x + dx[i];
-                int ny = current.y + dy[i];
-                int nbroken = current.broken;
-                int ndistance = current.distance;
-
-                if (nx<=0 || N+1<=nx || ny<=0 || M+1<=ny) {
+                if (nx<1 || R<nx || ny<1 || C<ny) {
                     continue;
                 }
-                if (input[nx][ny] == 0 && !check[nx][ny][nbroken]) {
-                    queue.add(new Coordinate(nx, ny, nbroken, ndistance + 1));
-                    check[nx][ny][nbroken] = true;
-                }
-                if (input[nx][ny] == 1 && nbroken + 1 <= 1 && !check[nx][ny][nbroken+1]) {
-                    queue.add(new Coordinate(nx, ny, nbroken+1, ndistance+1));
-                    check[nx][ny][nbroken+1] = true;
+                if (c.magic == 1) {
+                    if (array[nx][ny] == 1) {
+                        continue;
+                    } else {
+                        if (!visited[c.magic][nx][ny]) {
+                            visited[c.magic][nx][ny] = true;
+                            queue.add(new Coordinate(nx, ny, c.magic, c.distance + 1));
+                        }
+                    }
+                } else {
+                    if (array[nx][ny] == 1) {
+                        if (!visited[1][nx][ny]) {
+                            visited[1][nx][ny] = true;
+                            queue.add(new Coordinate(nx, ny, 1, c.distance+1));
+                        }
+                    } else {
+                        if (!visited[c.magic][nx][ny]) {
+                            visited[c.magic][nx][ny] = true;
+                            queue.add(new Coordinate(nx, ny, 0, c.distance+1));
+                        }
+                    }
                 }
             }
         }
-        if (min == 987_654_321) {
-            System.out.println(-1);
-        } else {
-            System.out.println(min);
-        }
+        System.out.println(-1);
     }
      */
 }
 
 /*
-class Coordinate implements Comparable<Coordinate>{
+class Coordinate {
     int x;
     int y;
-    int broken;
+    int magic;
     int distance;
 
-    Coordinate (int x, int y, int broken, int distance) {
+    Coordinate(int x, int y, int magic, int distance) {
         this.x = x;
         this.y = y;
-        this.broken = broken;
+        this.magic = magic;
         this.distance = distance;
-    }
-
-    @Override
-    public int compareTo(Coordinate o) {
-        return this.distance - o.distance;
     }
 }
  */
