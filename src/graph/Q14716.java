@@ -6,51 +6,56 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Q14716 {
-    public static int input [][];
-    public static int dx [] = {-1, 1, 0, 0, -1, -1, 1, 1};
-    public static int dy [] = {0, 0, -1, 1, -1, 1, -1, 1};
-    public static boolean check [][];
+    /*
+    public static int R, C;
+    public static int banner [][];
+    public static int dx [] = {-1, -1, -1, 0, 0, +1, +1, +1};
+    public static int dy [] = {-1, 0, +1, -1, +1, -1, 0, +1};
+    public static boolean visited [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        input = new int [N][M];
-        check = new boolean [N][M];
-        for (int i=0; i<N; ++i) {
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        banner = new int [R][C];
+        visited = new boolean [R][C];
+        for (int i=0; i<R; ++i) {
             st = new StringTokenizer(br.readLine());
-            for (int j=0; j<M; ++j) {
-                input[i][j] = Integer.parseInt(st.nextToken());
+            for (int j=0; j<C; ++j) {
+                banner[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        int counter = 1;
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<M; ++j) {
-                if (input[i][j] == 1 && !check[i][j]) {
-                    dfs(i, j, N, M);
-                    ++counter;
+        int count = 0;
+        for (int i=0; i<R; ++i) {
+            for (int j=0; j<C; ++j) {
+                if (!visited[i][j] && banner[i][j] == 1) {
+                    visited[i][j] = true;
+                    ++count;
+                    solve(i, j);
                 }
             }
         }
-        System.out.println(counter-1);
+        System.out.println(count);
     }
 
-    public static void dfs (int x, int y, int N, int M) {
-        check[x][y] = true;
-        for (int i=0; i<8; ++i) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
+    public static void solve(int x, int y) {
+        for (int dir=0; dir<8; ++dir) {
+            int nx = x + dx[dir];
+            int ny = y + dy[dir];
 
-            if (nx < 0 || N <= nx || ny < 0 || M <= ny) {
+            if (nx<0 || R<=nx || ny<0 || C<=ny) {
                 continue;
             }
-            if (check[nx][ny]) {
+            if (visited[nx][ny]) {
                 continue;
             }
-            if (input[nx][ny] == 0) {
+            if (banner[nx][ny] == 0) {
                 continue;
             }
-            dfs(nx, ny, N, M);
+
+            visited[nx][ny] = true;
+            solve(nx, ny);
         }
     }
+     */
 }
