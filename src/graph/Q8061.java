@@ -1,65 +1,71 @@
 package graph;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q8061 {
     /*
-    public static int N, M;
-    public static int input[][];
-    public static int distances [][];
+    public static int R, C;
+    public static int pixels [][];
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        input = new int [N][M];
-        distances = new int [N][M];
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        pixels = new int [R][C];
+        boolean visited [][] = new boolean [R][C];
         Queue<Coordinate> queue = new LinkedList<>();
-        for (int i=0; i<N; ++i) {
+        for (int i=0; i<R; ++i) {
             String line = br.readLine();
-            for (int j=0; j<M; ++j) {
-                input[i][j] = line.charAt(j) - '0';
-                if (input[i][j] == 1) {
+            for (int j=0; j<C; ++j) {
+                pixels[i][j] = line.charAt(j) - '0';
+                if (pixels[i][j] == 1) {
                     queue.add(new Coordinate(i, j, 0));
+                    visited[i][j] = true;
                 }
             }
         }
-        bfs(queue);
+        bfs(queue, visited);
+    }
+
+    public static void bfs (Queue<Coordinate> queue, boolean [][] visited) throws IOException {
+        int dx [] = {-1, 1, 0, 0};
+        int dy [] = {0, 0, -1, 1};
+        int result [][] = new int [R][C];
+
+        while (!queue.isEmpty()) {
+            Coordinate c = queue.poll();
+            for (int dir=0; dir<4; ++dir) {
+                int nx = c.x + dx[dir];
+                int ny = c.y + dy[dir];
+
+                if (nx<0 || R<=nx || ny<0 || C<=ny) {
+                    continue;
+                }
+                if (visited[nx][ny]) {
+                    continue;
+                }
+                if (pixels[nx][ny] == 1) {
+                    continue;
+                }
+                visited[nx][ny] = true;
+                result[nx][ny] = c.distance+1;
+                queue.add(new Coordinate(nx, ny, c.distance+1));
+            }
+        }
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        for (int i=0; i<N; ++i) {
+        for (int i=0; i<R; ++i) {
             String line = "";
-            for (int j=0; j<M; ++j) {
-                line += distances[i][j]+" ";
+            for (int j=0; j<C; ++j) {
+                line += result[i][j]+" ";
             }
             bw.append(line);
             bw.newLine();
         }
         bw.flush();
-    }
-
-    public static void bfs (Queue<Coordinate> queue) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-
-        while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            for (int i=0; i<4; ++i) {
-                int nx = c.x + dx[i];
-                int ny = c.y + dy[i];
-
-                if (0 <= nx && nx < N && 0 <= ny && ny < M) {
-                    if (input[nx][ny] == 0) {
-                        if (distances[nx][ny] == 0) {
-                            distances[nx][ny] = c.distance+1;
-                            queue.add(new Coordinate(nx, ny, c.distance+1));
-                        }
-                    }
-                }
-            }
-        }
     }
      */
 }
