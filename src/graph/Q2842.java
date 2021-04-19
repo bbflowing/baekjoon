@@ -7,35 +7,35 @@ import java.util.*;
 
 public class Q2842 {
     /*
-    public static int N, count;
-    public static char map[][];
+    public static int N, post;
+    public static Coordinate start;
+    public static char village[][];
     public static int elevations[][];
 
-    public static void main(String args[]) throws IOException {
+    public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        map = new char[N][N];
+        village = new char[N][N];
         elevations = new int[N][N];
-        ArrayList<Integer> numbers = new ArrayList<>();
-        int startX = 0;
-        int startY = 0;
-        count = 0;
-        for (int i = 0; i < N; ++i) {
+        start = null;
+        post = 0;
+        for (int i=0; i<N; ++i) {
             String line = br.readLine();
-            for (int j = 0; j < N; ++j) {
-                map[i][j] = line.charAt(j);
-                if (map[i][j] == 'P') {
-                    startX = i;
-                    startY = j;
-                } else if (map[i][j] == 'K') {
-                    ++count;
+            for (int j=0; j<N; ++j) {
+                village[i][j] = line.charAt(j);
+                if (village[i][j] == 'P') {
+                    start = new Coordinate(i, j);
+                } else if (village[i][j] == 'K') {
+                    ++post;
                 }
             }
         }
+
         StringTokenizer st;
-        for (int i = 0; i < N; ++i) {
+        ArrayList<Integer> numbers = new ArrayList<>();
+        for (int i=0; i<N; ++i) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < N; ++j) {
+            for (int j=0; j<N; ++j) {
                 elevations[i][j] = Integer.parseInt(st.nextToken());
                 if (!numbers.contains(elevations[i][j])) {
                     numbers.add(elevations[i][j]);
@@ -43,24 +43,22 @@ public class Q2842 {
             }
         }
         Collections.sort(numbers);
-        solve(startX, startY, numbers);
+        solve(numbers);
     }
 
-    public static void solve(int x, int y, ArrayList<Integer> numbers) {
-        int maxIndex = 0;
-        int minIndex = 0;
-        int answer = Integer.MAX_VALUE;
-        while (maxIndex < numbers.size() && minIndex < numbers.size()) {
-            int max = numbers.get(maxIndex);
+    public static void solve (ArrayList<Integer> numbers) {
+        int minIndex = 0; int maxIndex = 0;
+        int answer = 987_654_321;
+        while (minIndex < numbers.size() && maxIndex < numbers.size()) {
             int min = numbers.get(minIndex);
-            if (min > elevations[x][y] || elevations[x][y] > max) {
+            int max = numbers.get(maxIndex);
+            if (max < elevations[start.x][start.y] || elevations[start.x][start.y] < min) {
                 ++maxIndex;
                 continue;
             }
-            boolean result = bfs(max, min, x, y);
-            if (result) {
-                answer = answer > max - min ? max - min : answer;
+            if (bfs(min, max)) {
                 ++minIndex;
+                answer = answer > max-min ? max-min : answer;
             } else {
                 ++maxIndex;
             }
@@ -68,37 +66,37 @@ public class Q2842 {
         System.out.println(answer);
     }
 
-    public static boolean bfs(int max, int min, int x, int y) {
+    public static boolean bfs (int min, int max) {
         int dx[] = {-1, -1, -1, 0, 0, +1, +1, +1};
         int dy[] = {-1, 0, +1, -1, +1, -1, 0, +1};
         Queue<Coordinate> queue = new LinkedList<>();
+        queue.add(new Coordinate(start.x, start.y));
         boolean visited[][] = new boolean[N][N];
-        visited[x][y] = true;
-        queue.add(new Coordinate(x, y));
-        int counter = 0;
+        int count = 0;
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            for (int dir = 0; dir < 8; ++dir) {
+            if (village[c.x][c.y] == 'K') {
+                ++count;
+            }
+            for (int dir=0; dir<8; ++dir) {
                 int nx = c.x + dx[dir];
                 int ny = c.y + dy[dir];
 
-                if (nx < 0 || N <= nx || ny < 0 || N <= ny) {
+                if (nx<0 || N<=nx || ny<0 || N<=ny) {
                     continue;
                 }
                 if (visited[nx][ny]) {
                     continue;
                 }
-                if (min <= elevations[nx][ny] && elevations[nx][ny] <= max) {
-                    queue.add(new Coordinate(nx, ny));
-                    visited[nx][ny] = true;
-                    if (map[nx][ny] == 'K') {
-                        ++counter;
-                    }
+                if (elevations[nx][ny] < min || max < elevations[nx][ny]) {
+                    continue;
                 }
+                visited[nx][ny] = true;
+                queue.add(new Coordinate(nx, ny));
             }
         }
-        if (counter == count) {
+        if (count == post) {
             return true;
         } else {
             return false;
@@ -112,7 +110,7 @@ class Coordinate {
     int x;
     int y;
 
-    Coordinate(int x, int y) {
+    Coordinate (int x, int y) {
         this.x = x;
         this.y = y;
     }
