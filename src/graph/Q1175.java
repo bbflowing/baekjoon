@@ -3,96 +3,98 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q1175 {
     /*
-    public static char map [][];
-    public static void main (String args[]) throws IOException {
+    public static int R, C;
+    public static char classroom[][];
+    public static int presents[][];
+
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        map = new char [N][M];
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        classroom = new char[R][C];
+        presents = new int[R][C];
+        int startX = 0;
+        int startY = 0;
         boolean flag = false;
-        Coordinate first = null; Coordinate second = null;
-        Coordinate start = null;
-        for (int i=0; i<N; ++i) {
+        for (int i = 0; i < R; ++i) {
             String line = br.readLine();
-            for (int j=0; j<M; ++j) {
-                map[i][j] = line.charAt(j);
-                if (map[i][j] == 'C') {
+            for (int j = 0; j < C; ++j) {
+                classroom[i][j] = line.charAt(j);
+                if (classroom[i][j] == 'S') {
+                    startX = i;
+                    startY = j;
+                } else if (classroom[i][j] == 'C') {
                     if (!flag) {
-                        first = new Coordinate(i, j);
+                        presents[i][j] = 1;
                         flag = true;
                     } else {
-                        second = new Coordinate(i, j);
+                        presents[i][j] = 2;
                     }
-                } else if (map[i][j] == 'S') {
-                    start = new Coordinate(i, j);
                 }
             }
         }
-        bfs(start, first, second, N, M);
+        bfs(startX, startY);
     }
 
-    public static void bfs (Coordinate start, Coordinate first, Coordinate second, int N, int M) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-        Queue<Coordinate> queue = new LinkedList<>();
-        boolean visited [][][][] = new boolean [N][M][4][4];
-        for (int i=0; i<4; ++i) {
-            visited[start.x][start.y][i][0] = true;
+    public static void bfs(int x, int y) {
+        boolean visited[][][][] = new boolean[4][4][R][C];
+        for (int direction = 0; direction < 4; ++direction) {
+            visited[direction][0][x][y] = true;
         }
-        queue.add(new Coordinate(start.x, start.y, 0, -1, 0));
-        boolean success = false;
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        queue.add(new Coordinate(x, y, -1, 0, 0));
+        int dx[] = {-1, 1, 0, 0};
+        int dy[] = {0, 0, -1, 1};
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (c.found == 3) {
-                System.out.println(c.time);
-                success = true;
-                break;
-            }
-
-            for (int i=0; i<4; ++i) {
-                int nx = c.x + dx[i];
-                int ny = c.y + dy[i];
-                int nfound = c.found;
-                if (nx<0 || N<=nx || ny<0 || M<=ny) {
+            //System.out.println(c.x + "," + c.y + "," + c.direction + "," + c.distance + "," + c.found);
+            int nfound = c.found;
+            if (presents[c.x][c.y] == 1) {
+                if (c.found + 1 == 3) {
+                    System.out.println(c.distance);
+                    return;
+                } else if (c.found == 1){
                     continue;
-                }
-                if (c.before == i) {
-                    continue;
-                }
-                if (visited[nx][ny][i][c.found]) {
-                    continue;
-                }
-                if (map[nx][ny] == '#') {
-                    continue;
-                }
-                if (nx == first.x && ny == first.y && c.found != 1) {
-                    nfound += 1;
-                    visited[nx][ny][i][nfound] = true;
-                    queue.add(new Coordinate(nx, ny, c.time+1, i, nfound));
-                } else if (nx == second.x && ny == second.y && c.found != 2) {
-                    nfound += 2;
-                    visited[nx][ny][i][nfound] = true;
-                    queue.add(new Coordinate(nx, ny, c.time+1, i, nfound));
                 } else {
-                    visited[nx][ny][i][c.found] = true;
-                    queue.add(new Coordinate(nx, ny, c.time+1, i, c.found));
+                    nfound += 1;
                 }
+            } else if (presents[c.x][c.y] == 2) {
+                if (c.found + 2 == 3) {
+                    System.out.println(c.distance);
+                    return;
+                } else if (c.found == 2){
+                    continue;
+                } else {
+                    nfound += 2;
+                }
+            }
 
+            for (int dir = 0; dir < 4; ++dir) {
+                int nx = c.x + dx[dir];
+                int ny = c.y + dy[dir];
+
+                if (nx < 0 || R <= nx || ny < 0 || C <= ny) continue;
+                if (classroom[nx][ny] == '#') continue;
+                if (visited[dir][nfound][nx][ny]) continue;
+
+                if (c.direction == -1) {
+                    visited[dir][nfound][nx][ny] = true;
+                    queue.add(new Coordinate(nx, ny, dir, c.distance + 1, nfound));
+
+                } else if (c.direction != dir) {
+                    visited[dir][nfound][nx][ny] = true;
+                    queue.add(new Coordinate(nx, ny, dir, c.distance + 1, nfound));
+
+                }
             }
         }
-
-        if (!success) {
-            System.out.println(-1);
-        }
+        System.out.println(-1);
     }
      */
 }
@@ -101,20 +103,15 @@ public class Q1175 {
 class Coordinate {
     int x;
     int y;
-    int time;
-    int before;
+    int direction;
+    int distance;
     int found;
 
-    Coordinate (int x, int y) {
+    Coordinate(int x, int y, int direction, int distance, int found) {
         this.x = x;
         this.y = y;
-    }
-
-    Coordinate (int x, int y, int time, int before, int found) {
-        this.x = x;
-        this.y = y;
-        this.time = time;
-        this.before = before;
+        this.direction = direction;
+        this.distance = distance;
         this.found = found;
     }
 }
