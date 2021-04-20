@@ -1,14 +1,6 @@
 package graph;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.StringTokenizer;
-
-public class Q16959 {
+public class Q16952 {
     /*
     public static int N;
     public static int board[][];
@@ -34,10 +26,22 @@ public class Q16959 {
     public static void solve (int x, int y) {
         int max = (int) Math.pow(N, 2);
         boolean visited[][][][] = new boolean[3][N][N][max+1];
-        Queue<Coordinate> queue = new LinkedList<>();
+        PriorityQueue<Coordinate> queue = new PriorityQueue<>((c1, c2) -> {
+            if (c1.distance > c2.distance) {
+                return 1;
+            } else if (c1.distance == c2.distance) {
+                if (c1.changes > c2.changes) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                return -1;
+            }
+        });
         for (int piece=0; piece<3; ++piece) {
             visited[piece][x][y][2] = true;
-            queue.add(new Coordinate(piece, x, y, 2, 0));
+            queue.add(new Coordinate(piece, x, y, 2, 0, 0));
         }
 
         int knightX[] = {-1, -2, -2, -1, +1, +2, +2, +1};
@@ -49,14 +53,14 @@ public class Q16959 {
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            //System.out.println(c.x+","+c.y);
+            //System.out.println(c.x+","+c.y+","+c.piece+","+c.target+","+c.distance+","+c.changes);
             if (c.target == board[c.x][c.y]) {
                 if (c.target == max) {
-                    System.out.println(c.distance);
+                    System.out.println(c.distance+" "+c.changes);
                     return;
                 } else {
                     visited[c.piece][c.x][c.y][c.target+1] = true;
-                    queue.add(new Coordinate(c.piece, c.x, c.y, c.target+1, c.distance));
+                    queue.add(new Coordinate(c.piece, c.x, c.y, c.target+1, c.distance, c.changes));
                     continue;
                 }
             }
@@ -65,7 +69,7 @@ public class Q16959 {
                 if (c.piece != piece) {
                     if (!visited[piece][c.x][c.y][c.target]) {
                         visited[piece][c.x][c.y][c.target] = true;
-                        queue.add(new Coordinate(piece, c.x, c.y, c.target, c.distance+1));
+                        queue.add(new Coordinate(piece, c.x, c.y, c.target, c.distance+1, c.changes+1));
                     }
                 }
             }
@@ -79,7 +83,7 @@ public class Q16959 {
                     if (!check(nx, ny)) continue;
                     if (visited[c.piece][nx][ny][c.target]) continue;
                     visited[c.piece][nx][ny][c.target] = true;
-                    queue.add(new Coordinate(c.piece, nx, ny, c.target, c.distance+1));
+                    queue.add(new Coordinate(c.piece, nx, ny, c.target, c.distance+1, c.changes));
                 }
             } else if (c.piece == 1) {
                 for (int dir=0; dir<4; ++dir) {
@@ -91,7 +95,7 @@ public class Q16959 {
                         if (!check(nx, ny)) break;
                         if (visited[c.piece][nx][ny][c.target]) continue;
                         visited[c.piece][nx][ny][c.target] = true;
-                        queue.add(new Coordinate(c.piece, nx, ny, c.target, c.distance+1));
+                        queue.add(new Coordinate(c.piece, nx, ny, c.target, c.distance+1, c.changes));
                     }
                 }
             } else {
@@ -104,7 +108,7 @@ public class Q16959 {
                         if (!check(nx, ny)) break;
                         if (visited[c.piece][nx][ny][c.target]) continue;
                         visited[c.piece][nx][ny][c.target] = true;
-                        queue.add(new Coordinate(c.piece, nx, ny, c.target, c.distance+1));
+                        queue.add(new Coordinate(c.piece, nx, ny, c.target, c.distance+1, c.changes));
                     }
                 }
             }
@@ -126,13 +130,15 @@ class Coordinate {
     int y;
     int target;
     int distance;
+    int changes;
 
-    Coordinate (int piece, int x, int y, int target, int distance) {
+    Coordinate (int piece, int x, int y, int target, int distance, int changes) {
         this.piece = piece;
         this.x = x;
         this.y = y;
         this.target = target;
         this.distance = distance;
+        this.changes = changes;
     }
 }
  */
