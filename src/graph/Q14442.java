@@ -3,72 +3,66 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q14442 {
     /*
-    public static int input [][];
+    public static int R, C;
+    public static int map[][];
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
-        input = new int [N][M];
-
-        for (int i=0; i<N; ++i) {
+        map = new int[R+1][C+1];
+        for (int i=1; i<=R; ++i) {
             String line = br.readLine();
-            for (int j=0; j<M; ++j) {
-                input[i][j] = line.charAt(j)-'0';
+            for (int j=1; j<=C; ++j) {
+                map[i][j] = line.charAt(j-1) - '0';
             }
         }
-
-        bfs(N, M, K);
+        bfs (K);
     }
 
-    public static void bfs (int N, int M, int K) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-        Queue<Coordinate> queue = new LinkedList<>();
-        boolean visited [][][] = new boolean [N][M][K+1];
-        queue.add(new Coordinate(0, 0, 0, 1));
-        visited[0][0][0] = true;
-        boolean flag = false;
+    public static void bfs (int K) {
+        boolean visited[][][] = new boolean[K+1][R+1][C+1];
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        queue.add(new Coordinate(1, 1, 0, 1));
+        visited[0][1][1] = true;
+        int dx[] = {-1, 1, 0, 0};
+        int dy[] = {0, 0, -1, 1};
 
         while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            if (current.x == N-1 && current.y == M-1) {
-                System.out.println(current.distance);
-                flag = true;
-                break;
+            Coordinate c = queue.poll();
+            if (c.x == R && c.y == C) {
+                System.out.println(c.distance);
+                return;
             }
-            for (int i=0; i<4; ++i) {
-                int nx = current.x + dx[i];
-                int ny = current.y + dy[i];
+            for (int dir=0; dir<4; ++dir) {
+                int nx = c.x + dx[dir];
+                int ny = c.y + dy[dir];
 
-                if (nx<0 || N<=nx || ny<0 || M<=ny) {
+                if (nx<1 || R<nx || ny<1 || C<ny) {
                     continue;
                 }
-                if (input[nx][ny] == 1) {
-                    if (current.broken + 1 <= K && !visited[nx][ny][current.broken+1]) {
-                        visited[nx][ny][current.broken+1] = true;
-                        queue.add(new Coordinate(nx, ny, current.broken+1, current.distance+1));
+                if (map[nx][ny] == 1) {
+                    if (c.broken <= K-1) {
+                        if (!visited[c.broken+1][nx][ny]) {
+                            visited[c.broken+1][nx][ny] = true;
+                            queue.add(new Coordinate(nx, ny, c.broken+1, c.distance+1));
+                        }
                     }
-                } else if (input[nx][ny] == 0) {
-                    if (!visited[nx][ny][current.broken]) {
-                        visited[nx][ny][current.broken] = true;
-                        queue.add(new Coordinate(nx, ny, current.broken, current.distance+1));
+                } else {
+                    if (!visited[c.broken][nx][ny]) {
+                        visited[c.broken][nx][ny] = true;
+                        queue.add(new Coordinate(nx, ny, c.broken, c.distance+1));
                     }
                 }
             }
-
         }
-        if (!flag) {
-            System.out.println(-1);
-        }
+        System.out.println(-1);
     }
      */
 }
