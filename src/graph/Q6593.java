@@ -1,82 +1,96 @@
 package graph;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.io.*;
+import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q6593 {
     /*
-    public static char building [][][];
+    public static int L, R, C;
+    public static char building[][][];
+    public static BufferedWriter bw;
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String line = br.readLine();
-        while (!line.contentEquals("0 0 0")) {
-            StringTokenizer st = new StringTokenizer(line);
-            int L = Integer.parseInt(st.nextToken());
-            int R = Integer.parseInt(st.nextToken());
-            int C = Integer.parseInt(st.nextToken());
-            int startX = 0; int startY = 0; int startZ = 0;
-            int endX = 0; int endY = 0; int endZ = 0;
-            building = new char [L][R][C];
-            for (int i=0; i<L; ++i) {
-                for (int j=0; j<R; ++j) {
-                    line = br.readLine();
-                    //String temp = "";
-                    for (int l=0; l<C; ++l) {
-                        building [i][j][l] = line.charAt(l);
-                        if (building[i][j][l] == 'S') {
-                            startZ = i; startX = j; startY = l;
-                        }
-                        //temp += building[i][j][l];
-                    }
-                    //System.out.println(temp);
-                }
-                String blank = br.readLine();
-                //System.out.println(blank);
-            }
-            bfs(startZ, startX, startY, L, R, C);
-            line = br.readLine();
-        }
-    }
-    public static void bfs (int startZ, int startX, int startY, int L, int R, int C) {
-        int dz [] = {0, 0, 0, 0, -1, 1};
-        int dx [] = {-1, 1, 0, 0, 0, 0};
-        int dy [] = {0, 0, -1, 1, 0, 0};
+        StringTokenizer st;
+        bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(startZ, startX, startY, 0));
-        boolean check [][][] = new boolean [L][R][C];
-        check[startZ][startX][startY] = true;
+        while (true) {
+            String line = br.readLine();
+            if (line.equals("0 0 0")) {
+                break;
+            }
+            st = new StringTokenizer(line);
+            L = Integer.parseInt(st.nextToken());
+            R = Integer.parseInt(st.nextToken());
+            C = Integer.parseInt(st.nextToken());
+            building = new char[L][R][C];
+            int z = 0; int x = 0; int y = 0;
+            for (int i=0; i<L; ++i) {
+                for (int j=0; j<=R; ++j) {
+                    line = br.readLine();
+                    if (j == R) {
+                        continue;
+                    }
+                    for (int k=0; k<C; ++k) {
+                        building[i][j][k] = line.charAt(k);
+                        if (building[i][j][k] == 'S') {
+                            z = i; x = j; y = k;
+                        }
+                    }
+                }
+            }
+            bfs(z, x, y);
+        }
+        bw.flush();
+    }
+
+    public static void bfs (int z, int x, int y) throws IOException {
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        queue.add(new Coordinate(z, x, y, 0));
+        boolean visited[][][] = new boolean[L][R][C];
+        visited[z][x][y] = true;
+        int dz[] = {0, 0, 0, 0, -1, 1};
+        int dx[] = {-1, 1, 0, 0, 0, 0};
+        int dy[] = {0, 0, -1, 1, 0, 0};
 
         while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            if (building[current.z][current.x][current.y] == 'E') {
-                System.out.println("Escaped in "+current.time+" minute(s).");
+            Coordinate c = queue.poll();
+            if (building[c.z][c.x][c.y] == 'E') {
+                bw.append("Escaped in "+c.minutes+" minute(s).");
+                bw.newLine();
                 return;
             }
-            for (int i=0; i<6; ++i) {
-                int newZ = current.z + dz[i];
-                int newX = current.x + dx[i];
-                int newY = current.y + dy[i];
 
-                if (newZ < 0 || L <= newZ || newX < 0 || R <= newX || newY < 0 || C <= newY) {
+            for (int dir=0; dir<6; ++dir) {
+                int nz = c.z + dz[dir];
+                int nx = c.x + dx[dir];
+                int ny = c.y + dy[dir];
+
+                if (!check(nz, nx, ny)) {
                     continue;
                 }
-                if (check[newZ][newX][newY]) {
+
+                if (visited[nz][nx][ny]) {
                     continue;
                 }
-                if (building[newZ][newX][newY] == '#') {
+                if (building[nz][nx][ny] == '#') {
                     continue;
                 }
-                System.out.println(newZ+", "+newX+", "+newY);
-                queue.add(new Coordinate(newZ, newX, newY, current.time + 1));
-                check[newZ][newX][newY] = true;
+                visited[nz][nx][ny] = true;
+                queue.add(new Coordinate(nz, nx, ny, c.minutes+1));
             }
         }
-        System.out.println("Trapped!");
+        bw.append("Trapped!");
+        bw.newLine();
+    }
+
+    public static boolean check (int z, int x, int y) {
+        if (z<0 || L<=z || x<0 || R<=x || y<0 || C<=y) {
+            return false;
+        }
+        return true;
     }
      */
 }
@@ -86,13 +100,13 @@ class Coordinate {
     int z;
     int x;
     int y;
-    int time;
+    int minutes;
 
-    Coordinate (int z, int x, int y, int time) {
+    Coordinate (int z, int x, int y, int minutes) {
         this.z = z;
         this.x = x;
         this.y = y;
-        this.time = time;
+        this.minutes = minutes;
     }
 }
  */

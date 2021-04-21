@@ -3,57 +3,57 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q6087 {
     /*
     public static int R, C;
-    public static char map [][];
-    public static void main (String args[]) throws IOException{
+    public static char map[][];
+
+    public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         C = Integer.parseInt(st.nextToken());
         R = Integer.parseInt(st.nextToken());
-        map = new char [R][C];
+        map = new char[R][C];
         boolean flag = false;
-        int startX = 0; int startY = 0;
+        Coordinate start = null;
+        Coordinate end = null;
         for (int i=0; i<R; ++i) {
             String line = br.readLine();
             for (int j=0; j<C; ++j) {
                 map[i][j] = line.charAt(j);
                 if (map[i][j] == 'C') {
                     if (!flag) {
-                        map[i][j] = '.';
-                        startX = i; startY = j;
+                        start = new Coordinate(i, j, -1, 0);
                         flag = true;
+                    } else {
+                        end = new Coordinate(i, j, -1, 0);
                     }
                 }
             }
         }
-        bfs(startX, startY);
+        bfs(start, end);
     }
 
-    public static void bfs (int x, int y) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-        int mirrors [][] = new int [R][C];
+    public static void bfs (Coordinate start, Coordinate end) {
+        int dx[] = {-1, 1, 0, 0};
+        int dy[] = {0, 0, -1, 1};
+        int visited[][] = new int[R][C];
         for (int i=0; i<R; ++i) {
-            Arrays.fill(mirrors[i], 987_654_321);
+            for (int j=0; j<C; ++j) {
+                visited[i][j] = Integer.MAX_VALUE;
+            }
         }
-        mirrors[x][y] = 0;
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(x, y, -1, 0));
+        visited[start.x][start.y] = 0;
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        queue.add(start);
         int answer = 987_654_321;
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (map[c.x][c.y] == 'C') {
-                if (answer > c.distance) {
-                    answer = c.distance;
-                }
+            if (c.x == end.x && c.y == end.y) {
+                answer = answer > c.mirrors ? c.mirrors : answer;
             }
 
             for (int dir=0; dir<4; ++dir) {
@@ -66,18 +66,18 @@ public class Q6087 {
                 if (map[nx][ny] == '*') {
                     continue;
                 }
-                if (c.before == -1) {
-                    mirrors[nx][ny] = 0;
-                    queue.add(new Coordinate(nx, ny, dir, c.distance));
-                } else if (c.before == dir) {
-                    if (mirrors[nx][ny] >= c.distance) {
-                        mirrors[nx][ny] = c.distance;
-                        queue.add(new Coordinate(nx, ny, dir, c.distance));
+                if (c.direction == -1) {
+                    visited[nx][ny] = 0;
+                    queue.add(new Coordinate(nx, ny, dir, 0));
+                } else if (c.direction != dir) {
+                    if (visited[nx][ny] >= c.mirrors+1) {
+                        visited[nx][ny] = c.mirrors+1;
+                        queue.add(new Coordinate(nx, ny, dir, c.mirrors+1));
                     }
                 } else {
-                    if (mirrors[nx][ny] >= c.distance+1) {
-                        mirrors[nx][ny] = c.distance+1;
-                        queue.add(new Coordinate(nx, ny, dir, c.distance+1));
+                    if (visited[nx][ny] >= c.mirrors) {
+                        visited[nx][ny] = c.mirrors;
+                        queue.add(new Coordinate(nx, ny, dir, c.mirrors));
                     }
                 }
             }
@@ -91,14 +91,14 @@ public class Q6087 {
 class Coordinate {
     int x;
     int y;
-    int before;
-    int distance;
+    int direction;
+    int mirrors;
 
-    Coordinate(int x, int y, int before, int distance) {
+    Coordinate (int x, int y, int direction, int mirrors) {
         this.x = x;
         this.y = y;
-        this.before = before;
-        this.distance = distance;
+        this.direction = direction;
+        this.mirrors = mirrors;
     }
 }
  */

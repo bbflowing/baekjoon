@@ -3,6 +3,7 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
@@ -36,8 +37,10 @@ public class Q16952 {
         int max = (int) Math.pow(N, 2);
         //System.out.println(max);
         boolean visited[][][][] = new boolean[3][N][N][max + 1];
+        int dp[][][][] = new int[3][N][N][max + 1];
         PriorityQueue<Coordinate> queue = new PriorityQueue<>();
         for (int piece = 0; piece < 3; ++piece) {
+            dp[piece][startX][startY][2] = 0;
             visited[piece][startX][startY][2] = true;
             queue.add(new Coordinate(piece, startX, startY, 2, 0, 0));
         }
