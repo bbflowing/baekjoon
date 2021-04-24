@@ -8,20 +8,20 @@ import java.util.*;
 public class Q1981 {
     /*
     public static int N;
-    public static int array[][];
+    public static int[][] array;
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        array = new int[N][N];
+        array = new int[N+1][N+1];
         StringTokenizer st;
         ArrayList<Integer> numbers = new ArrayList<>();
-        for (int i=0; i<N; ++i) {
+        for (int r=1; r<=N; ++r) {
             st = new StringTokenizer(br.readLine());
-            for (int j=0; j<N; ++j) {
-                array[i][j] = Integer.parseInt(st.nextToken());
-                if (!numbers.contains(array[i][j])) {
-                    numbers.add(array[i][j]);
+            for (int c=1; c<=N; ++c) {
+                array[r][c] = Integer.parseInt(st.nextToken());
+                if (!numbers.contains(array[r][c])) {
+                    numbers.add(array[r][c]);
                 }
             }
         }
@@ -29,19 +29,20 @@ public class Q1981 {
         solve(numbers);
     }
 
-    public static void solve (ArrayList<Integer> numbers) {
+    public static void solve(ArrayList<Integer> numbers) {
         int minIndex = 0; int maxIndex = 0;
-        int answer = 987_654_321;
+        int answer = Integer.MAX_VALUE;
+
         while (minIndex < numbers.size() && maxIndex < numbers.size()) {
             int min = numbers.get(minIndex);
             int max = numbers.get(maxIndex);
-            if (array[0][0] < min || max < array[0][0]) {
+            if (array[1][1] < min || max < array[1][1]) {
                 ++maxIndex;
                 continue;
             }
             if (bfs(min, max)) {
+                answer = answer > max-min ? max-min : answer;
                 ++minIndex;
-                answer = answer > (max-min) ? max-min : answer;
             } else {
                 ++maxIndex;
             }
@@ -50,33 +51,32 @@ public class Q1981 {
     }
 
     public static boolean bfs (int min, int max) {
-        int dx[] = {-1, 1, 0, 0};
-        int dy[] = {0, 0, -1, 1};
-        Queue<Coordinate> queue = new LinkedList<>();
-        boolean visited[][] = new boolean[N][N];
-        visited[0][0] = true;
-        queue.add(new Coordinate(0, 0));
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        boolean[][] visited = new boolean[N+1][N+1];
+        visited[1][1] = true;
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        queue.add(new Coordinate(1, 1));
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (c.x == N-1 && c.y == N-1) {
+            if (c.r == N && c.c == N) {
                 return true;
             }
             for (int dir=0; dir<4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
+                int nr = c.r + dr[dir];
+                int nc = c.c + dc[dir];
 
-                if (nx<0 || N<=nx || ny<0 || N<=ny) {
+                if (nr<1 || N<nr || nc<1 || N<nc) {
                     continue;
                 }
-                if (visited[nx][ny]) {
+                if (visited[nr][nc]) {
                     continue;
                 }
-                if (array[nx][ny] < min || max < array[nx][ny]) {
-                    continue;
+                if (min <= array[nr][nc] && array[nr][nc] <= max) {
+                    visited[nr][nc] = true;
+                    queue.add(new Coordinate(nr, nc));
                 }
-                queue.add(new Coordinate(nx, ny));
-                visited[nx][ny] = true;
             }
         }
         return false;
@@ -86,12 +86,12 @@ public class Q1981 {
 
 /*
 class Coordinate {
-    int x;
-    int y;
+    int r;
+    int c;
 
-    Coordinate (int x, int y) {
-        this.x = x;
-        this.y = y;
+    Coordinate(int r, int c) {
+        this.r = r;
+        this.c = c;
     }
 }
  */
