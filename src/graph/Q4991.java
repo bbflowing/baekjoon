@@ -6,82 +6,77 @@ import java.util.*;
 public class Q4991 {
     /*
     public static int R, C, answer;
-    public static char room[][];
-    public static int distances[][];
+    public static char[][] room;
+    public static int[][] distances;
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st;
         while (true) {
             String line = br.readLine();
             if (line.equals("0 0")) {
                 break;
             }
-            st = new StringTokenizer(line);
+            StringTokenizer st = new StringTokenizer(line);
             C = Integer.parseInt(st.nextToken());
             R = Integer.parseInt(st.nextToken());
             room = new char[R][C];
-            Coordinate start = null;
             ArrayList<Coordinate> dust = new ArrayList<>();
-            for (int i = 0; i < R; ++i) {
+            Coordinate start = null;
+            for (int r = 0; r < R; ++r) {
                 line = br.readLine();
-                for (int j = 0; j < C; ++j) {
-                    room[i][j] = line.charAt(j);
-                    if (room[i][j] == 'o') {
-                        start = new Coordinate(i, j, 0);
-                    } else if (room[i][j] == '*') {
-                        dust.add(new Coordinate(i, j, 0));
+                for (int c = 0; c < C; ++c) {
+                    room[r][c] = line.charAt(c);
+                    if (room[r][c] == '*') {
+                        dust.add(new Coordinate(r, c));
+                    } else if (room[r][c] == 'o') {
+                        start = new Coordinate(r, c);
                     }
                 }
             }
             dust.add(0, start);
-            int N = dust.size();
-            distances = new int[N][N];
-            for (int i = 0; i < N - 1; ++i) {
+            distances = new int[dust.size()][dust.size()];
+            for (int i = 0; i < dust.size() - 1; ++i) {
                 Coordinate begin = dust.get(i);
-                for (int j = i+1; j < N; ++j) {
+                for (int j = i + 1; j < dust.size(); ++j) {
                     Coordinate dst = dust.get(j);
                     distances[i][j] = getDistance(begin, dst);
                     distances[j][i] = distances[i][j];
                 }
             }
             dust.remove(0);
-            int result[] = new int[N - 1];
-            boolean visited[] = new boolean[N - 1];
-            answer = 987_654_321;
-            permutation(N - 1, 0, visited, result);
-            if (answer == 987_654_321) {
-                bw.append(String.valueOf(-1));
+            boolean[] visited = new boolean[dust.size()];
+            int[] result = new int[dust.size()];
+            answer = Integer.MAX_VALUE;
+            permutation(dust.size(), 0, visited, result);
+            if (answer == Integer.MAX_VALUE) {
+                System.out.println(-1);
             } else {
-                bw.append(String.valueOf(answer));
+                System.out.println(answer);
             }
-            bw.newLine();
         }
-        bw.flush();
     }
 
     public static void permutation (int N, int index, boolean[] visited, int[] result) {
         if (index == N) {
-            int route [] = new int[N+1];
+            int[] route = new int[N+1];
             route[0] = 0;
             for (int i=1; i<N+1; ++i) {
                 route[i] = result[i-1];
             }
-
             int temp = 0;
-            for (int i=0; i<N; ++i) {
-                int start = route[i];
+            for (int i=0; i<route.length-1; ++i) {
+                int begin = route[i];
                 int end = route[i+1];
-                if (distances[start][end] == -1) {
+
+                if (distances[begin][end] == 0) {
                     return;
                 }
-                temp += distances[start][end];
+                temp += distances[begin][end];
                 if (temp > answer) {
                     return;
                 }
             }
-            answer = temp;
+            answer = Math.min(answer, temp);
             return;
         }
 
@@ -94,53 +89,57 @@ public class Q4991 {
             }
         }
 
-
     }
 
     public static int getDistance (Coordinate begin, Coordinate dst) {
-        int dx[] = {-1, 1, 0, 0};
-        int dy[] = {0, 0, -1, 1};
-        boolean visited[][] = new boolean[R][C];
-        visited[begin.x][begin.y] = true;
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        boolean[][] visited = new boolean[R][C];
         Queue<Coordinate> queue = new ArrayDeque<>();
-        queue.add(begin);
+        visited[begin.r][begin.c] = true;
+        queue.add(new Coordinate(begin.r, begin.c, 0));
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (c.x == dst.x && c.y == dst.y) {
+            if (c.r == dst.r && c.c == dst.c) {
                 return c.distance;
             }
             for (int dir=0; dir<4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
+                int nr = c.r + dr[dir];
+                int nc = c.c + dc[dir];
 
-                if (nx<0 || R<=nx || ny<0 || C<=ny) {
+                if (nr<0 || R<=nr || nc<0 || C<=nc) {
                     continue;
                 }
-                if (room[nx][ny] == 'x') {
+                if (visited[nr][nc]) {
                     continue;
                 }
-                if (visited[nx][ny]) {
+                if (room[nr][nc] == 'x') {
                     continue;
                 }
-                visited[nx][ny] = true;
-                queue.add(new Coordinate(nx, ny, c.distance+1));
+                visited[nr][nc] = true;
+                queue.add(new Coordinate(nr, nc, c.distance+1));
             }
         }
-        return -1;
+        return 0;
     }
      */
 }
 
 /*
 class Coordinate {
-    int x;
-    int y;
+    int r;
+    int c;
     int distance;
 
-    Coordinate (int x, int y, int distance) {
-        this.x = x;
-        this.y = y;
+    Coordinate (int r, int c) {
+        this.r = r;
+        this.c = c;
+    }
+
+    Coordinate (int r, int c, int distance) {
+        this.r = r;
+        this.c = c;
         this.distance = distance;
     }
 }
