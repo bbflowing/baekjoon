@@ -1,16 +1,13 @@
 package graph;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q16441 {
     /*
     public static int R, C;
-    public static char map[][];
-    public static boolean visited[][];
+    public static char[][] map;
+    public static boolean[][] visited;
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,29 +15,33 @@ public class Q16441 {
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
         map = new char[R][C];
+        visited = new boolean[R][C];
         ArrayList<Coordinate> wolves = new ArrayList<>();
-        for (int i=0; i<R; ++i) {
-            String line = br.readLine();
-            for (int j=0; j<C; ++j) {
-                map[i][j] = line.charAt(j);
-                if (map[i][j] == 'W') {
-                    wolves.add(new Coordinate(i, j));
+        String line;
+        for (int r=0; r<R; ++r) {
+            line = br.readLine();
+            for (int c=0; c<C; ++c) {
+                map[r][c] = line.charAt(c);
+                if (map[r][c] == 'W') {
+                    wolves.add(new Coordinate(r, c));
+                    visited[r][c] = true;
                 }
             }
         }
-        visited = new boolean[R][C];
+
         for (int i=0; i<wolves.size(); ++i) {
             Coordinate wolf = wolves.get(i);
             bfs(wolf);
         }
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        for (int i=0; i<R; ++i) {
+        for (int r=0; r<R; ++r) {
             StringBuilder sb = new StringBuilder();
-            for (int j=0; j<C; ++j) {
-                if (map[i][j] == '.' && !visited[i][j]) {
-                    map[i][j] = 'P';
+            for (int c=0; c<C; ++c) {
+                if (map[r][c] == '.' && !visited[r][c]) {
+                    sb.append("P");
+                } else {
+                    sb.append(map[r][c]);
                 }
-                sb.append(map[i][j]);
             }
             bw.append(sb);
             bw.newLine();
@@ -49,73 +50,63 @@ public class Q16441 {
     }
 
     public static void bfs (Coordinate wolf) {
-        int dx[] = {-1, 1, 0, 0};
-        int dy[] = {0, 0, -1, 1};
-        Queue<Coordinate> queue = new LinkedList<>();
-        visited[wolf.x][wolf.y] = true;
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        Queue<Coordinate> queue = new ArrayDeque<>();
         queue.add(wolf);
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
             for (int dir=0; dir<4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
+                int nr = c.r + dr[dir];
+                int nc = c.c + dc[dir];
 
-                if (!range(nx, ny)) continue;
-
-                if (visited[nx][ny]) {
+                if (nr<0 || R<=nr || nc<0 || C<=nc) {
                     continue;
                 }
-                if (map[nx][ny] == '#') {
+                if (visited[nr][nc]) {
                     continue;
-                } else if (map[nx][ny] == '+') {
+                }
+                if (map[nr][nc] == '#') {
+                    continue;
+                } else if (map[nr][nc] == '+') {
                     while (true) {
-                        nx += dx[dir];
-                        ny += dy[dir];
+                        nr += dr[dir];
+                        nc += dc[dir];
 
-                        if (!range(nx, ny)) break;
-                        if (map[nx][ny] == '#') {
-                            nx -= dx[dir]; ny -= dy[dir];
-                            if (!visited[nx][ny]) {
-                                visited[nx][ny] = true;
-                                queue.add(new Coordinate(nx, ny));
-                            }
+                        if (nr<0 || R<=nr || nc<0 || C<=nc) {
                             break;
-                        } else if (map[nx][ny] == '.') {
-                            if (!visited[nx][ny]) {
-                                visited[nx][ny] = true;
-                                queue.add(new Coordinate(nx, ny));
-                            }
+                        }
+                        if (map[nr][nc] == '#') {
+                            nr -= dr[dir];
+                            nc -= dc[dir];
+                            break;
+                        } else if (map[nr][nc] == '.') {
                             break;
                         }
                     }
-                } else if (map[nx][ny] == '.') {
-                    if (!visited[nx][ny]) {
-                        visited[nx][ny] = true;
-                        queue.add(new Coordinate(nx, ny));
+                    if (!visited[nr][nc]) {
+                        visited[nr][nc] = true;
+                        queue.add(new Coordinate(nr, nc));
                     }
+                } else {
+                    visited[nr][nc] = true;
+                    queue.add(new Coordinate(nr, nc));
                 }
             }
         }
-    }
-
-    public static boolean range (int x, int y) {
-        if (x<0 || R<=x || y<0 || C<=y) {
-            return false;
-        }
-        return true;
     }
      */
 }
 
 /*
 class Coordinate {
-    int x;
-    int y;
+    int r;
+    int c;
 
-    Coordinate(int x, int y) {
-        this.x = x;
-        this.y = y;
+    Coordinate (int r, int c) {
+        this.r = r;
+        this.c = c;
     }
 }
  */
