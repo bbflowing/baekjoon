@@ -5,95 +5,97 @@ import java.util.*;
 
 public class Q19952 {
     /*
-    public static int map [][];
-    public static int H, W;
-    public static BufferedWriter bw;
+    public static int R, C;
+    public static int[][] elevations;
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        bw = new BufferedWriter(new OutputStreamWriter(System.out));
         int T = Integer.parseInt(br.readLine());
+        StringTokenizer st;
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         for (int t=0; t<T; ++t) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            H = Integer.parseInt(st.nextToken());
-            W = Integer.parseInt(st.nextToken());
+            st = new StringTokenizer(br.readLine());
+            R = Integer.parseInt(st.nextToken());
+            C = Integer.parseInt(st.nextToken());
+            elevations = new int[R+1][C+1];
             int O = Integer.parseInt(st.nextToken());
             int F = Integer.parseInt(st.nextToken());
-            int startX = Integer.parseInt(st.nextToken());
-            int startY = Integer.parseInt(st.nextToken());
-            int endX = Integer.parseInt(st.nextToken());
-            int endY = Integer.parseInt(st.nextToken());
-            map = new int [H+1][W+1];
-            for (int i=0; i<O; ++i) {
+            int startR = Integer.parseInt(st.nextToken());
+            int startC  = Integer.parseInt(st.nextToken());
+            int endR = Integer.parseInt(st.nextToken());
+            int endC = Integer.parseInt(st.nextToken());
+            for (int o=0; o<O; ++o) {
                 st = new StringTokenizer(br.readLine());
-                int x = Integer.parseInt(st.nextToken());
-                int y = Integer.parseInt(st.nextToken());
-                int height = Integer.parseInt(st.nextToken());
-                map[x][y] = height;
+                int r = Integer.parseInt(st.nextToken());
+                int c = Integer.parseInt(st.nextToken());
+                int l = Integer.parseInt(st.nextToken());
+                elevations[r][c] = l;
             }
-            bfs(startX, startY, endX, endY, F);
-            if (t != T-1) {
-                bw.newLine();
+            String success = "잘했어!!";
+            String fail = "인성 문제있어??";
+
+            if (bfs(F, startR, startC, endR, endC)) {
+                bw.append(success);
+            } else {
+                bw.append(fail);
             }
+            bw.newLine();
         }
         bw.flush();
     }
 
-    public static void bfs (int startX, int startY, int endX, int endY, int F) throws IOException {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate (startX, startY, F));
-        boolean visited [][] = new boolean [H+1][W+1];
-        visited[startX][startY] = true;
+    public static boolean bfs (int F, int startR, int startC, int endR, int endC) {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        queue.add(new Coordinate(startR, startC, F));
+        boolean[][] visited = new boolean[R+1][C+1];
+        visited[startR][startC] = true;
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (c.x == endX && c.y == endY) {
-                bw.append("잘했어!!");
-                return;
+            if (c.r == endR && c.c == endC) {
+                return true;
             }
-            if (c.strength <= 0) {
-                continue;
+            if (c.f == 0) {
+                return false;
             }
-            for (int i=0; i<4; ++i) {
-                int nx = c.x + dx[i];
-                int ny = c.y + dy[i];
+            for (int dir=0; dir<4; ++dir) {
+                int nr = c.r + dr[dir];
+                int nc = c.c + dc[dir];
 
-                if (nx<1 || H<nx || ny<1 || W<ny) {
+                if (nr<1 || R<nr || nc<1 || C<nc) {
                     continue;
                 }
-                if (visited[nx][ny]) {
+                if (visited[nr][nc]) {
                     continue;
                 }
-                if (map[nx][ny] >= 1) {
-                    if (c.strength < map[nx][ny]-map[c.x][c.y]) {
-                        continue;
+                if (elevations[nr][nc] == 0) {
+                    queue.add(new Coordinate(nr, nc, c.f-1));
+                    visited[nr][nc] = true;
+                } else {
+                    if (c.f >= elevations[nr][nc]-elevations[c.r][c.c]) {
+                        queue.add(new Coordinate(nr, nc, c.f-1));
+                        visited[nr][nc] = true;
                     }
-                }
-                int nF = c.strength-1;
-                if (nF >= 0) {
-                    visited[nx][ny] = true;
-                    queue.add(new Coordinate(nx, ny, nF));
                 }
             }
         }
-        bw.append("인성 문제있어??");
+        return false;
     }
      */
 }
 
 /*
 class Coordinate {
-    int x;
-    int y;
-    int strength;
+    int r;
+    int c;
+    int f;
 
-    Coordinate (int x, int y, int strength) {
-        this.x = x;
-        this.y = y;
-        this.strength = strength;
+    Coordinate (int r, int c, int f) {
+        this.r = r;
+        this.c = c;
+        this.f = f;
     }
 }
  */
-
