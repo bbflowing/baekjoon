@@ -3,61 +3,62 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q2206 {
     /*
-    public static int map [][];
-    public static int N, M;
+    public static int R, C;
+    public static int[][] map;
+
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        map = new int [N+1][M+1];
-        for (int i=1; i<=N; ++i) {
-            String line = br.readLine();
-            for (int j=1; j<=M; ++j) {
-                map[i][j] = line.charAt(j-1) - '0';
-
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        map = new int[R+1][C+1];
+        String line;
+        for (int r=1; r<=R; ++r) {
+            line = br.readLine();
+            for (int c=1; c<=C; ++c) {
+                map[r][c] = line.charAt(c-1)-'0';
             }
         }
         bfs();
     }
 
-    public static void bfs () {
-        boolean visited [][][] = new boolean [2][N+1][M+1];
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(1, 1, 1, 0));
+    public static void bfs() {
+        int dx[] = {-1, 1, 0, 0};
+        int dy[] = {0, 0, -1, 1};
+        boolean visited[][][] = new boolean[2][R+1][C+1];
         visited[0][1][1] = true;
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        queue.add(new Coordinate(1, 1, 0, 1));
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (c.x == N && c.y == M) {
+            if (c.r == R && c.c == C) {
                 System.out.println(c.distance);
                 return;
             }
-            for (int i=0; i<4; ++i) {
-                int nx = c.x + dx[i];
-                int ny = c.y + dy[i];
+            for (int dir=0; dir<4; ++dir) {
+                int nr = c.r + dx[dir];
+                int nc = c.c + dy[dir];
 
-                if (nx<1 || N<nx || ny<1 || M<ny) {
+                if (nr<1 || R<nr || nc<1 || C<nc) {
                     continue;
                 }
-                if (map[nx][ny] == 0) {
-                    if (!visited[c.broke][nx][ny]) {
-                        visited[c.broke][nx][ny] = true;
-                        queue.add(new Coordinate(nx, ny, c.distance+1, c.broke));
+                if (map[nr][nc] == 0) {
+                    if (!visited[c.broke][nr][nc]) {
+                        visited[c.broke][nr][nc] = true;
+                        queue.add(new Coordinate(nr, nc, c.broke, c.distance+1));
                     }
                 } else {
-                    if (c.broke == 0 && !visited[1][nx][ny]) {
-                        visited[1][nx][ny] = true;
-                        queue.add(new Coordinate(nx, ny, c.distance+1, 1));
+                    if (c.broke == 0) {
+                        if (!visited[1][nr][nc]) {
+                            visited[1][nr][nc] = true;
+                            queue.add(new Coordinate(nr, nc, 1, c.distance+1));
+                        }
                     }
                 }
             }
@@ -69,16 +70,16 @@ public class Q2206 {
 
 /*
 class Coordinate {
-    int x;
-    int y;
-    int distance;
+    int r;
+    int c;
     int broke;
+    int distance;
 
-    Coordinate (int x, int y, int distance, int broke) {
-        this.x = x;
-        this.y = y;
-        this.distance = distance;
+    Coordinate (int r, int c, int broke, int distance) {
+        this.r = r;
+        this.c = c;
         this.broke = broke;
+        this.distance = distance;
     }
 }
  */
