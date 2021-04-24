@@ -3,86 +3,83 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class Q2665 {
     /*
     public static int N;
-    public static int maze[][];
+    public static int[][] rooms;
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        maze = new int [N][N];
-        for (int i=0; i<N; ++i) {
+        rooms = new int[N][N];
+        for (int r=0; r<N; ++r) {
             String line = br.readLine();
-            for (int j=0; j<N; ++j) {
-                maze[i][j] = line.charAt(j)-'0';
+            for (int c=0; c<N; ++c) {
+                rooms[r][c] = line.charAt(c) - '0';
             }
         }
         bfs();
     }
 
-    public static void bfs () {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(0, 0, 0));
-        int visited [][] = new int [N][N];
-        for (int i=0; i<N; ++i) {
-            Arrays.fill(visited[i], 987_654_321);
+    public static void bfs() {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        int[][] changes = new int[N][N];
+        for (int r=0; r<N; ++r) {
+            Arrays.fill(changes[r], Integer.MAX_VALUE);
         }
-        visited[0][0] = 0;
-        int answer = 987_654_321;
+        PriorityQueue<Coordinate> queue = new PriorityQueue<>();
+        queue.add(new Coordinate(0, 0, 0));
+        changes[0][0] = 0;
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (c.x == N-1 && c.y == N-1) {
-                if (answer > c.changes) {
-                    answer = c.changes;
-                }
+            if (c.r == N-1 && c.c == N-1) {
+                System.out.println(c.changes);
+                return;
             }
-            for (int dir=0; dir<4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
 
-                if (nx<0 || N<=nx || ny<0 || N<=ny) {
+            for (int dir=0; dir<4; ++dir) {
+                int nr = c.r + dr[dir];
+                int nc = c.c + dc[dir];
+
+                if (nr<0 || N<=nr || nc<0 || N<=nc) {
                     continue;
                 }
-                if (maze[nx][ny] == 0) {
-                    if (c.changes+1 < visited[nx][ny]) {
-                        visited[nx][ny] = c.changes+1;
-                        queue.add(new Coordinate(nx, ny, c.changes+1));
+                if (rooms[nr][nc] == 0) {
+                    if (changes[nr][nc] > c.changes+1) {
+                        changes[nr][nc] = c.changes+1;
+                        queue.add(new Coordinate(nr, nc, c.changes+1));
                     }
                 } else {
-                    if (c.changes < visited[nx][ny]) {
-                        visited[nx][ny] = c.changes;
-                        queue.add(new Coordinate(nx, ny, c.changes));
+                    if (changes[nr][nc] > c.changes) {
+                        changes[nr][nc] = c.changes;
+                        queue.add(new Coordinate(nr, nc, c.changes));
                     }
                 }
             }
         }
-        if (answer == 987_654_321) {
-            System.out.println(0);
-        } else {
-            System.out.println(answer);
-        }
     }
-
      */
 }
 
 /*
-class Coordinate {
-    int x;
-    int y;
+class Coordinate implements Comparable<Coordinate>{
+    int r;
+    int c;
     int changes;
 
-    Coordinate(int x, int y, int changes) {
-        this.x = x;
-        this.y = y;
-        this.changes = changes;
+    Coordinate (int r, int c, int changes) {
+       this.r = r;
+       this.c = c;
+       this.changes = changes;
+    }
+
+    @Override
+    public int compareTo (Coordinate c) {
+        return this.changes - c.changes;
     }
 }
  */
