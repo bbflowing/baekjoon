@@ -3,100 +3,97 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q14948 {
     /*
-    public static int R, C;
-    public static int army[][];
+    public static int N, M;
+    public static int[][] army;
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        R = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
-        army = new int[R][C];
-        for (int i=0; i<R; ++i) {
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        army = new int[N][M];
+
+        for (int i=0; i<N; ++i) {
             st = new StringTokenizer(br.readLine());
-            for (int j=0; j<C; ++j) {
+            for (int j = 0; j < M; ++j) {
                 army[i][j] = Integer.parseInt(st.nextToken());
             }
         }
         bfs();
     }
 
-    public static void bfs() {
-        int dx[] = {-1, 1, 0, 0};
-        int dy[] = {0, 0, -1, 1};
-        int visited[][][][] = new int[2][2][R][C];
+    public static void bfs () {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        PriorityQueue<Coordinate> queue = new PriorityQueue<>();
+        int[][][][] visited = new int[2][2][N][M];
         for (int i=0; i<2; ++i) {
             for (int j=0; j<2; ++j) {
-                for (int k=0; k<R; ++k) {
-                    Arrays.fill(visited[i][j][k], -1);
+                for (int k=0; k<N; ++k) {
+                    Arrays.fill(visited[i][j][k], Integer.MAX_VALUE);
                 }
             }
         }
-        PriorityQueue<Coordinate> queue = new PriorityQueue<>();
-        queue.add(new Coordinate(0, army[0][0], 0, 0));
+        queue.add(new Coordinate(0, 0, 0, army[0][0]));
         visited[0][0][0][0] = army[0][0];
+        int answer = Integer.MAX_VALUE;
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (c.x == R-1 && c.y == C-1) {
-                System.out.println(c.max);
-                return;
+            if (c.r == N-1 && c.c == M-1) {
+                answer = Math.min(answer, c.max);
+                continue;
             }
             for (int dir=0; dir<4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
+                int nr = c.r + dr[dir];
+                int nc = c.c + dc[dir];
 
-                if (nx<0 || R<=nx || ny<0 || C<=ny) {
+                if (nr<0 || N<=nr || nc<0 || M<=nc) {
                     continue;
                 }
-                int nmax = Math.max(c.max, army[nx][ny]);
-                if (visited[c.skipped][0][nx][ny] <= nmax && visited[c.skipped][0][nx][ny] != -1) {
-                    continue;
+                int nmax = Math.max(c.max, army[nr][nc]);
+                if (visited[c.skipped][0][nr][nc] > nmax) {
+                    visited[c.skipped][0][nr][nc] = nmax;
+                    queue.add(new Coordinate(nr, nc, c.skipped, nmax));
                 }
-                visited[c.skipped][0][nx][ny] = nmax;
-                queue.add(new Coordinate(c.skipped, nmax, nx, ny));
 
                 if (c.skipped == 0) {
-                    int nnx = nx + dx[dir];
-                    int nny = ny + dy[dir];
+                    int nnr = nr + dr[dir];
+                    int nnc = nc + dc[dir];
 
-                    if (nnx<0 || R<=nnx || nny<0 || C<=nny) {
+                    if (nnr<0 || N<=nnr || nnc<0 || M<=nnc) {
                         continue;
                     }
-                    nmax = Math.max(c.max, army[nnx][nny]);
-                    if (visited[1][0][nnx][nny] <= nmax && visited[1][0][nnx][nny] != -1) {
-                        continue;
+                    nmax = Math.max(c.max, army[nnr][nnc]);
+                    if (visited[1][0][nr][nc] > nmax && visited[0][1][nnr][nnc] > nmax) {
+                        visited[1][0][nr][nc] = nmax;
+                        visited[0][1][nnr][nnc] = nmax;
+                        queue.add(new Coordinate(nnr, nnc, 1, nmax));
                     }
-                    if (visited[0][1][nx][ny] <= nmax && visited[0][1][nx][ny] != -1) {
-                        continue;
-                    }
-                    visited[1][0][nnx][nny] = nmax;
-                    visited[0][1][nx][ny] = nmax;
-                    queue.add(new Coordinate(1, nmax, nnx, nny));
                 }
             }
         }
+        System.out.println(answer);
     }
      */
 }
 
 /*
 class Coordinate implements Comparable<Coordinate> {
+    int r;
+    int c;
     int skipped;
     int max;
-    int x;
-    int y;
 
-    Coordinate (int skipped, int max, int x, int y) {
+    Coordinate (int r, int c, int skipped, int max) {
+        this.r = r;
+        this.c = c;
         this.skipped = skipped;
         this.max = max;
-        this.x = x;
-        this.y = y;
     }
 
     @Override
