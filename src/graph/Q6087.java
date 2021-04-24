@@ -8,98 +8,104 @@ import java.util.*;
 public class Q6087 {
     /*
     public static int R, C;
-    public static char map[][];
+    public static char[][] map;
 
     public static void main (String args[]) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         C = Integer.parseInt(st.nextToken());
         R = Integer.parseInt(st.nextToken());
         map = new char[R][C];
+        String line;
         boolean flag = false;
-        Coordinate start = null;
-        Coordinate end = null;
-        for (int i=0; i<R; ++i) {
-            String line = br.readLine();
-            for (int j=0; j<C; ++j) {
-                map[i][j] = line.charAt(j);
-                if (map[i][j] == 'C') {
+        Coordinate start = null; Coordinate end = null;
+        for (int r=0; r<R; ++r) {
+            line = br.readLine();
+            for (int c=0; c<C; ++c) {
+                map[r][c] = line.charAt(c);
+                if (map[r][c] == 'C') {
                     if (!flag) {
-                        start = new Coordinate(i, j, -1, 0);
                         flag = true;
+                        start = new Coordinate(r, c);
                     } else {
-                        end = new Coordinate(i, j, -1, 0);
+                        end = new Coordinate(r, c);
                     }
                 }
             }
         }
-        bfs(start, end);
+        solve(start, end);
     }
 
-    public static void bfs (Coordinate start, Coordinate end) {
-        int dx[] = {-1, 1, 0, 0};
-        int dy[] = {0, 0, -1, 1};
-        int visited[][] = new int[R][C];
-        for (int i=0; i<R; ++i) {
-            for (int j=0; j<C; ++j) {
-                visited[i][j] = Integer.MAX_VALUE;
-            }
+    public static void solve (Coordinate start, Coordinate end) {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        int[][] visited = new int[R][C];
+        for (int r=0; r<R; ++r) {
+            Arrays.fill(visited[r], Integer.MAX_VALUE);
         }
-        visited[start.x][start.y] = 0;
-        Queue<Coordinate> queue = new ArrayDeque<>();
-        queue.add(start);
-        int answer = 987_654_321;
+        PriorityQueue<Coordinate> queue = new PriorityQueue<>();
+        queue.add(new Coordinate(start.r, start.c, -1, 0));
+        visited[start.r][start.c] = 0;
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (c.x == end.x && c.y == end.y) {
-                answer = answer > c.mirrors ? c.mirrors : answer;
+            if (c.r == end.r && c.c == end.c) {
+                System.out.println(c.mirrors);
+                return;
             }
-
             for (int dir=0; dir<4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
+                int nr = c.r + dr[dir];
+                int nc = c.c + dc[dir];
 
-                if (nx<0 || R<=nx || ny<0 || C<=ny) {
+                if (nr<0 || R<=nr || nc<0 || C<=nc) {
                     continue;
                 }
-                if (map[nx][ny] == '*') {
+                if (map[nr][nc] == '*') {
                     continue;
                 }
                 if (c.direction == -1) {
-                    visited[nx][ny] = 0;
-                    queue.add(new Coordinate(nx, ny, dir, 0));
+                    visited[nr][nc] = 0;
+                    queue.add(new Coordinate(nr, nc, dir, 0));
                 } else if (c.direction != dir) {
-                    if (visited[nx][ny] >= c.mirrors+1) {
-                        visited[nx][ny] = c.mirrors+1;
-                        queue.add(new Coordinate(nx, ny, dir, c.mirrors+1));
+                    if (visited[nr][nc] >= c.mirrors+1) {
+                        visited[nr][nc] = c.mirrors+1;
+                        queue.add(new Coordinate(nr, nc, dir, c.mirrors+1));
                     }
                 } else {
-                    if (visited[nx][ny] >= c.mirrors) {
-                        visited[nx][ny] = c.mirrors;
-                        queue.add(new Coordinate(nx, ny, dir, c.mirrors));
+                    if (visited[nr][nc] >= c.mirrors) {
+                        visited[nr][nc] = c.mirrors;
+                        queue.add(new Coordinate(nr, nc, dir, c.mirrors));
                     }
                 }
             }
         }
-        System.out.println(answer);
     }
-     */
+    */
 }
 
 /*
-class Coordinate {
-    int x;
-    int y;
+class Coordinate implements Comparable<Coordinate>{
+    int r;
+    int c;
     int direction;
     int mirrors;
 
-    Coordinate (int x, int y, int direction, int mirrors) {
-        this.x = x;
-        this.y = y;
+    Coordinate (int r, int c) {
+        this.r = r;
+        this.c = c;
+    }
+
+    Coordinate (int r, int c, int direction, int mirrors) {
+        this.r = r;
+        this.c = c;
         this.direction = direction;
         this.mirrors = mirrors;
     }
+
+    @Override
+    public int compareTo (Coordinate c) {
+        return this.mirrors - c.mirrors;
+    }
 }
  */
-
