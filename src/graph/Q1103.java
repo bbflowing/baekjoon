@@ -3,59 +3,56 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Q1103 {
     /*
     public static int R, C;
-    public static char board[][];
-    public static int distance[][];
-    public static boolean visited[][];
-    public static int dx[] = {-1, 1, 0, 0};
-    public static int dy[] = {0, 0, -1, 1};
+    public static char[][] board;
+    public static boolean[][] visited;
+    public static int[][] dp;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        board = new char[R][C];
-        distance = new int[R][C];
-        visited = new boolean[R][C];
-        for (int i=0; i<R; ++i) {
-            String line = br.readLine();
-            for (int j=0; j<C; ++j) {
-                board[i][j] = line.charAt(j);
-                distance[i][j] = -1;
+        board = new char[R+1][C+1];
+        dp = new int[R+1][C+1];
+        visited = new boolean[R+1][C+1];
+        String line = "";
+        for (int r=1; r<=R; ++r) {
+            line = br.readLine();
+            for (int c=1; c<=C; ++c) {
+                board[r][c] = line.charAt(c-1);
+                dp[r][c] = -1;
             }
         }
-        solve(0, 0);
-        System.out.println(distance[0][0]);
+        solve(1, 1);
+        System.out.println(dp[1][1]);
     }
 
-    public static int solve (int x, int y) {
-        if (x<0 || R<=x || y<0 || C<=y || board[x][y] == 'H') {
-            return 0;
-        }
-        if (visited[x][y]) {
+    public static int solve (int r, int c) {
+        if (r<1 || R<r || c<1 || C<c) return 0;
+        if (board[r][c] == 'H') return 0;
+        if (visited[r][c]) {
             System.out.println(-1);
             System.exit(0);
         }
-        if (distance[x][y] != -1) {
-            return distance[x][y];
-        }
-        distance[x][y] = 0;
-        visited[x][y] = true;
-        int multiplier = board[x][y] - '0';
+        if (dp[r][c] != -1) return dp[r][c];
+        dp[r][c] = 0;
+        visited[r][c] = true;
+        int times = board[r][c] - '0';
         for (int dir=0; dir<4; ++dir) {
-            int nx = x + multiplier*dx[dir];
-            int ny = y + multiplier*dy[dir];
-            distance[x][y] = Math.max(distance[x][y], solve(nx, ny)+1);
+            int nr = r + dr[dir]*times;
+            int nc = c + dc[dir]*times;
+
+            dp[r][c] = Math.max(solve(nr, nc)+1, dp[r][c]);
         }
-        visited[x][y] = false;
-        return distance[x][y];
+        visited[r][c] = false;
+        return dp[r][c];
     }
      */
 }
-
