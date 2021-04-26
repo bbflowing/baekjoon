@@ -3,66 +3,60 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q18405 {
     /*
     public static int N;
-    public static int virus[][];
-    public static PriorityQueue<Coordinate> queue;
+    public static int[][] tube;
+    public static Queue<Coordinate> queue;
 
-    public static void main(String args[]) throws IOException {
+    public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
-        virus = new int[N + 1][N + 1];
-        queue = new PriorityQueue<>();
-        for (int i = 1; i <= N; ++i) {
+        tube = new int[N][N];
+        queue = new LinkedList<>();
+        for (int r=0; r<N; ++r) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 1; j <= N; ++j) {
-                virus[i][j] = Integer.parseInt(st.nextToken());
-                if (virus[i][j] != 0) {
-                    queue.add(new Coordinate(virus[i][j], i, j));
+            for (int c=0; c<N; ++c) {
+                tube[r][c] = Integer.parseInt(st.nextToken());
+                if (tube[r][c] != 0) {
+                    queue.add(new Coordinate(r, c, tube[r][c]));
                 }
             }
         }
         st = new StringTokenizer(br.readLine());
         int time = Integer.parseInt(st.nextToken());
-        int endX = Integer.parseInt(st.nextToken());
-        int endY = Integer.parseInt(st.nextToken());
-        if (time == 0) {
-            System.out.println(virus[endX][endY]);
-        } else {
-            for (int i = 1; i <= time; ++i) {
-                bfs();
-            }
-            System.out.println(virus[endX][endY]);
+        int endR = Integer.parseInt(st.nextToken())-1;
+        int endC = Integer.parseInt(st.nextToken())-1;
+
+        for (int t=0; t<time; ++t) {
+            bfs();
         }
+        System.out.println(tube[endR][endC]);
     }
 
     public static void bfs() {
-        int dx[] = {-1, 1, 0, 0};
-        int dy[] = {0, 0, -1, 1};
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
         PriorityQueue<Coordinate> next = new PriorityQueue<>();
 
-
-        while (!queue.isEmpty()) {
+        int size = queue.size();
+        for (int i=0; i<size; ++i) {
             Coordinate c = queue.poll();
-            for (int dir = 0; dir < 4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
+            for (int dir=0; dir<4; ++dir) {
+                int nr = c.r + dr[dir];
+                int nc = c.c + dc[dir];
 
-                if (nx < 1 || N < nx || ny < 1 || N < ny) {
+                if (nr<0 || N<=nr || nc<0 || N<=nc) {
                     continue;
                 }
-                if (virus[nx][ny] != 0) {
+                if (tube[nr][nc] != 0) {
                     continue;
                 }
-                virus[nx][ny] = c.type;
-                next.add(new Coordinate(c.type, nx, ny));
+                tube[nr][nc] = c.type;
+                next.add(new Coordinate(nr, nc, c.type));
             }
         }
         queue = next;
@@ -72,18 +66,18 @@ public class Q18405 {
 
 /*
 class Coordinate implements Comparable<Coordinate> {
+    int r;
+    int c;
     int type;
-    int x;
-    int y;
 
-    Coordinate(int type, int x, int y) {
+    Coordinate (int r, int c, int type) {
+        this.r = r;
+        this.c = c;
         this.type = type;
-        this.x = x;
-        this.y = y;
     }
 
     @Override
-    public int compareTo(Coordinate c) {
+    public int compareTo (Coordinate c) {
         return this.type - c.type;
     }
 }

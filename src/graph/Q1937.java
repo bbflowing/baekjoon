@@ -10,54 +10,55 @@ import java.util.StringTokenizer;
 
 public class Q1937 {
     /*
-    public static int forest[][];
-    public static int distance[][];
-    public static int dx[] = {-1, 1, 0, 0};
-    public static int dy[] = {0, 0, -1, 1};
     public static int N;
+    public static int[][] forest;
+    public static int[][] dp;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
         forest = new int[N][N];
-        distance = new int[N][N];
+        dp = new int[N][N];
         StringTokenizer st;
-        for (int i=0; i<N; ++i) {
+        for (int r=0; r<N; ++r) {
             st = new StringTokenizer(br.readLine());
-            for (int j=0; j<N; ++j) {
-                distance[i][j] = -1;
-                forest[i][j] = Integer.parseInt(st.nextToken());
+            for (int c=0; c<N; ++c) {
+                forest[r][c] = Integer.parseInt(st.nextToken());
+                dp[r][c] = -1;
             }
         }
         int answer = -1;
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<N; ++j) {
-                solve(i, j);
-                answer = answer < distance[i][j] ? distance[i][j] : answer;
+        for (int r=0; r<N; ++r) {
+            for (int c=0; c<N; ++c) {
+                if (dp[r][c] == -1) {
+                    solve(r, c);
+                }
+                answer = Math.max(answer, dp[r][c]);
             }
         }
-        System.out.println(answer);
+        System.out.println(answer+1);
     }
 
-    public static int solve (int x, int y) {
-        if (distance[x][y] != -1) {
-            return distance[x][y];
+    public static int solve (int r, int c) {
+        if (dp[r][c] != -1) {
+            return dp[r][c];
         }
-        distance[x][y] = 1;
+        dp[r][c] = 0;
 
         for (int dir=0; dir<4; ++dir) {
-            int nx = x + dx[dir];
-            int ny = y + dy[dir];
+            int nr = r + dr[dir];
+            int nc = c + dc[dir];
 
-            if (nx<0 || N<=nx || ny<0 || N<=ny) {
+            if (nr<0 || N<=nr || nc<0 || N<=nc) {
                 continue;
             }
-            if (forest[x][y] >= forest[nx][ny]) {
-                continue;
+            if (forest[r][c] < forest[nr][nc]) {
+                dp[r][c] = Math.max(solve(nr, nc)+1, dp[r][c]);
             }
-            distance[x][y] = Math.max(distance[x][y], solve(nx, ny)+1);
         }
-        return distance[x][y];
+        return dp[r][c];
     }
      */
 }
