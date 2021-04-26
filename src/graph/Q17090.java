@@ -11,8 +11,8 @@ import java.util.StringTokenizer;
 public class Q17090 {
     /*
     public static int R, C;
-    public static char maze[][];
-    public static int dp[][];
+    public static char[][] maze;
+    public static int[][] result;
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,21 +20,21 @@ public class Q17090 {
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
         maze = new char[R][C];
-        dp = new int[R][C];
-        for (int i=0; i<R; ++i) {
-            String line = br.readLine();
-            for (int j=0; j<C; ++j) {
-                maze[i][j] = line.charAt(j);
-                dp[i][j] = -1;
+        result = new int[R][C];
+        String line;
+        for (int r=0; r<R; ++r) {
+            line = br.readLine();
+            for (int c=0; c<C; ++c) {
+                maze[r][c] = line.charAt(c);
+                result[r][c] = -1;
             }
         }
         int answer = 0;
-        for (int i=0; i<R; ++i) {
-            for (int j=0; j<C; ++j) {
-                if (dp[i][j] == -1) {
-                    solve(i, j);
-                }
-                if (dp[i][j] == 1) {
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                if (result[r][c] == -1) {
+                    answer += solve(r, c);
+                } else if (result[r][c] == 1) {
                     ++answer;
                 }
             }
@@ -42,30 +42,26 @@ public class Q17090 {
         System.out.println(answer);
     }
 
-    public static int solve (int x, int y) {
-        if (x<0 || R<=x || y<0 || C<=y) {
+    public static int solve (int r, int c) {
+        if (r<0 || R<=r || c<0 || C<=c) {
             return 1;
         }
-
-        if (dp[x][y] != -1) {
-            return dp[x][y];
+        if (result[r][c] != -1) {
+            return result[r][c];
         }
-
-        dp[x][y] = 0;
-        int nx = x; int ny = y;
-        if (maze[x][y] == 'U') {
-            --nx;
-        } else if (maze[x][y] == 'R') {
-            ++ny;
-        } else if (maze[x][y] == 'D') {
-            ++nx;
+        result[r][c] = 0;
+        int nr = r; int nc = c;
+        if (maze[r][c] == 'U') {
+            --nr;
+        } else if (maze[r][c] == 'R') {
+            ++nc;
+        } else if (maze[r][c] == 'D') {
+            ++nr;
         } else {
-            --ny;
+            --nc;
         }
-
-        dp[x][y] = solve(nx, ny);
-        return dp[x][y];
+        result[r][c] = solve(nr, nc);
+        return result[r][c];
     }
      */
 }
-
