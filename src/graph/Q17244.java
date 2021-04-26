@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q17244 {
+    /*
     public static int R, C, answer;
     public static char[][] house;
     public static int[][] distances;
@@ -114,8 +115,10 @@ public class Q17244 {
         }
         return -1;
     }
+     */
 }
 
+/*
 class Coordinate {
     int r;
     int c;
@@ -132,3 +135,4 @@ class Coordinate {
         this.distance = distance;
     }
 }
+ */
