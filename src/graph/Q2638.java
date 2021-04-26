@@ -11,94 +11,100 @@ import java.util.StringTokenizer;
 
 public class Q2638 {
     /*
+    public static Queue<Coordinate> air, cheese;
+    public static int[][] grid;
     public static int R, C;
-    public static int[][] cheese;
-    public static int[][] dp;
-    public static Queue<Coordinate> queue;
     public static int[] dr = {-1, 1, 0, 0};
     public static int[] dc = {0, 0, -1, 1};
 
-    public static void main (String args[]) throws IOException {
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        cheese = new int[R][C];
-        String line;
+        grid = new int[R][C];
+        air = new ArrayDeque<>();
+        cheese = new ArrayDeque<>();
         int count = 0;
-
-        for (int r=0; r<R; ++r) {
+        for (int r = 0; r < R; ++r) {
             st = new StringTokenizer(br.readLine());
-            for (int c=0; c<C; ++c) {
-                cheese[r][c] = Integer.parseInt(st.nextToken());
-                if (cheese[r][c] == 1) {
+            for (int c = 0; c < C; ++c) {
+                grid[r][c] = Integer.parseInt(st.nextToken());
+                if (grid[r][c] == 1) {
                     ++count;
+                    cheese.add(new Coordinate(r, c));
                 }
             }
         }
-        if (count == 0) {
-            System.out.println(0);
-        } else {
-            solve(count);
-        }
-    }
-
-    public static void solve(int count) {
         int time = 0;
-        int before = 0;
+        grid[0][0] = -1;
+        air.add(new Coordinate(0, 0));
+        dfs(0, 0);
         while (count != 0) {
             ++time;
-            dp = new int[R][C];
-            queue = new ArrayDeque<>();
-            dfs(0, 0);
-            before = count;
-            count = bfs(count);
+            count = solve(count);
         }
         System.out.println(time);
-        System.out.println(before);
+
     }
 
-    public static int bfs (int count) {
-        int size = queue.size();
-        for (int i=0; i<size; ++i) {
-            Coordinate c = queue.poll();
-            for (int dir=0; dir<4; ++dir) {
+    public static int solve(int count) {
+        int[][] temp = new int[R][C];
+        for (int r = 0; r < R; ++r) {
+            temp[r] = grid[r].clone();
+        }
+        int size = cheese.size();
+        for (int i = 0; i < size; ++i) {
+            Coordinate c = cheese.poll();
+            int counter = 0;
+            for (int dir = 0; dir < 4; ++dir) {
                 int nr = c.r + dr[dir];
                 int nc = c.c + dc[dir];
-
-                if (nr<0 || R<=nr || nc<0 || C<=nc) {
+                if (nr < 0 || R <= nr || nc < 0 || C <= nc) {
                     continue;
                 }
-                if (dp[nr][nc] == -1) {
-                    continue;
-                }
-                if (cheese[nr][nc] == 1) {
-                    cheese[nr][nc] = 0;
+                if (temp[nr][nc] == -1) ++counter;
+                if (counter == 2) {
+                    grid[c.r][c.c] = -1;
+                    air.add(new Coordinate(c.r, c.c));
                     --count;
+                    break;
                 }
-                dp[nr][nc] = -1;
+            }
+            if (counter < 2) {
+                cheese.add(c);
+            }
+        }
+
+        while (!air.isEmpty()) {
+            Coordinate c = air.poll();
+            for (int dir = 0; dir < 4; ++dir) {
+                int nr = c.r + dr[dir];
+                int nc = c.c + dc[dir];
+                if (nr < 0 || R <= nr || nc < 0 || C <= nc) {
+                    continue;
+                }
+                if (grid[nr][nc] == 0) {
+                    grid[nr][nc] = -1;
+                    air.add(new Coordinate(nr, nc));
+                }
             }
         }
         return count;
     }
 
-    public static void dfs (int r, int c) {
-        for (int dir=0; dir<4; ++dir) {
+    public static void dfs(int r, int c) {
+        for (int dir = 0; dir < 4; ++dir) {
             int nr = r + dr[dir];
             int nc = c + dc[dir];
 
-            if (nr<0 || R<=nr || nc<0 || C<=nc) {
+            if (nr < 0 || R <= nr || nc < 0 || C <= nc) {
                 continue;
             }
-            if (dp[nr][nc] == -1) {
-                continue;
+            if (grid[nr][nc] == 0) {
+                grid[nr][nc] = -1;
+                dfs(nr, nc);
             }
-            if (cheese[nr][nc] == 1) {
-                continue;
-            }
-            dp[nr][nc] = -1;
-            queue.add(new Coordinate(nr, nc));
-            dfs(nr, nc);
         }
     }
      */
@@ -109,7 +115,7 @@ class Coordinate {
     int r;
     int c;
 
-    Coordinate (int r, int c) {
+    Coordinate(int r, int c) {
         this.r = r;
         this.c = c;
     }
