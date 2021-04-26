@@ -9,43 +9,48 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q2606 {
+    /*
+    public static int computers;
     public static ArrayList<ArrayList<Integer>> network;
-    public static boolean visited [];
+    public static boolean[] visited;
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        int M = Integer.parseInt(br.readLine());
-        StringTokenizer st;
-        network = new ArrayList<>();
-        for (int i=0; i<=N; ++i) {
+        computers = Integer.parseInt(br.readLine());
+        network = new ArrayList<>(computers+1);
+        for (int i=0; i<=computers; ++i) {
             network.add(new ArrayList<>());
         }
-        for (int i=0; i<M; ++i) {
+        int N = Integer.parseInt(br.readLine());
+        StringTokenizer st;
+        for (int i=0; i<N; ++i) {
             st = new StringTokenizer(br.readLine());
             int start = Integer.parseInt(st.nextToken());
             int end = Integer.parseInt(st.nextToken());
             network.get(start).add(end);
             network.get(end).add(start);
         }
-        visited = new boolean [N+1];
+        visited = new boolean[computers+1];
         visited[1] = true;
         solve(1);
-        int virus = 0;
-        for (int i=2; i<=N; ++i) {
+        int answer = 0;
+        for (int i=2; i<computers+1; ++i) {
             if (visited[i]) {
-                ++virus;
+                ++answer;
             }
         }
-        System.out.println(virus);
+        System.out.println(answer);
     }
 
-    public static void solve (int start) {
-        ArrayList<Integer> target = network.get(start);
+    public static void solve (int computer) {
+        ArrayList<Integer> target = network.get(computer);
         for (int i=0; i<target.size(); ++i) {
-            if (!visited[target.get(i)]) {
-                visited[target.get(i)] = true;
-                solve(target.get(i));
+            int dst = target.get(i);
+            if (!visited[dst]) {
+                visited[dst] = true;
+                solve(dst);
             }
         }
     }
+     */
 }
