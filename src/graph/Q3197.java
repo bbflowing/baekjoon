@@ -11,11 +11,11 @@ public class Q3197 {
     /*
     public static int R, C;
     public static char[][] lake;
-    public static int[] dr = {-1, 1, 0, 0};
-    public static int[] dc = {0, 0, -1, 1};
-    public static Queue<Coordinate> water;
     public static Queue<Coordinate> swan;
     public static boolean[][] swanV;
+    public static Queue<Coordinate> water;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,16 +23,16 @@ public class Q3197 {
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
         lake = new char[R][C];
-        water = new ArrayDeque<>();
         swan = new ArrayDeque<>();
         swanV = new boolean[R][C];
+        water = new ArrayDeque<>();
+        String line;
         boolean flag = false;
         Coordinate dst = null;
-        String line;
 
-        for (int r = 0; r < R; ++r) {
+        for (int r=0; r<R; ++r) {
             line = br.readLine();
-            for (int c = 0; c < C; ++c) {
+            for (int c=0; c<C; ++c) {
                 lake[r][c] = line.charAt(c);
                 if (lake[r][c] == 'L') {
                     lake[r][c] = '.';
@@ -51,7 +51,7 @@ public class Q3197 {
         }
         int days = 0;
         while (true) {
-            if (move(dst)) {
+            if (swim(dst)) {
                 break;
             }
             melt();
@@ -60,7 +60,36 @@ public class Q3197 {
         System.out.println(days);
     }
 
-    public static void melt() {
+    public static boolean swim (Coordinate dst) {
+        Queue<Coordinate> next = new ArrayDeque<>();
+        while (!swan.isEmpty()) {
+            Coordinate s = swan.poll();
+            if (s.r == dst.r && s.c == dst.c) {
+                return true;
+            }
+            for (int dir=0; dir<4; ++dir) {
+                int nr = s.r + dr[dir];
+                int nc = s.c + dc[dir];
+
+                if (nr<0 || R<=nr || nc<0 || C<=nc) {
+                    continue;
+                }
+                if (swanV[nr][nc]) {
+                    continue;
+                }
+                swanV[nr][nc] = true;
+                if (lake[nr][nc] == 'X') {
+                    next.add(new Coordinate(nr, nc));
+                } else if (lake[nr][nc] == '.') {
+                    swan.add(new Coordinate(nr, nc));
+                }
+            }
+        }
+        swan = next;
+        return false;
+    }
+
+    public static void melt () {
         int size = water.size();
         for (int i=0; i<size; ++i) {
             Coordinate w = water.poll();
@@ -77,35 +106,6 @@ public class Q3197 {
                 }
             }
         }
-    }
-
-    public static boolean move(Coordinate dst) {
-        Queue<Coordinate> nextSwan = new ArrayDeque<>();
-        while (!swan.isEmpty()) {
-            Coordinate s = swan.poll();
-            if (s.r == dst.r && s.c == dst.c) {
-                return true;
-            }
-            for (int dir=0; dir<4; ++dir) {
-                int nr = s.r + dr[dir];
-                int nc = s.c + dc[dir];
-
-                if (nr < 0 || R <= nr || nc < 0 || C <= nc) {
-                    continue;
-                }
-                if (swanV[nr][nc]) {
-                    continue;
-                }
-                swanV[nr][nc] = true;
-                if (lake[nr][nc] == '.') {
-                    swan.add(new Coordinate(nr, nc));
-                } else if (lake[nr][nc] == 'X') {
-                    nextSwan.add(new Coordinate(nr, nc));
-                }
-            }
-        }
-        swan = nextSwan;
-        return false;
     }
      */
 }
