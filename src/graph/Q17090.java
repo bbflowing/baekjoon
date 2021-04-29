@@ -12,7 +12,7 @@ public class Q17090 {
     /*
     public static int R, C;
     public static char[][] maze;
-    public static int[][] result;
+    public static int[][] escape;
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,21 +20,21 @@ public class Q17090 {
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
         maze = new char[R][C];
-        result = new int[R][C];
-        String line;
+        escape = new int[R][C];
+        String line = "";
         for (int r=0; r<R; ++r) {
             line = br.readLine();
             for (int c=0; c<C; ++c) {
                 maze[r][c] = line.charAt(c);
-                result[r][c] = -1;
+                escape[r][c] = -1;
             }
         }
         int answer = 0;
         for (int r=0; r<R; ++r) {
             for (int c=0; c<C; ++c) {
-                if (result[r][c] == -1) {
+                if (escape[r][c] == -1) {
                     answer += solve(r, c);
-                } else if (result[r][c] == 1) {
+                } else if (escape[r][c] == 1) {
                     ++answer;
                 }
             }
@@ -46,11 +46,12 @@ public class Q17090 {
         if (r<0 || R<=r || c<0 || C<=c) {
             return 1;
         }
-        if (result[r][c] != -1) {
-            return result[r][c];
+        if (escape[r][c] != -1) {
+            return escape[r][c];
         }
-        result[r][c] = 0;
-        int nr = r; int nc = c;
+        escape[r][c] = 0;
+        int nr = r;
+        int nc = c;
         if (maze[r][c] == 'U') {
             --nr;
         } else if (maze[r][c] == 'R') {
@@ -60,8 +61,8 @@ public class Q17090 {
         } else {
             --nc;
         }
-        result[r][c] = solve(nr, nc);
-        return result[r][c];
+        escape[r][c] = solve(nr, nc);
+        return escape[r][c];
     }
      */
 }
