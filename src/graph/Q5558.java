@@ -3,6 +3,7 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -10,84 +11,89 @@ import java.util.StringTokenizer;
 public class Q5558 {
     /*
     public static int R, C;
-    public static char map[][];
+    public static int[][] input;
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
+        input = new int[R][C];
         int K = Integer.parseInt(st.nextToken());
-        map = new char[R][C];
+        String line = "";
         Coordinate start = null;
-        for (int i=0; i<R; ++i) {
-            String line = br.readLine();
-            for (int j=0; j<C; ++j) {
-                map[i][j] = line.charAt(j);
-                if (map[i][j] == 'S') {
-                    map[i][j] = '.';
-                    start = new Coordinate (i, j, 0, 1);
+
+        for (int r=0; r<R; ++r) {
+            line = br.readLine();
+            for (int c=0; c<C; ++c) {
+                char target = line.charAt(c);
+                if (target == 'X') {
+                    input[r][c] = -1;
+                } else if ('1' <= target && target <= '9') {
+                    input[r][c] = target-'0';
+                } else if (target == 'S') {
+                    start = new Coordinate(r, c, 1,0);
                 }
             }
         }
         bfs(start, K);
     }
 
-    public static void bfs (Coordinate start, int max) {
-        int dx[] = {-1, 1, 0, 0};
-        int dy[] = {0, 0, -1, 1};
-        boolean visited[][][] = new boolean[max+1][R][C];
-        Queue<Coordinate> queue = new LinkedList<>();
+    public static void bfs (Coordinate start, int K) {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+
+        Queue<Coordinate> queue = new ArrayDeque<>();
         queue.add(start);
-        visited[1][start.x][start.y] = true;
+        boolean[][][] visited = new boolean[R][C][K+1];
+        visited[start.r][start.c][1] = true;
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            int dst = map[c.x][c.y]-'0';
-            if (c.target == dst) {
-                if (dst == max) {
+            if (input[c.r][c.c] == c.target) {
+                if (c.target == K) {
                     System.out.println(c.distance);
                     return;
+                } else {
+                    queue.add(new Coordinate(c.r, c.c, c.target+1, c.distance));
+                    visited[c.r][c.c][c.target+1] = true;
+                    continue;
                 }
-                visited[dst+1][c.x][c.y] = true;
-                queue.add(new Coordinate(c.x, c.y, c.distance, dst+1));
-                continue;
             }
 
             for (int dir=0; dir<4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
+                int nr = c.r + dr[dir];
+                int nc = c.c + dc[dir];
 
-                if (!check(nx, ny)) continue;
-                if (visited[c.target][nx][ny]) continue;
-                if (map[nx][ny] == 'X') continue;
-
-                visited[c.target][nx][ny] = true;
-                queue.add(new Coordinate(nx, ny, c.distance+1, c.target));
+                if (nr<0 || R<=nr || nc<0 || C<=nc) {
+                    continue;
+                }
+                if (input[nr][nc] == -1) {
+                    continue;
+                }
+                if (visited[nr][nc][c.target]) {
+                    continue;
+                }
+                visited[nr][nc][c.target] = true;
+                queue.add(new Coordinate(nr, nc, c.target, c.distance+1));
             }
         }
-    }
-
-    public static boolean check (int x, int y) {
-        if (x<0 || R<=x || y<0 || C<=y) {
-            return false;
-        }
-        return true;
     }
      */
 }
 
 /*
 class Coordinate {
-    int x;
-    int y;
-    int distance;
+    int r;
+    int c;
     int target;
+    int distance;
 
-    Coordinate (int x, int y, int distance, int target) {
-        this.x = x;
-        this.y = y;
-        this.distance = distance;
+    Coordinate (int r, int c, int target, int distance) {
+        this.r = r;
+        this.c = c;
         this.target = target;
+        this.distance = distance;
     }
 }
  */
