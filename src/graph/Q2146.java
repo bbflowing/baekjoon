@@ -3,130 +3,116 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q2146 {
     /*
-    public static int input [][];
-    public static boolean visited [][];
+    public static int N;
+    public static int[][] map, group;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        input = new int [N][N];
-        visited = new boolean [N][N];
-        for (int i=0; i<N; ++i) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            for (int j=0; j<N; ++j) {
-                input[i][j] = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(br.readLine());
+        map = new int[N][N];
+        StringTokenizer st;
+        for (int r=0; r<N; ++r) {
+            st = new StringTokenizer(br.readLine());
+            for (int c=0; c<N; ++c) {
+                map[r][c] = Integer.parseInt(st.nextToken());
             }
         }
         int counter = 0;
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<N; ++j) {
-                if (input[i][j] == 1 && !visited[i][j]) {
+        group = new int[N][N];
+        for (int r=0; r<N; ++r) {
+            for (int c=0; c<N; ++c) {
+                if (map[r][c] == 1 && group[r][c] == 0) {
                     ++counter;
-                    input[i][j] = counter;
-                    visited[i][j] = true;
-                    dfs(i, j, N, counter);
+                    group[r][c] = counter;
+                    dfs(r, c, counter);
                 }
             }
         }
-        int answer = 987_654_321;
+        for (int r=0; r<N; ++r) {
+            System.out.println(Arrays.toString(group[r]));
+        }
+        System.out.println();
+        int answer = Integer.MAX_VALUE;
         for (int i=1; i<=counter; ++i) {
-            int min = bfs(N, i);
-            if (answer > min) {
-                answer = min;
-            }
+            answer = Math.min(answer, bfs(i));
         }
         System.out.println(answer);
     }
 
-    public static int bfs(int N, int start) {
-        Queue<Coordinate> queue = new LinkedList<>();
-        boolean visited [][] = new boolean[N][N];
+    public static int bfs (int continent) {
+        boolean[][] visited = new boolean[N][N];
+        Queue<Coordinate> queue = new ArrayDeque<>();
         for (int i=0; i<N; ++i) {
             for (int j=0; j<N; ++j) {
-                if (input[i][j] == start) {
+                if (group[i][j] == continent) {
                     queue.add(new Coordinate(i, j, 0));
                     visited[i][j] = true;
                 }
             }
         }
 
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-
         while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            int nbridge = current.bridge;
-            for (int i=0; i<4; ++i) {
-                int nx = current.x + dx[i];
-                int ny = current.y + dy[i];
+            Coordinate cur = queue.poll();
+            for (int dir=0; dir<4; ++dir) {
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
 
-                if (nx<0 || N<=nx || ny<0 || N<=ny) {
+                if (nr<0 || N<=nr || nc<0 || N<=nc) {
                     continue;
                 }
-
-                if (visited[nx][ny]) {
+                if (visited[nr][nc]) {
                     continue;
                 }
-
-                if (input[nx][ny] == start) {
-                    visited[nx][ny] = true;
-                    queue.add(new Coordinate (nx, ny, nbridge));
-                } else if (input[nx][ny] == 0) {
-                    visited[nx][ny] = true;
-                    queue.add(new Coordinate(nx, ny, nbridge+1));
+                visited[nr][nc] = true;
+                if (group[nr][nc] == 0) {
+                    queue.add(new Coordinate(nr, nc, cur.bridges+1));
+                } else if (group[nr][nc] == continent) {
+                    queue.add(new Coordinate(nr, nc, cur.bridges));
                 } else {
-                    return nbridge;
+                    return cur.bridges;
                 }
             }
         }
-        return 987_654_321;
-
+        return Integer.MAX_VALUE;
     }
 
-    public static void dfs (int x, int y, int N, int counter) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
+    public static void dfs (int r, int c, int counter) {
+        for (int dir=0; dir<4; ++dir) {
+            int nr = r + dr[dir];
+            int nc = c + dc[dir];
 
-        for (int i=0; i<4; ++i) {
-            int nx = x+dx[i];
-            int ny = y+dy[i];
-
-            if (nx<0 || N<=nx || ny<0 || N<=ny) {
+            if (nr<0 || N<=nr || nc<0 || N<=nc) {
                 continue;
             }
-
-            if (visited[nx][ny]) {
+            if (group[nr][nc] != 0) {
                 continue;
             }
-
-            if (input[nx][ny] == 0) {
+            if (map[nr][nc] == 0) {
                 continue;
             }
-            visited[nx][ny] = true;
-            input[nx][ny] = counter;
-            dfs(nx, ny, N, counter);
+            group[nr][nc] = counter;
+            dfs(nr, nc, counter);
         }
     }
-
      */
 }
 
 /*
 class Coordinate {
-    int x;
-    int y;
-    int bridge;
+    int r;
+    int c;
+    int bridges;
 
-    Coordinate (int x, int y, int bridge) {
-        this.x = x;
-        this.y = y;
-        this.bridge = bridge;
+    Coordinate (int r, int c, int bridges) {
+        this.r = r;
+        this.c = c;
+        this.bridges = bridges;
     }
 }
  */
