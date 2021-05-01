@@ -1,12 +1,11 @@
 package graph;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Q6087 {
     /*
+    // 레이저 통신
     public static int R, C;
     public static char[][] map;
 
@@ -16,78 +15,67 @@ public class Q6087 {
         C = Integer.parseInt(st.nextToken());
         R = Integer.parseInt(st.nextToken());
         map = new char[R][C];
-        int[][] mirrors = new int[R][C];
-        boolean flag = false;
+        int[][] visited = new int[R][C];
+        String line = "";
         Coordinate start = null;
-        Coordinate end = null;
-        String line;
-
+        boolean flag = false;
         for (int r = 0; r < R; ++r) {
             line = br.readLine();
             for (int c = 0; c < C; ++c) {
                 map[r][c] = line.charAt(c);
-                mirrors[r][c] = -1;
+                visited[r][c] = Integer.MAX_VALUE;
                 if (map[r][c] == 'C') {
                     if (!flag) {
+                        visited[r][c] = 0;
                         start = new Coordinate(r, c, -1, 0);
                         flag = true;
-                    } else {
-                        end = new Coordinate(r, c, -1, 0);
                     }
                 }
             }
         }
-        bfs(start, end, mirrors);
+        bfs(start, visited);
     }
 
-    public static void bfs(Coordinate start, Coordinate end, int[][] mirrors) {
+    public static void bfs(Coordinate start, int[][] visited) throws IOException {
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
         PriorityQueue<Coordinate> queue = new PriorityQueue<>();
-        mirrors[start.r][start.c] = 0;
-        for (int dir = 0; dir < 4; ++dir) {
-            int nr = start.r + dr[dir];
-            int nc = start.c + dc[dir];
-
-            if (nr < 0 || R <= nr || nc < 0 || C <= nc) {
-                continue;
-            }
-            if (map[nr][nc] == '*') {
-                continue;
-            }
-            mirrors[nr][nc] = 0;
+        int nr = 0;
+        int nc = 0;
+        int dir = 0;
+        for (dir = 0; dir < 4; ++dir) {
+            nr = start.r + dr[dir];
+            nc = start.c + dc[dir];
+            if (!check(nr, nc) || map[nr][nc] == '*') continue;
+            visited[nr][nc] = 0;
             queue.add(new Coordinate(nr, nc, dir, 0));
         }
-
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (c.r == end.r && c.c == end.c) {
-                System.out.println(c.mirrors);
+            if (map[c.r][c.c] == 'C') {
+                StringBuilder sb = new StringBuilder().append(c.mirrors);
+                bw.append(sb).flush();
                 return;
             }
-            for (int dir = 0; dir < 4; ++dir) {
-                int nr = c.r + dr[dir];
-                int nc = c.c + dc[dir];
-
-                if (nr < 0 || R <= nr || nc < 0 || C <= nc) {
-                    continue;
-                }
-                if (map[nr][nc] == '*') {
-                    continue;
-                }
-                if (c.direction == dir) {
-                    if (mirrors[nr][nc] >= c.mirrors || mirrors[nr][nc] == -1) {
-                        mirrors[nr][nc] = c.mirrors;
-                        queue.add(new Coordinate(nr, nc, dir, c.mirrors));
-                    }
-                } else {
-                    if (mirrors[nr][nc] >= c.mirrors + 1 || mirrors[nr][nc] == -1) {
-                        mirrors[nr][nc] = c.mirrors + 1;
-                        queue.add(new Coordinate(nr, nc, dir, c.mirrors + 1));
-                    }
-                }
+            for (dir = 0; dir < 4; ++dir) {
+                nr = c.r + dr[dir];
+                nc = c.c + dc[dir];
+                if (!check(nr, nc) || map[nr][nc] == '*') continue;
+                int nmirrors = c.mirrors;
+                if (c.direction != dir) ++nmirrors;
+                if (visited[nr][nc] < nmirrors) continue;
+                visited[nr][nc] = nmirrors;
+                queue.add(new Coordinate(nr, nc, dir, nmirrors));
             }
         }
+    }
+
+    public static boolean check(int r, int c) {
+        if (r < 0 || R <= r || c < 0 || C <= c) {
+            return false;
+        }
+        return true;
     }
      */
 }

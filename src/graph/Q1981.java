@@ -1,8 +1,6 @@
 package graph;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Q1981 {
@@ -13,12 +11,12 @@ public class Q1981 {
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        array = new int[N+1][N+1];
         StringTokenizer st;
         ArrayList<Integer> numbers = new ArrayList<>();
-        for (int r=1; r<=N; ++r) {
+        array = new int[N][N];
+        for (int r=0; r<N; ++r) {
             st = new StringTokenizer(br.readLine());
-            for (int c=1; c<=N; ++c) {
+            for (int c=0; c<N; ++c) {
                 array[r][c] = Integer.parseInt(st.nextToken());
                 if (!numbers.contains(array[r][c])) {
                     numbers.add(array[r][c]);
@@ -29,45 +27,48 @@ public class Q1981 {
         solve(numbers);
     }
 
-    public static void solve(ArrayList<Integer> numbers) {
+    public static void solve (ArrayList<Integer> numbers) throws IOException {
         int minIndex = 0; int maxIndex = 0;
         int answer = Integer.MAX_VALUE;
-
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         while (minIndex < numbers.size() && maxIndex < numbers.size()) {
             int min = numbers.get(minIndex);
             int max = numbers.get(maxIndex);
-            if (array[1][1] < min || max < array[1][1]) {
+            if (array[0][0] < min || max < array[0][0]) {
                 ++maxIndex;
                 continue;
             }
             if (bfs(min, max)) {
-                answer = answer > max-min ? max-min : answer;
                 ++minIndex;
+                answer = Math.min(max-min, answer);
             } else {
                 ++maxIndex;
             }
         }
-        System.out.println(answer);
+        StringBuilder sb = new StringBuilder();
+        sb.append(answer);
+        bw.append(sb);
+        bw.flush();
     }
 
     public static boolean bfs (int min, int max) {
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
-        boolean[][] visited = new boolean[N+1][N+1];
-        visited[1][1] = true;
+        boolean[][] visited = new boolean[N][N];
+        visited[0][0] = true;
         Queue<Coordinate> queue = new ArrayDeque<>();
-        queue.add(new Coordinate(1, 1));
+        queue.add(new Coordinate(0, 0));
 
         while (!queue.isEmpty()) {
             Coordinate c = queue.poll();
-            if (c.r == N && c.c == N) {
+            if (c.r == N-1 && c.c == N-1) {
                 return true;
             }
             for (int dir=0; dir<4; ++dir) {
                 int nr = c.r + dr[dir];
                 int nc = c.c + dc[dir];
 
-                if (nr<1 || N<nr || nc<1 || N<nc) {
+                if (nr<0 || N<=nr || nc<0 || N<=nc) {
                     continue;
                 }
                 if (visited[nr][nc]) {
@@ -89,7 +90,7 @@ class Coordinate {
     int r;
     int c;
 
-    Coordinate(int r, int c) {
+    Coordinate (int r, int c) {
         this.r = r;
         this.c = c;
     }
