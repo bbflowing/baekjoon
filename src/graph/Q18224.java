@@ -1,6 +1,7 @@
 package graph;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
@@ -8,14 +9,13 @@ import java.util.*;
 public class Q18224 {
     /*
     public static int N;
-    public static int M;
-    public static int maze[][];
+    public static int[][] maze;
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
         maze = new int[N][N];
         for (int r=0; r<N; ++r) {
             st = new StringTokenizer(br.readLine());
@@ -23,78 +23,65 @@ public class Q18224 {
                 maze[r][c] = Integer.parseInt(st.nextToken());
             }
         }
-        bfs();
+        bfs(M);
     }
 
-    public static void bfs() {
-        boolean visited[][][][] = new boolean[2][M+1][N][N];
-        visited[0][1][0][0] = true;
+    public static void bfs (int M) {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        boolean[][][][] visited = new boolean[2][M+1][N][N];
         Queue<Coordinate> queue = new ArrayDeque<>();
-        queue.add(new Coordinate(0, 0, 1,0, 0));
-        int dr[] = {-1, 1, 0, 0};
-        int dc[] = {0, 0, -1, 1};
+        queue.add(new Coordinate(0, 0, 1, 0, 1));
+        visited[0][1][0][0] = true;
 
         while (!queue.isEmpty()) {
-            Coordinate c= queue.poll();
+            Coordinate c = queue.poll();
             if (c.r == N-1 && c.c == N-1) {
                 if (c.time == 0) {
-                    System.out.println(c.day+" sun");
+                    System.out.println(c.days+" sun");
                 } else {
-                    System.out.println(c.day+" moon");
+                    System.out.println(c.days+" moon");
                 }
                 return;
             }
-
             for (int dir=0; dir<4; ++dir) {
                 int nr = c.r + dr[dir];
                 int nc = c.c + dc[dir];
 
-                if (nr<0 || N<=nr || nc<0 || N<=nc) {
-                    continue;
-                }
+                if (nr<0 || N<=nr || nc<0 || N<=nc) continue;
+                int ndistance = c.distance+1;
                 int ntime = c.time;
-                int nmoves = c.moves+1;
-                int nday = c.day;
-                if (nmoves == M) {
-                    nmoves = 0;
-                    if (c.time == 0) {
+                int ndays = c.days;
+                if (ndistance == M+1) {
+                    ndistance = 1;
+                    if (ntime == 0) {
                         ntime = 1;
                     } else {
                         ntime = 0;
-                        nday += 1;
+                        ++ndays;
                     }
-                }
-                if (visited[ntime][nmoves][nr][nc]) {
-                    continue;
                 }
                 if (maze[nr][nc] == 1) {
                     if (c.time == 1) {
-                        boolean success = false;
                         while (true) {
                             nr += dr[dir];
                             nc += dc[dir];
 
-                            if (nr < 0 || N <= nr || nc < 0 || N <= nc) {
-                                break;
-                            }
+                            if (nr < 0 || N <= nr || nc < 0 || N <= nc) break;
                             if (maze[nr][nc] == 0) {
-                                success = true;
+                                if (!visited[ntime][ndistance][nr][nc]) {
+                                    visited[ntime][ndistance][nr][nc] = true;
+                                    queue.add(new Coordinate(nr, nc, ndays, ntime, ndistance));
+                                }
                                 break;
                             }
-                        }
-                        if (success) {
-                            if (visited[ntime][nmoves][nr][nc]) {
-                                continue;
-                            }
-                            visited[ntime][nmoves][nr][nc] = true;
-                            queue.add(new Coordinate(ntime, nmoves, nday, nr, nc));
                         }
                     }
-                } else if (maze[nr][nc] != 1) {
-                    visited[ntime][nmoves][nr][nc] = true;
-                    queue.add(new Coordinate(ntime, nmoves, nday, nr, nc));
+                } else {
+                    if (visited[ntime][ndistance][nr][nc]) continue;
+                    queue.add(new Coordinate(nr, nc, ndays, ntime, ndistance));
+                    visited[ntime][ndistance][nr][nc] = true;
                 }
-
             }
         }
         System.out.println(-1);
@@ -104,20 +91,18 @@ public class Q18224 {
 
 /*
 class Coordinate {
-    int time;
-    int moves;
-    int day;
     int r;
     int c;
+    int days;
+    int time;
+    int distance;
 
-    Coordinate (int time, int moves, int day, int r, int c) {
-        this.time = time;
-        this.moves = moves;
-        this.day = day;
+    Coordinate (int r, int c, int days, int time, int distance) {
         this.r = r;
         this.c = c;
+        this.days = days;
+        this.time = time;
+        this.distance = distance;
     }
 }
  */
-
-
