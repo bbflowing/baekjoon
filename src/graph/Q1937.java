@@ -1,6 +1,7 @@
 package graph;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -32,30 +33,23 @@ public class Q1937 {
         int answer = -1;
         for (int r=0; r<N; ++r) {
             for (int c=0; c<N; ++c) {
-                if (dp[r][c] == -1) {
-                    solve(r, c);
-                }
-                answer = Math.max(answer, dp[r][c]);
+                if (dp[r][c] == -1) answer = Math.max(answer, solve(r, c));
             }
         }
-        System.out.println(answer+1);
+        System.out.println(answer);
     }
 
     public static int solve (int r, int c) {
         if (dp[r][c] != -1) {
             return dp[r][c];
         }
-        dp[r][c] = 0;
-
+        dp[r][c] = 1;
         for (int dir=0; dir<4; ++dir) {
             int nr = r + dr[dir];
             int nc = c + dc[dir];
-
-            if (nr<0 || N<=nr || nc<0 || N<=nc) {
-                continue;
-            }
+            if (nr<0 || N<=nr || nc<0 || N<=nc) continue;
             if (forest[r][c] < forest[nr][nc]) {
-                dp[r][c] = Math.max(solve(nr, nc)+1, dp[r][c]);
+                dp[r][c] = Math.max(dp[r][c], solve(nr, nc)+1);
             }
         }
         return dp[r][c];
