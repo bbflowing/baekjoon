@@ -9,61 +9,61 @@ import java.util.StringTokenizer;
 
 public class Q16929 {
     /*
-    1. dfs
-    2. found a visited spot & reached using a direction different from the direction right before -> cycle
-       found a visited spot & used the same direction -> not a cycle
-    3. no more same character -> no cycle (cancel all the routes)
+    public static int R, C;
+    public static char[][] board;
+    public static boolean[][] visited;
+    public static int[][] dp;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
 
-    public static int N, M;
-    public static char game [][];
-    public static boolean visited [][];
-    public static int dx [] = {-1, 1, 0, 0};
-    public static int dy [] = {0, 0, -1, 1};
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        game = new char [N][M];
-        visited = new boolean [N][M];
-        for (int i=0; i<N; ++i) {
-            String line = br.readLine();
-            for (int j=0; j<M; ++j) {
-                game[i][j] = line.charAt(j);
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        board = new char[R][C];
+        visited = new boolean[R][C];
+        dp = new int[R][C];
+        String line = "";
+        for (int r=0; r<R; ++r) {
+            line = br.readLine();
+            for (int c=0; c<C; ++c) {
+                board[r][c] = line.charAt(c);
             }
         }
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<M; ++j) {
-                if (!visited[i][j]) {
-                    visited[i][j] = true;
-                    findCycle(i, j, -1);
-                    visited[i][j] = false;
+
+        int counter = 0;
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                if (dp[r][c] == 0) {
+                    ++counter;
+                    visited[r][c] = true;
+                    dp[r][c] = counter;
+                    solve(r, c, -1, -1, counter);
+                    visited[r][c] = false;
                 }
             }
         }
         System.out.println("No");
     }
 
-    public static void findCycle(int x, int y, int before) {
-        for (int i=0; i<4; ++i) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
-
-            if (0 <= nx && nx < N && 0 <= ny && ny < M) {
-                if (!visited[nx][ny] && game[nx][ny] == game[x][y]) {
-                    visited [nx][ny] = true;
-                    //System.out.println(nx+","+ny);
-                    findCycle(nx, ny, i);
-                    visited[nx][ny] = false;
-                } else if (visited[nx][ny] && game[nx][ny] == game[x][y]) {
-                    if ((before == 0 && i == 1) || (before == 1 && i == 0) ||
-                            (before == 2 && i == 3) || (before == 3 && i == 2)) {
-                        continue;
-                    } else {
-                        System.out.println("Yes");
-                        System.exit(0);
-                    }
+    public static void solve (int r, int c, int br, int bc, int counter) {
+        for (int dir=0; dir<4; ++dir) {
+            int nr = r + dr[dir];
+            int nc = c + dc[dir];
+            if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+            if (visited[nr][nc]) {
+                if (nr == br && nc == bc) continue;
+                else if (nr != br || nc != bc) {
+                    System.out.println("Yes");
+                    System.exit(0);
                 }
+            }
+            if (board[nr][nc] == board[r][c]) {
+                dp[nr][nc] = counter;
+                visited[nr][nc] = true;
+                solve(nr, nc, r, c, counter);
+                visited[nr][nc] = false;
             }
         }
     }
