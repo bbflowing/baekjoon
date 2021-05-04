@@ -22,14 +22,13 @@ public class Q3197 {
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        lake = new char[R][C];
         swan = new ArrayDeque<>();
         swanV = new boolean[R][C];
+        lake = new char[R][C];
         water = new ArrayDeque<>();
-        String line;
+        Coordinate target = null;
+        String line = "";
         boolean flag = false;
-        Coordinate dst = null;
-
         for (int r=0; r<R; ++r) {
             line = br.readLine();
             for (int c=0; c<C; ++c) {
@@ -37,11 +36,11 @@ public class Q3197 {
                 if (lake[r][c] == 'L') {
                     lake[r][c] = '.';
                     if (!flag) {
+                        flag = true;
                         swan.add(new Coordinate(r, c));
                         swanV[r][c] = true;
-                        flag = true;
                     } else {
-                        dst = new Coordinate(r, c);
+                        target = new Coordinate(r, c);
                     }
                 }
                 if (lake[r][c] == '.') {
@@ -51,7 +50,7 @@ public class Q3197 {
         }
         int days = 0;
         while (true) {
-            if (swim(dst)) {
+            if (swim(target)) {
                 break;
             }
             melt();
@@ -60,28 +59,24 @@ public class Q3197 {
         System.out.println(days);
     }
 
-    public static boolean swim (Coordinate dst) {
+    public static boolean swim (Coordinate target) {
         Queue<Coordinate> next = new ArrayDeque<>();
-        while (!swan.isEmpty()) {
-            Coordinate s = swan.poll();
-            if (s.r == dst.r && s.c == dst.c) {
+        while(!swan.isEmpty()) {
+            Coordinate cur = swan.poll();
+            if (cur.r == target.r && cur.c == target.c) {
                 return true;
             }
             for (int dir=0; dir<4; ++dir) {
-                int nr = s.r + dr[dir];
-                int nc = s.c + dc[dir];
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
 
-                if (nr<0 || R<=nr || nc<0 || C<=nc) {
-                    continue;
-                }
-                if (swanV[nr][nc]) {
-                    continue;
-                }
+                if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+                if (swanV[nr][nc]) continue;
                 swanV[nr][nc] = true;
-                if (lake[nr][nc] == 'X') {
-                    next.add(new Coordinate(nr, nc));
-                } else if (lake[nr][nc] == '.') {
+                if (lake[nr][nc] == '.') {
                     swan.add(new Coordinate(nr, nc));
+                } else if (lake[nr][nc] == 'X') {
+                    next.add(new Coordinate(nr, nc));
                 }
             }
         }
@@ -89,17 +84,15 @@ public class Q3197 {
         return false;
     }
 
-    public static void melt () {
+    public static void melt() {
         int size = water.size();
         for (int i=0; i<size; ++i) {
-            Coordinate w = water.poll();
+            Coordinate cur = water.poll();
             for (int dir=0; dir<4; ++dir) {
-                int nr = w.r + dr[dir];
-                int nc = w.c + dc[dir];
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
 
-                if (nr<0 || R<=nr || nc<0 || C<=nc) {
-                    continue;
-                }
+                if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
                 if (lake[nr][nc] == 'X') {
                     lake[nr][nc] = '.';
                     water.add(new Coordinate(nr, nc));
