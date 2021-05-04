@@ -3,152 +3,144 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Q16952 {
     /*
-    public static int board[][];
     public static int N;
+    public static int[][] board;
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
         board = new int[N][N];
         StringTokenizer st;
-        int startX = 0;
-        int startY = 0;
-        for (int i = 0; i < N; ++i) {
+        int startR = 0;
+        int startC = 0;
+        for (int r = 0; r < N; ++r) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < N; ++j) {
-                board[i][j] = Integer.parseInt(st.nextToken());
-                if (board[i][j] == 1) {
-                    startX = i;
-                    startY = j;
+            for (int c = 0; c < N; ++c) {
+                board[r][c] = Integer.parseInt(st.nextToken());
+                if (board[r][c] == 1) {
+                    startR = r;
+                    startC = c;
                 }
             }
         }
-        bfs(startX, startY);
+        bfs(startR, startC);
     }
 
-    public static void bfs(int startX, int startY) {
-        int max = (int) Math.pow(N, 2);
-        int counter = 0;
-        boolean visited[][][][] = new boolean[3][N][N][max + 1];
+    public static void bfs(int r, int c) {
         PriorityQueue<Coordinate> queue = new PriorityQueue<>();
-        for (int piece = 0; piece < 3; ++piece) {
-            visited[piece][startX][startY][2] = true;
-            queue.add(new Coordinate(piece, startX, startY, 2, 0, 0));
+        int max = (int) Math.pow(N, 2);
+        boolean[][][][] visited = new boolean[3][N][N][max + 1];
+
+        int[] knightR = {-1, -2, -2, -1, +1, +2, +2, +1};
+        int[] knightC = {-2, -1, +1, +2, -2, -1, +1, +2};
+        int[] bishopR = {-1, -1, +1, +1};
+        int[] bishopC = {-1, +1, -1, +1};
+        int[] rookR = {-1, 0, 0, +1};
+        int[] rookC = {0, -1, +1, 0};
+
+        for (int type = 0; type < 3; ++type) {
+            queue.add(new Coordinate(type, r, c, 0, 2, 0));
+            visited[type][r][c][2] = true;
         }
-        int knightX[] = {-1, -2, -2, -1, +1, +2, +2, +1};
-        int knightY[] = {-2, -1, +1, +2, -2, -1, +1, +2};
-        int bishopX[] = {-1, -1, +1, +1};
-        int bishopY[] = {-1, +1, -1, +1};
-        int rookX[] = {-1, 0, 0, +1};
-        int rookY[] = {0, -1, +1, 0};
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            if (c.target == board[c.x][c.y]) {
-                if (c.target == max) {
-                    System.out.println(c.distance + " " + c.changes);
+            Coordinate cur = queue.poll();
+            if (cur.target == board[cur.r][cur.c]) {
+                if (cur.target == max) {
+                    System.out.println(cur.times + " " + cur.changes);
                     return;
                 } else {
-                    visited[c.piece][c.x][c.y][c.target + 1] = true;
-                    queue.add(new Coordinate(c.piece, c.x, c.y, c.target + 1, c.distance, c.changes));
+                    queue.add(new Coordinate(cur.type, cur.r, cur.c, cur.changes, cur.target + 1, cur.times));
+                    visited[cur.type][cur.r][cur.c][cur.target + 1] = true;
                     continue;
                 }
-            }
-            for (int piece = 0; piece < 3; ++piece) {
-                if (c.piece != piece) {
-                    if (!visited[piece][c.x][c.y][c.target]) {
-                        visited[piece][c.x][c.y][c.target] = true;
-                        queue.add(new Coordinate(piece, c.x, c.y, c.target, c.distance + 1, c.changes + 1));
+            } else {
+                for (int type = 0; type < 3; ++type) {
+                    if (cur.type != type) {
+                        if (!visited[type][cur.r][cur.c][cur.target]) {
+                            visited[type][cur.r][cur.c][cur.target] = true;
+                            queue.add(new Coordinate(type, cur.r, cur.c, cur.changes + 1, cur.target, cur.times + 1));
+                        }
                     }
                 }
             }
 
-            if (c.piece == 0) {
-                int nx = c.x;
-                int ny = c.y;
+            if (cur.type == 0) {
                 for (int dir = 0; dir < 8; ++dir) {
-                    nx = c.x + knightX[dir];
-                    ny = c.y + knightY[dir];
-                    if (nx < 0 || N <= nx || ny < 0 || N <= ny) {
-                        continue;
-                    }
-                    if (visited[0][nx][ny][c.target]) {
-                        continue;
-                    }
-                    visited[0][nx][ny][c.target] = true;
-                    queue.add(new Coordinate(0, nx, ny, c.target, c.distance + 1, c.changes));
+                    int nr = cur.r + knightR[dir];
+                    int nc = cur.c + knightC[dir];
+                    if (!check(nr, nc)) continue;
+                    if (visited[0][nr][nc][cur.target]) continue;
+                    visited[0][nr][nc][cur.target] = true;
+                    queue.add(new Coordinate(0, nr, nc, cur.changes, cur.target, cur.times + 1));
                 }
-            } else if (c.piece == 1) {
+            } else if (cur.type == 1) {
                 for (int dir = 0; dir < 4; ++dir) {
-                    int nx = c.x;
-                    int ny = c.y;
+                    int nr = cur.r;
+                    int nc = cur.c;
                     while (true) {
-                        nx += bishopX[dir];
-                        ny += bishopY[dir];
-
-                        if (nx < 0 || N <= nx || ny < 0 || N <= ny) {
-                            break;
-                        }
-                        if (visited[1][nx][ny][c.target]) {
-                            continue;
-                        }
-                        visited[1][nx][ny][c.target] = true;
-                        queue.add(new Coordinate(1, nx, ny, c.target, c.distance + 1, c.changes));
+                        nr += bishopR[dir];
+                        nc += bishopC[dir];
+                        if (!check(nr, nc)) break;
+                        if (visited[1][nr][nc][cur.target]) continue;
+                        visited[1][nr][nc][cur.target] = true;
+                        queue.add(new Coordinate(1, nr, nc, cur.changes, cur.target, cur.times + 1));
                     }
                 }
             } else {
                 for (int dir = 0; dir < 4; ++dir) {
-                    int nx = c.x;
-                    int ny = c.y;
+                    int nr = cur.r;
+                    int nc = cur.c;
                     while (true) {
-                        nx += rookX[dir];
-                        ny += rookY[dir];
-
-                        if (nx < 0 || N <= nx || ny < 0 || N <= ny) {
-                            break;
-                        }
-                        if (visited[2][nx][ny][c.target]) {
-                            continue;
-                        }
-                        visited[2][nx][ny][c.target] = true;
-                        queue.add(new Coordinate(2, nx, ny, c.target, c.distance + 1, c.changes));
+                        nr += rookR[dir];
+                        nc += rookC[dir];
+                        if (!check(nr, nc)) break;
+                        if (visited[2][nr][nc][cur.target]) continue;
+                        visited[2][nr][nc][cur.target] = true;
+                        queue.add(new Coordinate(2, nr, nc, cur.changes, cur.target, cur.times + 1));
                     }
                 }
             }
         }
+    }
+
+    public static boolean check(int r, int c) {
+        if (r < 0 || N <= r || c < 0 || N <= c) return false;
+        return true;
     }
      */
 }
 
 /*
 class Coordinate implements Comparable<Coordinate> {
-    int piece;
-    int x;
-    int y;
-    int target;
-    int distance;
+    int type;
+    int r;
+    int c;
     int changes;
+    int target;
+    int times;
 
-    Coordinate(int piece, int x, int y, int target, int distance, int changes) {
-        this.piece = piece;
-        this.x = x;
-        this.y = y;
+    Coordinate(int type, int r, int c, int changes, int target, int times) {
+        this.type = type;
         this.target = target;
-        this.distance = distance;
+        this.r = r;
+        this.c = c;
         this.changes = changes;
+        this.times = times;
     }
 
     @Override
     public int compareTo(Coordinate c) {
-        if (this.distance > c.distance) {
+        if (this.times > c.times) {
             return 1;
-        } else if (this.distance == c.distance) {
+        } else if (this.times == c.times) {
             if (this.changes > c.changes) {
                 return 1;
             } else if (this.changes == c.changes) {
@@ -161,5 +153,4 @@ class Coordinate implements Comparable<Coordinate> {
         }
     }
 }
-
  */
