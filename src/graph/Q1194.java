@@ -1,8 +1,10 @@
 package graph;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -10,7 +12,7 @@ import java.util.StringTokenizer;
 public class Q1194 {
     /*
     public static int R, C;
-    public static char maze[][];
+    public static char[][] maze;
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,64 +20,55 @@ public class Q1194 {
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
         maze = new char[R][C];
-        Coordinate start = null;
-        for (int i=0; i<R; ++i) {
-            String line = br.readLine();
-            for (int j=0; j<C; ++j) {
-                maze[i][j] = line.charAt(j);
-                if (maze[i][j] == '0') {
-                    start = new Coordinate(i, j, 0, 0);
-                    maze[i][j] = '.';
+        String line = "";
+        int startR = 0; int startC = 0;
+        for (int r=0; r<R; ++r) {
+            line = br.readLine();
+            for (int c=0; c<C; ++c) {
+                maze[r][c] = line.charAt(c);
+                if (maze[r][c] == '0') {
+                    maze[r][c] = '.';
+                    startR = r;
+                    startC = c;
                 }
             }
         }
-        bfs(start);
+        bfs(startR, startC);
     }
 
-    public static void bfs(Coordinate start) {
-        int dx[] = {-1, 1, 0, 0};
-        int dy[] = {0, 0, -1, 1};
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(start);
-        boolean visited[][][] = new boolean[R][C][1<<6];
-        visited[start.x][start.y][0] = true;
+    public static void bfs (int r, int c) {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        boolean[][][] visited = new boolean[R][C][1<<6];
+        visited[r][c][0] = true;
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        queue.add(new Coordinate(r, c, 0, 0));
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
+            Coordinate cur = queue.poll();
+            if (maze[cur.r][cur.c] == '1') {
+                System.out.println(cur.distance);
+                return;
+            }
             for (int dir=0; dir<4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
+                int nkeys = cur.keys;
 
-                if (nx<0 || R<=nx || ny<0 || C<=ny) {
+                if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+                if (visited[nr][nc][nkeys]) continue;
+                if (maze[nr][nc] == '#') {
                     continue;
-                }
-                if (visited[nx][ny][c.key]) {
-                    continue;
-                }
-                if (maze[nx][ny] == '#') {
-                    continue;
-                } else if ('a' <= maze[nx][ny] && maze[nx][ny] <= 'f') {
-                    visited[nx][ny][c.key] = true;
-                    int tempKey = 1<<(maze[nx][ny]-'a') | c.key;
-                    visited[nx][ny][tempKey] = true;
-                    queue.add(new Coordinate(nx, ny, tempKey, c.distance+1));
-                    //maze[nx][ny] = '.';
-                } else if ('A' <= maze[nx][ny] && maze[nx][ny] <= 'F') {
-                    int check = c.key & 1<<(maze[nx][ny]-'A');
-                    if (check == 0) {
+                } else if ('A' <= maze[nr][nc] && maze[nr][nc] <= 'F') {
+                    int temp = nkeys & 1<<(maze[nr][nc]-'A');
+                    if (temp == 0) {
                         continue;
-                    } else {
-                        //maze[nx][ny] = '.';
-                        visited[nx][ny][c.key] = true;
-                        queue.add(new Coordinate(nx, ny, c.key, c.distance+1));
                     }
-                } else if (maze[nx][ny] == '1') {
-                    System.out.println(c.distance+1);
-                    return;
-                } else if (maze[nx][ny] == '.') {
-                    queue.add(new Coordinate(nx, ny, c.key, c.distance+1));
-                    visited[nx][ny][c.key] = true;
+                } else if ('a' <= maze[nr][nc] && maze[nr][nc] <= 'f') {
+                    nkeys = nkeys | (1<<maze[nr][nc]-'A');
                 }
+                visited[nr][nc][nkeys] = true;
+                queue.add(new Coordinate(nr, nc, nkeys,cur.distance+1));
             }
         }
         System.out.println(-1);
@@ -85,16 +78,17 @@ public class Q1194 {
 
 /*
 class Coordinate {
-    int x;
-    int y;
-    int key;
+    int r;
+    int c;
+    int keys;
     int distance;
 
-    Coordinate(int x, int y, int key, int distance) {
-        this.x = x;
-        this.y = y;
-        this.key = key;
+    Coordinate (int r, int c, int keys, int distance) {
+        this.r = r;
+        this.c = c;
+        this.keys = keys;
         this.distance = distance;
     }
 }
  */
+
