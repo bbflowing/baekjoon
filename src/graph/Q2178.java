@@ -1,61 +1,58 @@
 package graph;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q2178 {
     /*
-    public static int maze [][];
     public static int R, C;
+    public static int[][] maze;
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        maze = new int [R+1][C+1];
-        for (int i=1; i<=R; ++i) {
-            String line = br.readLine();
-            for (int j=1; j<=C; ++j) {
-                maze[i][j] = line.charAt(j-1)-'0';
+        maze = new int[R][C];
+        String line = "";
+        for (int r=0; r<R; ++r) {
+            line = br.readLine();
+            for (int c=0; c<C; ++c) {
+                maze[r][c] = line.charAt(c) - '0';
             }
         }
         bfs();
     }
 
-    public static void bfs() {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-        Queue<Coordinate> queue = new LinkedList<>();
-        boolean visited [][] = new boolean [R+1][C+1];
-        queue.add(new Coordinate(1, 1, 1));
-        visited[1][1] = true;
+    public static void bfs () {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        boolean[][] visited = new boolean[R][C];
+        visited[0][0] = true;
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        queue.add(new Coordinate(0, 0, 1));
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            if (c.x == R && c.y == C) {
-                System.out.println(c.distance);
+            Coordinate cur = queue.poll();
+            if (cur.r == R-1 && cur.c == C-1) {
+                System.out.println(cur.distance);
                 return;
             }
-            for (int i=0; i<4; ++i) {
-                int nx = c.x + dx[i];
-                int ny = c.y + dy[i];
+            for (int dir=0; dir<4; ++dir) {
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
 
-                if (nx<1 || R<nx || ny<1 || C<ny) {
-                    continue;
-                }
-                if (visited[nx][ny]) {
-                    continue;
-                }
-                if (maze[nx][ny] == 0) {
-                    continue;
-                }
-
-                visited[nx][ny] = true;
-                queue.add(new Coordinate(nx, ny, c.distance+1));
+                if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+                if (visited[nr][nc]) continue;
+                if (maze[nr][nc] == 0) continue;
+                visited[nr][nc] = true;
+                queue.add(new Coordinate(nr, nc, cur.distance+1));
             }
         }
     }
@@ -64,15 +61,14 @@ public class Q2178 {
 
 /*
 class Coordinate {
-    int x;
-    int y;
+    int r;
+    int c;
     int distance;
 
-    Coordinate (int x, int y, int distance) {
-        this.x = x;
-        this.y = y;
+    Coordinate (int r, int c, int distance) {
+        this.r = r;
+        this.c = c;
         this.distance = distance;
     }
 }
  */
-
