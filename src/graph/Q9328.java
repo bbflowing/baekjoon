@@ -6,7 +6,8 @@ import java.util.*;
 public class Q9328 {
     /*
     public static int R, C;
-    public static char building[][];
+    public static char[][] plan;
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -16,84 +17,78 @@ public class Q9328 {
             st = new StringTokenizer(br.readLine());
             R = Integer.parseInt(st.nextToken());
             C = Integer.parseInt(st.nextToken());
-            building = new char[R+2][C+2];
-            for (int i=0; i<R+2; ++i) {
-                Arrays.fill(building[i], '.');
-            }
-            for (int i=1; i<=R; ++i) {
-                String line = br.readLine();
-                for (int j=1; j<=C; ++j) {
-                    building[i][j] = line.charAt(j-1);
+            plan = new char[R + 2][C + 2];
+            String line = "";
+            for (int r = 0; r < R + 2; ++r) {
+                if (r==0 || r==R+1) {
+                    Arrays.fill(plan[r], '.');
+                    continue;
+                } else {
+                    line = br.readLine();
+                    plan[r][0] = '.';
+                    plan[r][C+1] = '.';
+                    for (int c=1; c<=C; ++c) {
+                        plan[r][c] = line.charAt(c-1);
+                    }
                 }
             }
-            boolean keys[] = new boolean[26];
+            boolean[] keys = new boolean[26];
             String key = br.readLine();
             if (!key.equals("0")) {
                 for (int i = 0; i < key.length(); ++i) {
                     keys[key.charAt(i) - 'a'] = true;
                 }
             }
-            bw.append(String.valueOf(solve(keys)));
+            bw.append(String.valueOf(bfs(keys)));
             bw.newLine();
         }
         bw.flush();
     }
 
-    public static int solve (boolean[] keys) {
-        int dx[] = {-1, 1, 0, 0};
-        int dy[] = {0, 0, -1, 1};
-        Queue<Coordinate> unsolved = new LinkedList<>();
-        Queue<Coordinate> queue = new LinkedList<>();
-        boolean visited[][] = new boolean[R+2][C+2];
+    public static int bfs (boolean[] keys) {
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        Queue<Coordinate> yet = new ArrayDeque<>();
         queue.add(new Coordinate(0, 0));
+        boolean[][] visited = new boolean[R+2][C+2];
         visited[0][0] = true;
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
         int count = 0;
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
+            Coordinate cur = queue.poll();
             for (int dir=0; dir<4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
 
-                if (nx<0 || R+2<=nx || ny<0 || C+2<=ny) {
+                if (nr<0 || R+2<=nr || nc<0 || C+2<=nc) continue;
+                if (visited[nr][nc]) continue;
+                if (plan[nr][nc] == '*') {
                     continue;
-                }
-                if (visited[nx][ny]) {
-                    continue;
-                }
-                if (building[nx][ny] == '*') {
-                    continue;
-                } else if (building[nx][ny] == '.') {
-                    queue.add(new Coordinate(nx, ny));
-                    visited[nx][ny] = true;
-                } else if ('A' <= building[nx][ny] && building[nx][ny] <= 'Z') {
-                    if (keys[building[nx][ny]-'A']) {
-                        queue.add(new Coordinate(nx, ny));
-                        visited[nx][ny] = true;
-                    } else {
-                        unsolved.add(new Coordinate(nx, ny));
-                    }
-                } else if ('a' <= building[nx][ny] && building[nx][ny] <= 'z') {
-                    queue.add(new Coordinate(nx, ny));
-                    visited[nx][ny] = true;
-                    if (!keys[building[nx][ny]-'a']) {
-                        keys[building[nx][ny]-'a'] = true;
-                        int size = unsolved.size();
+                } else if (plan[nr][nc] == '$') {
+                    ++count;
+                } else if ('a' <= plan[nr][nc] && plan[nr][nc] <= 'z') {
+                    if (!keys[plan[nr][nc]-'a']) {
+                        keys[plan[nr][nc]-'a'] = true;
+                        int size = yet.size();
                         for (int i=0; i<size; ++i) {
-                            Coordinate check = unsolved.poll();
-                            if (building[check.x][check.y]-'A' == building[nx][ny]-'a') {
-                                queue.add(new Coordinate(check.x, check.y));
-                                visited[check.x][check.y] = true;
+                            Coordinate test = yet.poll();
+                            if (plan[test.r][test.c]-'A' == plan[nr][nc]-'a') {
+                                visited[test.r][test.c] = true;
+                                queue.add(new Coordinate(test.r, test.c));
                             } else {
-                                unsolved.add(new Coordinate(check.x, check.y));
+                                yet.add(new Coordinate(test.r, test.c));
                             }
                         }
                     }
-                } else if (building[nx][ny] == '$') {
-                    queue.add(new Coordinate(nx, ny));
-                    visited[nx][ny] = true;
-                    ++count;
+                } else if ('A' <= plan[nr][nc] && plan[nr][nc] <= 'Z') {
+                    if (!keys[plan[nr][nc]-'A']) {
+                        yet.add(new Coordinate(nr, nc));
+                        continue;
+                    }
                 }
+                visited[nr][nc] = true;
+                queue.add(new Coordinate(nr, nc));
             }
         }
         return count;
@@ -103,12 +98,13 @@ public class Q9328 {
 
 /*
 class Coordinate {
-    int x;
-    int y;
+    int r;
+    int c;
 
-    Coordinate(int x, int y) {
-        this.x = x;
-        this.y = y;
+    Coordinate (int r, int c) {
+        this.r = r;
+        this.c =c;
     }
 }
+
  */
