@@ -1,65 +1,78 @@
 package graph;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class Q2583 {
     /*
-    public static int input [][];
+    public static int R, C, size;
+    public static int[][] grid;
+    public static int[][] groups;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int M = Integer.parseInt(st.nextToken());
-        int N = Integer.parseInt(st.nextToken());
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
-        input = new int [M][N];
-        ArrayList<Coordinate> list = new ArrayList<>();
-        for (int a []:input) {
-            Arrays.fill(a, 1);
-        }
-
-        for (int i = 0; i < K; ++i) {
+        grid = new int[R][C];
+        for (int k=0; k<K; ++k) {
             st = new StringTokenizer(br.readLine());
-            list.add (new Coordinate(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()),
-                                        Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
-        }
-
-        for (int i = 0; i < K; ++i) {
-            Coordinate square = list.get(i);
-            for (int j = M - 2*square.startY - square.endY; j <= M - 3*square.startY - 1; ++j) {
-                for (int k = square.startX; k <= square.endX - 1; ++k) {
-                    input[j][k] = 0;
+            int sc = Integer.parseInt(st.nextToken());
+            int sr = R-1-Integer.parseInt(st.nextToken());
+            int ec = Integer.parseInt(st.nextToken())-1;
+            int er = R-Integer.parseInt(st.nextToken());
+            for (int i=er; i<=sr; ++i) {
+                for (int j=sc; j<=ec; ++j) {
+                    grid[i][j] = 1;
                 }
             }
-
         }
+        groups = new int[R][C];
+        ArrayList<Integer> sizes = new ArrayList<>();
+        int counter = 0;
 
-        for (int i = 0; i < N; ++i) {
-            System.out.println(Arrays.toString(input[i]));
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                if (grid[r][c] == 0 && groups[r][c] == 0) {
+                    ++counter;
+                    size = 1;
+                    groups[r][c] = counter;
+                    dfs(r, c, counter);
+                    sizes.add(size);
+                }
+            }
         }
-
-
+        Collections.sort(sizes);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        bw.append(String.valueOf(sizes.size()));
+        bw.newLine();
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i<sizes.size(); ++i) {
+            sb.append(sizes.get(i)+" ");
+        }
+        bw.append(sb);
+        bw.flush();
     }
 
+    public static void dfs (int r, int c, int counter) {
+        for (int dir=0; dir<4; ++dir) {
+            int nr = r + dr[dir];
+            int nc = c + dc[dir];
+
+            if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+            if (groups[nr][nc] != 0) continue;
+            if (grid[nr][nc] == 1) continue;
+
+            groups[nr][nc] = counter;
+            ++size;
+            dfs(nr, nc, counter);
+        }
+    }
      */
 }
-
-/*
-class Coordinate {
-    int startX;
-    int startY;
-    int endX;
-    int endY;
-
-    Coordinate(int startX, int startY, int endX, int endY) {
-        this.startX = startX;
-        this.startY = startY;
-        this.endX = endX;
-        this.endY = endY;
-    }
-}
- */
