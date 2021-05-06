@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Q1987 {
+    /*
     public static int R, C, answer;
     public static int[][] dp;
     public static char[][] board;
@@ -52,4 +53,5 @@ public class Q1987 {
             visited[board[nr][nc]-'A'] = false;
         }
     }
+     */
 }
