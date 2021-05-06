@@ -8,57 +8,48 @@ import java.util.*;
 public class Q2665 {
     /*
     public static int N;
-    public static int[][] room;
+    public static int[][] rooms;
 
-    public static void main (String args[]) throws IOException{
+    public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        String line;
-        room = new int[N][N];
+        rooms = new int[N][N];
+        String line = "";
+        int[][] visited = new int[N][N];
         for (int r=0; r<N; ++r) {
-            line = br.readLine();
+            line =br.readLine();
             for (int c=0; c<N; ++c) {
-                if (line.charAt(c) == '1') {
-                    room[r][c] = 1;
-                }
+                rooms[r][c] = line.charAt(c)-'0';
+                visited[r][c] = -1;
             }
         }
-        bfs();
+        bfs(visited);
     }
-
-    public static void bfs() {
-        PriorityQueue<Coordinate> queue = new PriorityQueue<>();
-        int[][] visited = new int[N][N];
-        for (int i=0; i<N; ++i) {
-            Arrays.fill(visited[i], Integer.MAX_VALUE);
-        }
-        queue.add(new Coordinate(0, 0, 0));
+    public static void bfs(int[][] visited) {
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
+        PriorityQueue<Coordinate> queue = new PriorityQueue<>();
+        queue.add(new Coordinate(0, 0, 0));
+        visited[0][0] = 0;
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            if (c.r == N-1 && c.c == N-1) {
-                System.out.println(c.changes);
+            Coordinate cur = queue.poll();
+            if (cur.r == N-1 && cur.c == N-1) {
+                System.out.println(cur.changes);
                 return;
             }
             for (int dir=0; dir<4; ++dir) {
-                int nr = c.r + dr[dir];
-                int nc = c.c + dc[dir];
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
+                int nchanges = cur.changes;
 
-                if (nr<0 || N<=nr || nc<0 || N<=nc) {
-                    continue;
+                if (nr<0 || N<=nr || nc<0 || N<=nc) continue;
+                if (rooms[nr][nc] == 0) {
+                    ++nchanges;
                 }
-                if (room[nr][nc] == 0) {
-                    if (c.changes+1 < visited[nr][nc]) {
-                        visited[nr][nc] = c.changes+1;
-                        queue.add(new Coordinate(nr, nc, c.changes+1));
-                    }
-                } else {
-                    if (c.changes < visited[nr][nc]) {
-                        visited[nr][nc] = c.changes;
-                        queue.add(new Coordinate(nr, nc, c.changes));
-                    }
+                if (visited[nr][nc] == -1 || nchanges < visited[nr][nc]) {
+                    visited[nr][nc] = nchanges;
+                    queue.add(new Coordinate(nr, nc, nchanges));
                 }
             }
         }
