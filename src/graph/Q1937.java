@@ -30,19 +30,19 @@ public class Q1937 {
                 dp[r][c] = -1;
             }
         }
-        int answer = -1;
+        int max = -1;
         for (int r=0; r<N; ++r) {
             for (int c=0; c<N; ++c) {
-                if (dp[r][c] == -1) answer = Math.max(answer, solve(r, c));
+                if (dp[r][c] == -1) {
+                    max = Math.max(max, solve(r, c));
+                }
             }
         }
-        System.out.println(answer);
+        System.out.println(max);
     }
 
     public static int solve (int r, int c) {
-        if (dp[r][c] != -1) {
-            return dp[r][c];
-        }
+        if (dp[r][c] != -1) return dp[r][c];
         dp[r][c] = 1;
         for (int dir=0; dir<4; ++dir) {
             int nr = r + dr[dir];
