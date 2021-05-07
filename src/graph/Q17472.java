@@ -7,139 +7,123 @@ import java.util.*;
 
 public class Q17472 {
     /*
-    public static int R, C, counter;
-    public static int[][] input;
+    public static int R, C;
+    public static int[][] map;
+    public static int[] parents;
     public static int[] dr = {-1, 1, 0, 0};
     public static int[] dc = {0, 0, -1, 1};
-    public static Queue<Node> queue;
-    public static int[] parents;
-    public static PriorityQueue<Node> pq;
+    public static Queue<Coordinate> queue;
+    public static PriorityQueue<Coordinate> bridges;
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        input = new int[R][C];
+        map = new int[R][C];
         for (int r=0; r<R; ++r) {
             st = new StringTokenizer(br.readLine());
             for (int c=0; c<C; ++c) {
-                if (Integer.parseInt(st.nextToken()) == 1) {
-                    input[r][c] = -1;
-                }
+                int target = Integer.parseInt(st.nextToken());
+                if (target == 1) map[r][c] = -1;
             }
         }
-        counter = 0;
+        int counter = 0;
         queue = new ArrayDeque<>();
         for (int r=0; r<R; ++r) {
             for (int c=0; c<C; ++c) {
-                if (input[r][c] == -1) {
+                if (map[r][c] == -1) {
                     ++counter;
-                    grouping(r, c, counter);
+                    dfs(r, c, counter);
                 }
             }
         }
 
-        parents = new int[counter+1];
-        for (int i=1; i<=counter; ++i) {
-            parents[i] = -1;
-            //distances[i] = new ArrayList<>();
-        }
-        pq = new PriorityQueue<>();
+        bridges = new PriorityQueue<>();
         getDistance();
+        parents = new int[counter+1];
+        Arrays.fill(parents, -1);
         System.out.println(getMST());
     }
 
-    public static int find (int node) {
-        if (parents[node] == -1) {
-            return node;
-        } else return parents[node] = find(parents[node]);
+    public static boolean union (int island1, int island2) {
+        int parent1 = find(island1);
+        int parent2 = find(island2);
+
+        if (parent1 == parent2) return false; // already united
+        else parents[parent2] = parent1;
+        return true;
     }
 
-    public static boolean union (int a, int b) {
-        a = find(a);
-        b = find(b);
-
-        if (a != b) {
-            parents[b] = a;
-            return true;
-        } else {
-            return false;
-        }
+    public static int find (int island) {
+        if (parents[island] == -1) return island;
+        else return parents[island] = find(parents[island]);
     }
 
     public static int getMST() {
-        int result = 0;
-        while (!pq.isEmpty()) {
-            Node n = pq.poll();
-            if (union(n.start, n.dst)) { // yet not united
-                result += n.cost;
-            }
+        int answer = 0;
+        while (!bridges.isEmpty()) {
+            Coordinate cur = bridges.poll();
+            if (union(cur.start, cur.end)) answer += cur.value;
         }
-        int roots = 0;
-        for (int i=1; i<counter+1; ++i) {
-            if (parents[i] == -1) {
-                ++roots;
-            }
-        }
-
-        return roots == 1 ? result : -1;
+        int check = 0;
+        for (int i=1; i<parents.length; ++i) if (parents[i] == -1) ++check;
+        answer = check != 1 ? -1 : answer;
+        return answer;
     }
 
     public static void getDistance() {
         while (!queue.isEmpty()) {
-            Node n = queue.poll();
+            Coordinate cur = queue.poll();
             for (int dir=0; dir<4; ++dir) {
-                int nr = n.start + dr[dir];
-                int nc = n.dst + dc[dir];
-                int bridges = 0;
-
-                while (0<=nr && nr<R && 0<=nc && nc<C) {
-                    if (input[nr][nc] != 0) {
-                        if (n.cost < input[nr][nc] && 2<=bridges) {
-                            pq.add(new Node(input[n.start][n.dst], input[nr][nc], bridges));
+                int nr = cur.start; int nc = cur.end;
+                int bridge = 0;
+                while (true) {
+                    nr += dr[dir];
+                    nc += dc[dir];
+                    if (nr<0 || R<=nr || nc<0 || C<=nc) break;
+                    if (map[nr][nc] != 0) {
+                        if (cur.value < map[nr][nc] && 2<=bridge) {
+                            bridges.add(new Coordinate(map[cur.start][cur.end], map[nr][nc], bridge));
                         }
                         break;
                     }
-                    nr += dr[dir];
-                    nc += dc[dir];
-                    ++bridges;
+                    ++bridge;
                 }
             }
         }
     }
 
-    public static void grouping (int r, int c, int counter) {
-        input[r][c] = counter;
-        queue.add(new Node(r, c, counter));
+    public static void dfs (int r, int c, int counter) {
+        map[r][c] = counter;
+        queue.add(new Coordinate(r, c, counter));
         for (int dir=0; dir<4; ++dir) {
             int nr = r + dr[dir];
             int nc = c + dc[dir];
 
             if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
-            if (input[nr][nc] == -1) {
-                grouping(nr, nc, counter);
-            }
+            if (map[nr][nc] != -1) continue;
+            dfs(nr, nc, counter);
         }
     }
      */
 }
 
 /*
-class Node implements Comparable<Node>{
+class Coordinate implements Comparable<Coordinate> {
     int start;
-    int dst;
-    int cost;
+    int end;
+    int value;
 
-    Node (int start, int dst, int cost) {
+    Coordinate (int start, int end, int value) {
         this.start = start;
-        this.dst = dst;
-        this.cost = cost;
+        this.end = end;
+        this.value = value;
     }
 
     @Override
-    public int compareTo (Node n) {
-        return this.cost - n.cost;
+    public int compareTo (Coordinate c) {
+        return this.value - c.value;
     }
 }
  */
