@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Q17472 {
     /*
-    public static int R, C;
+    public static int R, C, count;
     public static int[][] map;
     public static int[] parents;
     public static int[] dr = {-1, 1, 0, 0};
@@ -24,8 +24,7 @@ public class Q17472 {
         for (int r=0; r<R; ++r) {
             st = new StringTokenizer(br.readLine());
             for (int c=0; c<C; ++c) {
-                int target = Integer.parseInt(st.nextToken());
-                if (target == 1) map[r][c] = -1;
+                if (Integer.parseInt(st.nextToken()) == 1) map[r][c] = -1;
             }
         }
         int counter = 0;
@@ -38,53 +37,60 @@ public class Q17472 {
                 }
             }
         }
-
         bridges = new PriorityQueue<>();
         getDistance();
         parents = new int[counter+1];
         Arrays.fill(parents, -1);
+        count = counter;
         System.out.println(getMST());
+    }
+
+    public static int getMST() {
+        int total = 0;
+        while (!bridges.isEmpty()) {
+            Coordinate cur = bridges.poll();
+            if (union(cur.start, cur.end)) {
+                total += cur.cost;
+                --count;
+            }
+            if (count == 1) {
+                break;
+            }
+        }
+        return count == 1 ? total : -1;
+    }
+
+    public static int find (int island) {
+        if (parents[island] == -1) return island;
+        return parents[island] = find(parents[island]);
     }
 
     public static boolean union (int island1, int island2) {
         int parent1 = find(island1);
         int parent2 = find(island2);
 
-        if (parent1 == parent2) return false; // already united
-        else parents[parent2] = parent1;
-        return true;
-    }
-
-    public static int find (int island) {
-        if (parents[island] == -1) return island;
-        else return parents[island] = find(parents[island]);
-    }
-
-    public static int getMST() {
-        int answer = 0;
-        while (!bridges.isEmpty()) {
-            Coordinate cur = bridges.poll();
-            if (union(cur.start, cur.end)) answer += cur.value;
+        if (parent1 == parent2) {
+            return false;
+        } else if (parent1 < parent2) {
+            parents[parent2] = parent1;
+        } else {
+            parents[parent1] = parent2;
         }
-        int check = 0;
-        for (int i=1; i<parents.length; ++i) if (parents[i] == -1) ++check;
-        answer = check != 1 ? -1 : answer;
-        return answer;
+        return true;
     }
 
     public static void getDistance() {
         while (!queue.isEmpty()) {
             Coordinate cur = queue.poll();
             for (int dir=0; dir<4; ++dir) {
-                int nr = cur.start; int nc = cur.end;
-                int bridge = 0;
+                int bridge = 0; int nr = cur.start; int nc = cur.end;
                 while (true) {
                     nr += dr[dir];
                     nc += dc[dir];
                     if (nr<0 || R<=nr || nc<0 || C<=nc) break;
                     if (map[nr][nc] != 0) {
-                        if (cur.value < map[nr][nc] && 2<=bridge) {
-                            bridges.add(new Coordinate(map[cur.start][cur.end], map[nr][nc], bridge));
+                        if (cur.cost < map[nr][nc] && 2 <= bridge) {
+                            bridges.add(new Coordinate(cur.cost, map[nr][nc], bridge));
                         }
                         break;
                     }
@@ -103,6 +109,7 @@ public class Q17472 {
 
             if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
             if (map[nr][nc] != -1) continue;
+            map[nr][nc] = counter;
             dfs(nr, nc, counter);
         }
     }
@@ -113,17 +120,17 @@ public class Q17472 {
 class Coordinate implements Comparable<Coordinate> {
     int start;
     int end;
-    int value;
+    int cost;
 
-    Coordinate (int start, int end, int value) {
+    Coordinate (int start, int end, int cost) {
         this.start = start;
         this.end = end;
-        this.value = value;
+        this.cost = cost;
     }
 
     @Override
     public int compareTo (Coordinate c) {
-        return this.value - c.value;
+        return this.cost - c.cost;
     }
 }
  */
