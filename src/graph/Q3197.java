@@ -4,84 +4,92 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q3197 {
     /*
     public static int R, C;
-    public static char[][] lake;
-    public static Queue<Coordinate> swan;
-    public static boolean[][] swanV;
+    public static int[][] map;
+    public static Queue<Coordinate> queue;
     public static Queue<Coordinate> water;
+    public static boolean[][] visited;
     public static int[] dr = {-1, 1, 0, 0};
     public static int[] dc = {0, 0, -1, 1};
+    public static int[] parents;
 
-    public static void main (String args[]) throws IOException {
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        swan = new ArrayDeque<>();
-        swanV = new boolean[R][C];
-        lake = new char[R][C];
-        water = new ArrayDeque<>();
-        Coordinate target = null;
+        map = new int[R][C];
         String line = "";
-        boolean flag = false;
+        Coordinate start = null;
+        Coordinate dst = null;
         for (int r=0; r<R; ++r) {
             line = br.readLine();
             for (int c=0; c<C; ++c) {
-                lake[r][c] = line.charAt(c);
-                if (lake[r][c] == 'L') {
-                    lake[r][c] = '.';
-                    if (!flag) {
-                        flag = true;
-                        swan.add(new Coordinate(r, c));
-                        swanV[r][c] = true;
+                char target = line.charAt(c);
+                if (target == '.') {
+                    map[r][c] = -1;
+                } else if (target == 'L') {
+                    map[r][c] = -1;
+                    if (start == null) {
+                        start = new Coordinate (r, c, 0);
                     } else {
-                        target = new Coordinate(r, c);
+                        dst = new Coordinate(r, c, 0);
                     }
                 }
-                if (lake[r][c] == '.') {
-                    water.add(new Coordinate(r, c));
+            }
+        }
+        int counter = 0;
+        queue = new ArrayDeque<>();
+        water = new ArrayDeque<>();
+        for (int r=0; r<R; ++r) {
+            for (int c=0; c<C; ++c) {
+                if (map[r][c] == -1) {
+                    ++counter;
+                    dfs(r, c, counter);
                 }
             }
         }
-        int days = 0;
-        while (true) {
-            if (swim(target)) {
-                break;
-            }
-            melt();
-            ++days;
+        start.number = map[start.r][start.c];
+        dst.number = map[dst.r][dst.c];
+        parents = new int[counter+1];
+        for (int i=1; i<counter+1; ++i) {
+            parents[i] = i;
         }
-        System.out.println(days);
+        int time = 0;
+        while (true) {
+            merge();
+            int parent1 = find(start.number);
+            int parent2 = find(dst.number);
+            if (parent1 == parent2 ||
+                parent1 == dst.number ||
+                parent2 == start.number) break;
+            melt();
+            ++time;
+        }
+        System.out.println(time);
     }
 
-    public static boolean swim (Coordinate target) {
-        Queue<Coordinate> next = new ArrayDeque<>();
-        while(!swan.isEmpty()) {
-            Coordinate cur = swan.poll();
-            if (cur.r == target.r && cur.c == target.c) {
-                return true;
-            }
+    public static void merge() {
+        while (!queue.isEmpty()) {
+            Coordinate cur = queue.poll();
+            water.add(cur);
             for (int dir=0; dir<4; ++dir) {
                 int nr = cur.r + dr[dir];
                 int nc = cur.c + dc[dir];
 
                 if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
-                if (swanV[nr][nc]) continue;
-                swanV[nr][nc] = true;
-                if (lake[nr][nc] == '.') {
-                    swan.add(new Coordinate(nr, nc));
-                } else if (lake[nr][nc] == 'X') {
-                    next.add(new Coordinate(nr, nc));
+                if (map[nr][nc] == cur.number) continue;
+                if (map[nr][nc] != 0) {
+                    union(map[cur.r][cur.c], map[nr][nc]);
                 }
             }
         }
-        swan = next;
-        return false;
     }
 
     public static void melt() {
@@ -93,11 +101,40 @@ public class Q3197 {
                 int nc = cur.c + dc[dir];
 
                 if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
-                if (lake[nr][nc] == 'X') {
-                    lake[nr][nc] = '.';
-                    water.add(new Coordinate(nr, nc));
+                if (map[nr][nc] == 0) {
+                    map[nr][nc] = map[cur.r][cur.c];
+                    queue.add(new Coordinate(nr, nc, map[cur.r][cur.c]));
                 }
             }
+        }
+    }
+
+    public static int find (int island) {
+        if (parents[island] == island) return island;
+        return parents[island] = find(parents[island]);
+    }
+
+    public static void union (int island1, int island2) {
+        int parent1 = find(island1);
+        int parent2 = find(island2);
+
+        if (parent1 == parent2) {
+            return;
+        } else if (parent1 > parent2) {
+            parents[parent1] = parent2;
+        } else {
+            parents[parent2] = parent1;
+        }
+    }
+
+    public static void dfs (int r, int c, int counter) {
+        map[r][c] = counter;
+        queue.add(new Coordinate(r, c, counter));
+        for (int dir=0; dir<4; ++dir) {
+            int nr = r + dr[dir];
+            int nc = c + dc[dir];
+            if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+            if (map[nr][nc] == -1) dfs(nr, nc, counter);
         }
     }
      */
@@ -105,12 +142,12 @@ public class Q3197 {
 
 /*
 class Coordinate {
-    int r;
-    int c;
+    int r, c, number;
 
-    Coordinate (int r, int c) {
+    Coordinate(int r, int c, int number) {
         this.r = r;
         this.c = c;
+        this.number = number;
     }
 }
  */
