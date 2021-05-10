@@ -9,9 +9,9 @@ public class Q17472 {
     /*
     public static int R, C, count;
     public static int[][] map;
-    public static int[] parents;
     public static int[] dr = {-1, 1, 0, 0};
     public static int[] dc = {0, 0, -1, 1};
+    public static int[] parents;
     public static Queue<Coordinate> queue;
     public static PriorityQueue<Coordinate> bridges;
 
@@ -24,7 +24,8 @@ public class Q17472 {
         for (int r=0; r<R; ++r) {
             st = new StringTokenizer(br.readLine());
             for (int c=0; c<C; ++c) {
-                if (Integer.parseInt(st.nextToken()) == 1) map[r][c] = -1;
+                if (Integer.parseInt(st.nextToken()) != 0)
+                map[r][c] = -1;
             }
         }
         int counter = 0;
@@ -38,10 +39,10 @@ public class Q17472 {
             }
         }
         bridges = new PriorityQueue<>();
-        getDistance();
         parents = new int[counter+1];
-        Arrays.fill(parents, -1);
         count = counter;
+        Arrays.fill(parents, -1);
+        getDistance();
         System.out.println(getMST());
     }
 
@@ -53,11 +54,9 @@ public class Q17472 {
                 total += cur.cost;
                 --count;
             }
-            if (count == 1) {
-                break;
-            }
+            if (count == 1) return total;
         }
-        return count == 1 ? total : -1;
+        return -1;
     }
 
     public static int find (int island) {
@@ -83,14 +82,14 @@ public class Q17472 {
         while (!queue.isEmpty()) {
             Coordinate cur = queue.poll();
             for (int dir=0; dir<4; ++dir) {
-                int bridge = 0; int nr = cur.start; int nc = cur.end;
+                int nr = cur.start; int nc = cur.end;
+                int bridge = 0;
                 while (true) {
-                    nr += dr[dir];
-                    nc += dc[dir];
+                    nr += dr[dir]; nc += dc[dir];
                     if (nr<0 || R<=nr || nc<0 || C<=nc) break;
                     if (map[nr][nc] != 0) {
                         if (cur.cost < map[nr][nc] && 2 <= bridge) {
-                            bridges.add(new Coordinate(cur.cost, map[nr][nc], bridge));
+                            bridges.add(new Coordinate(map[cur.start][cur.end], map[nr][nc], bridge));
                         }
                         break;
                     }
@@ -106,11 +105,8 @@ public class Q17472 {
         for (int dir=0; dir<4; ++dir) {
             int nr = r + dr[dir];
             int nc = c + dc[dir];
-
             if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
-            if (map[nr][nc] != -1) continue;
-            map[nr][nc] = counter;
-            dfs(nr, nc, counter);
+            if (map[nr][nc] == -1) dfs(nr, nc, counter);
         }
     }
      */
@@ -118,9 +114,7 @@ public class Q17472 {
 
 /*
 class Coordinate implements Comparable<Coordinate> {
-    int start;
-    int end;
-    int cost;
+    int start, end, cost;
 
     Coordinate (int start, int end, int cost) {
         this.start = start;
