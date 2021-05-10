@@ -1,78 +1,85 @@
 package graph;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q16933 {
     /*
-    public static int map [][];
+    public static int R, C;
+    public static int[][] map;
+
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        StringTokenizer st =new StringTokenizer(br.readLine());
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
-        map = new int [N+1][M+1];
+        map = new int[R+1][C+1];
+        String line = "";
+        for (int r=1; r<=R; ++r) {
+            line = br.readLine();
+            for (int c=1; c<=C; ++c) {
+                map[r][c] = line.charAt(c-1)-'0';
 
-        for (int i=1; i<=N; ++i) {
-            String line = br.readLine();
-            for (int j=1; j<=M; ++j) {
-                map[i][j] = line.charAt(j-1)-'0';
             }
         }
-        bfs(N, M, K);
+        bfs(K);
     }
 
-    public static void bfs (int N, int M, int K) {
-        Queue<Coordinate> queue = new LinkedList<>();
-        boolean visited [][][][] = new boolean [N+1][M+1][2][K+1];
-        queue.add(new Coordinate(1, 1, 0, 0, 1));
-        visited[1][1][0][0] = true;
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
+    public static void bfs(int K) {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        int[][][][] visited = new int[2][K+1][R+1][C+1];
+        for (int i=0; i<2; ++i) {
+            for (int j=0; j<K+1; ++j) {
+                for (int k=0; k<R+1; ++k) Arrays.fill(visited[i][j][k], -1);
+            }
+        }
+        Queue<Coordinate> queue = new ArrayDeque<>();
+        queue.add(new Coordinate(0, 0,1, 1, 1));
+        visited[0][0][1][1] = 1;
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            if (c.x == N && c.y == M) {
-                System.out.println(c.distance);
+            Coordinate cur = queue.poll();
+            if (cur.r == R &&  cur.c == C) {
+                System.out.println(cur.distance);
                 return;
             }
+            for (int dir=0; dir<4; ++dir) {
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
 
-            if (c.time == 0 && !visited[c.x][c.y][1][c.broken]) {
-                visited[c.x][c.y][1][c.broken] = true;
-                queue.add(new Coordinate (c.x, c.y, c.broken, 1, c.distance+1));
-            } else if (c.time == 1 && !visited[c.x][c.y][0][c.broken]) {
-                visited[c.x][c.y][0][c.broken] = true;
-                queue.add(new Coordinate(c.x, c.y, c.broken, 0, c.distance+1));
-            }
-
-            for (int i=0; i<4; ++i) {
-                int nx = c.x + dx[i];
-                int ny = c.y + dy[i];
-
-                if (nx<1 || N+1<=nx || ny<1 || M+1<=ny) {
-                    continue;
-                }
-                if (c.time == 0) {
-                    if (map[nx][ny] == 1 && c.broken+1 <= K && !visited[nx][ny][1][c.broken+1]) {
-                        visited[nx][ny][1][c.broken+1] = true;
-                        queue.add(new Coordinate(nx, ny, c.broken+1, 1,c.distance+1));
-                    } else if (map[nx][ny] == 0 && !visited[nx][ny][1][c.broken]) {
-                        visited[nx][ny][1][c.broken] = true;
-                        queue.add(new Coordinate(nx, ny, c.broken, 1, c.distance+1));
+                if (nr<1 || R<nr || nc<1 || C<nc) continue;
+                if (cur.time == 0) {
+                    if (map[nr][nc] == 1 && cur.broken+1 <= K) {
+                        if (visited[1][cur.broken+1][nr][nc] == -1 ||
+                                cur.distance+1 < visited[1][cur.broken+1][nr][nc]) {
+                            visited[1][cur.broken+1][nr][nc] = cur.distance+1;
+                            queue.add(new Coordinate(1, cur.broken+1, nr, nc, cur.distance+1));
+                        }
+                    } else if (map[nr][nc] == 0) {
+                        if (visited[1][cur.broken][nr][nc] == -1 ||
+                            cur.distance+1 < visited[1][cur.broken][nr][nc]) {
+                            visited[1][cur.broken][nr][nc] = cur.distance+1;
+                            queue.add(new Coordinate(1, cur.broken, nr, nc, cur.distance+1));
+                        }
                     }
-                } else if (c.time == 1) {
-                    if (map[nx][ny] == 1 && c.broken+1<=K && !visited[nx][ny][0][c.broken+1]) {
-                        visited[c.x][c.y][1][c.broken] = true;
-                        queue.add(new Coordinate(c.x, c.y, c.broken, 0, c.distance+1));
-                    } else if (map[nx][ny] == 0 && !visited[nx][ny][0][c.broken]) {
-                        visited[nx][ny][0][c.broken] = true;
-                        queue.add(new Coordinate(nx, ny, c.broken, 0, c.distance+1));
+                } else {
+                    if (map[nr][nc] == 1 && cur.broken+1 <= K) {
+                        if (visited[1][cur.broken+1][nr][nc] == -1 ||
+                            cur.distance+1 < visited[1][cur.broken+1][nr][nc]) {
+                            visited[0][cur.broken][nr][nc] = cur.distance+1;
+                            queue.add(new Coordinate(0, cur.broken, cur.r, cur.c, cur.distance+1));
+                        }
+                    } else if (map[nr][nc] == 0) {
+                        if (visited[0][cur.broken][nr][nc] == -1 ||
+                            cur.distance+1 < visited[0][cur.broken][nr][nc]) {
+                            visited[0][cur.broken][nr][nc] = cur.distance+1;
+                            queue.add(new Coordinate(0, cur.broken, nr, nc, cur.distance+1));
+                        }
                     }
                 }
             }
@@ -84,19 +91,14 @@ public class Q16933 {
 
 /*
 class Coordinate {
-    int x;
-    int y;
-    int broken;
-    int time;
-    int distance;
+    int time, broken, r, c, distance;
 
-    Coordinate (int x, int y, int broken, int time, int distance) {
-        this.x = x;
-        this.y = y;
-        this.broken = broken;
+    Coordinate (int time, int broken, int r, int c, int distance) {
         this.time = time;
+        this.broken = broken;
+        this.r = r;
+        this.c = c;
         this.distance = distance;
     }
 }
-
  */
