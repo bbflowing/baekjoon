@@ -3,6 +3,7 @@ package graph;
 import java.io.*;
 import java.util.*;
 public class Q2174 {
+    /*
     static int a,b,n,m;
     static int dx[] = {0,-1,0,1,0};
     static int dy[] =  {0,0,1,0,-1};
@@ -106,7 +107,9 @@ public class Q2174 {
         }
         return 1000;
     }
+     */
 }
+/*
 class Robot{
     int x,y,dir;
     Robot(int x, int y, int dir){
@@ -124,3 +127,4 @@ class Order{
         this.str =str;
     }
 }
+ */
