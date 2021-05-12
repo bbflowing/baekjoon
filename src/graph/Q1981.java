@@ -11,9 +11,9 @@ public class Q1981 {
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
+        array = new int[N][N];
         StringTokenizer st;
         ArrayList<Integer> numbers = new ArrayList<>();
-        array = new int[N][N];
         for (int r=0; r<N; ++r) {
             st = new StringTokenizer(br.readLine());
             for (int c=0; c<N; ++c) {
@@ -24,13 +24,19 @@ public class Q1981 {
             }
         }
         Collections.sort(numbers);
-        solve(numbers);
+        int answer = solve(numbers);
+        StringBuilder sb = new StringBuilder();
+        sb.append(answer);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        bw.append(sb);
+        bw.flush();
     }
 
-    public static void solve (ArrayList<Integer> numbers) throws IOException {
-        int minIndex = 0; int maxIndex = 0;
+    public static int solve (ArrayList<Integer> numbers) {
+        int minIndex = 0;
+        int maxIndex = 0;
         int answer = Integer.MAX_VALUE;
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
         while (minIndex < numbers.size() && maxIndex < numbers.size()) {
             int min = numbers.get(minIndex);
             int max = numbers.get(maxIndex);
@@ -39,16 +45,11 @@ public class Q1981 {
                 continue;
             }
             if (bfs(min, max)) {
-                ++minIndex;
                 answer = Math.min(max-min, answer);
-            } else {
-                ++maxIndex;
-            }
+                ++minIndex;
+            } else ++maxIndex;
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append(answer);
-        bw.append(sb);
-        bw.flush();
+        return answer;
     }
 
     public static boolean bfs (int min, int max) {
@@ -60,20 +61,14 @@ public class Q1981 {
         queue.add(new Coordinate(0, 0));
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            if (c.r == N-1 && c.c == N-1) {
-                return true;
-            }
+            Coordinate cur = queue.poll();
+            if (cur.r == N-1 && cur.c == N-1) return true;
             for (int dir=0; dir<4; ++dir) {
-                int nr = c.r + dr[dir];
-                int nc = c.c + dc[dir];
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
 
-                if (nr<0 || N<=nr || nc<0 || N<=nc) {
-                    continue;
-                }
-                if (visited[nr][nc]) {
-                    continue;
-                }
+                if (nr<0 || N<=nr || nc<0 || N<=nc) continue;
+                if (visited[nr][nc]) continue;
                 if (min <= array[nr][nc] && array[nr][nc] <= max) {
                     visited[nr][nc] = true;
                     queue.add(new Coordinate(nr, nc));
@@ -87,8 +82,7 @@ public class Q1981 {
 
 /*
 class Coordinate {
-    int r;
-    int c;
+    int r, c;
 
     Coordinate (int r, int c) {
         this.r = r;
