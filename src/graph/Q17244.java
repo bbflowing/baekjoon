@@ -3,15 +3,13 @@ package graph;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q17244 {
     /*
     public static int R, C, answer;
     public static char[][] house;
+    public static ArrayList<Coordinate> things;
     public static int[][] distances;
     public static Coordinate start, end;
 
@@ -21,20 +19,18 @@ public class Q17244 {
         C = Integer.parseInt(st.nextToken());
         R = Integer.parseInt(st.nextToken());
         house = new char[R][C];
-        ArrayList<Coordinate> things = new ArrayList<>();
-        start = null; end = null;
+        things = new ArrayList<>();
         String line = "";
-
+        start = null;
+        end = null;
         for (int r=0; r<R; ++r) {
             line = br.readLine();
             for (int c=0; c<C; ++c) {
                 house[r][c] = line.charAt(c);
-                if (house[r][c] == 'S') {
-                    start = new Coordinate(r, c);
-                } else if (house[r][c] == 'X') {
+                if (house[r][c] == 'S') start = new Coordinate(r, c);
+                else if (house[r][c] == 'E') end = new Coordinate(r, c);
+                else if (house[r][c] == 'X') {
                     things.add(new Coordinate(r, c));
-                } else if (house[r][c] == 'E') {
-                    end = new Coordinate(r, c);
                 }
             }
         }
@@ -62,22 +58,16 @@ public class Q17244 {
         if (index == N) {
             int[] route = new int[N+2];
             route[0] = 0;
-            for (int i=1; i<=N; ++i) {
-                route[i] = result[i-1];
-            }
+            for (int i=1; i<=N; ++i) route[i] = result[i-1];
             route[N+1] = N+1;
-            int temp = 0;
+            int total = 0;
             for (int i=0; i<N+1; ++i) {
-                int start = route[i];
-                int dst = route[i+1];
-                if (distances[start][dst] == -1) return;
-                temp += distances[start][dst];
-                if (temp > answer) return;
+                total += distances[route[i]][route[i+1]];
+                if (answer < total) return;
             }
-            answer = temp;
+            answer = total;
             return;
         }
-
         for (int i=0; i<N; ++i) {
             if (!visited[i]) {
                 visited[i] = true;
@@ -88,29 +78,28 @@ public class Q17244 {
         }
     }
 
-    public static int getDistance(Coordinate begin, Coordinate dst) {
+    public static int getDistance (Coordinate begin, Coordinate dst) {
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
+        boolean[][] visited = new boolean[R][C];
         Queue<Coordinate> queue = new ArrayDeque<>();
         queue.add(new Coordinate(begin.r, begin.c, 0));
-        boolean[][] visited = new boolean[R][C];
         visited[begin.r][begin.c] = true;
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            if (c.r == dst.r && c.c == dst.c) {
-                return c.distance;
+            Coordinate cur = queue.poll();
+            if (cur.r == dst.r && cur.c == dst.c) {
+                return cur.distance;
             }
             for (int dir=0; dir<4; ++dir) {
-                int nr = c.r + dr[dir];
-                int nc = c.c + dc[dir];
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
 
                 if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
                 if (visited[nr][nc]) continue;
                 if (house[nr][nc] == '#') continue;
-
-                queue.add(new Coordinate(nr, nc, c.distance+1));
                 visited[nr][nc] = true;
+                queue.add(new Coordinate(nr, nc, cur.distance+1));
             }
         }
         return -1;
@@ -120,17 +109,15 @@ public class Q17244 {
 
 /*
 class Coordinate {
-    int r;
-    int c;
-    int distance;
+    int r, c, distance;
 
     Coordinate (int r, int c) {
-        this.r = r;
+        this.r= r;
         this.c = c;
     }
 
     Coordinate (int r, int c, int distance) {
-        this.r = r;
+        this.r= r;
         this.c = c;
         this.distance = distance;
     }
