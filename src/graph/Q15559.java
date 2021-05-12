@@ -8,38 +8,34 @@ public class Q15559 {
     /*
     public static int R, C, answer;
     public static char[][] map;
-    public static int[][] groups;
+    public static int[][] dp;
 
-    public static void main (String args[]) throws IOException {
+    public static void main(String args[]) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
         map = new char[R][C];
-        groups = new int[R][C];
+        dp = new int[R][C];
         String line = "";
         for (int r=0; r<R; ++r) {
             line = br.readLine();
             for (int c=0; c<C; ++c) {
+                dp[r][c] = -1;
                 map[r][c] = line.charAt(c);
             }
         }
-        answer = 0;
         int counter = 0;
         for (int r=0; r<R; ++r) {
             for (int c=0; c<C; ++c) {
-                if (groups[r][c] == 0) {
+                if (dp[r][c] == -1) {
                     ++counter;
-                    groups[r][c] = counter;
-                    solve (r, c, counter);
+                    dp[r][c] = counter;
+                    solve(r, c, counter);
                 }
             }
         }
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder sb = new StringBuilder();
-        sb.append(answer);
-        bw.append(sb);
-        bw.flush();
+        System.out.println(answer);
     }
 
     public static void solve (int r, int c, int counter) {
@@ -47,12 +43,15 @@ public class Q15559 {
         if (map[r][c] == 'S') ++nr;
         else if (map[r][c] == 'N') --nr;
         else if (map[r][c] == 'W') --nc;
-        else if (map[r][c] == 'E') ++nc;
+        else ++nc;
 
-        if (groups[nr][nc] == counter) {
+        if (dp[nr][nc] == counter) {
             ++answer;
-        } else if (groups[nr][nc] == 0) {
-            groups[nr][nc] = counter;
+            return;
+        } else if (dp[nr][nc] != counter && dp[nr][nc] != -1) {
+            return;
+        } else {
+            dp[nr][nc] = counter;
             solve(nr, nc, counter);
         }
     }
