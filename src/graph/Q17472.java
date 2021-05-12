@@ -7,13 +7,13 @@ import java.util.*;
 
 public class Q17472 {
     /*
-    public static int R, C, count;
+    public static int R, C, islands;
     public static int[][] map;
     public static int[] dr = {-1, 1, 0, 0};
     public static int[] dc = {0, 0, -1, 1};
-    public static int[] parents;
     public static Queue<Coordinate> queue;
     public static PriorityQueue<Coordinate> bridges;
+    public static int[] parents;
 
     public static void main (String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -24,7 +24,7 @@ public class Q17472 {
         for (int r=0; r<R; ++r) {
             st = new StringTokenizer(br.readLine());
             for (int c=0; c<C; ++c) {
-                if (Integer.parseInt(st.nextToken()) != 0)
+                if (Integer.parseInt(st.nextToken()) == 1)
                 map[r][c] = -1;
             }
         }
@@ -39,29 +39,29 @@ public class Q17472 {
             }
         }
         bridges = new PriorityQueue<>();
+        getDistances();
         parents = new int[counter+1];
-        count = counter;
-        Arrays.fill(parents, -1);
-        getDistance();
+        islands = counter;
+        for (int i=1; i<=counter; ++i) parents[i] = i;
         System.out.println(getMST());
     }
 
-    public static int getMST() {
-        int total = 0;
-        while (!bridges.isEmpty()) {
-            Coordinate cur = bridges.poll();
-            if (union(cur.start, cur.end)) {
-                total += cur.cost;
-                --count;
-            }
-            if (count == 1) return total;
+    public static void dfs (int r, int c, int counter) {
+        map[r][c] = counter;
+        queue.add(new Coordinate(r, c, counter));
+        for (int dir=0; dir<4; ++dir) {
+            int nr = r + dr[dir];
+            int nc = c + dc[dir];
+
+            if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+            if (map[nr][nc] != -1) continue;
+            dfs(nr, nc, counter);
         }
-        return -1;
     }
 
     public static int find (int island) {
-        if (parents[island] == -1) return island;
-        return parents[island] = find(parents[island]);
+        if (parents[island] == island) return island;
+        else return parents[island] = find(parents[island]);
     }
 
     public static boolean union (int island1, int island2) {
@@ -78,35 +78,39 @@ public class Q17472 {
         return true;
     }
 
-    public static void getDistance() {
+    public static int getMST() {
+        int answer = 0;
+        while (!bridges.isEmpty()) {
+            Coordinate cur = bridges.poll();
+            if (union(cur.start, cur.end)) {
+                answer += cur.cost;
+                --islands;
+            }
+            if (islands == 1) return answer;
+        }
+        return -1;
+    }
+
+    public static void getDistances() {
         while (!queue.isEmpty()) {
             Coordinate cur = queue.poll();
             for (int dir=0; dir<4; ++dir) {
                 int nr = cur.start; int nc = cur.end;
                 int bridge = 0;
                 while (true) {
-                    nr += dr[dir]; nc += dc[dir];
-                    if (nr<0 || R<=nr || nc<0 || C<=nc) break;
+                    nr += dr[dir];
+                    nc += dc[dir];
+                    if (nr < 0 || R <= nr || nc < 0 || C <= nc) break;
                     if (map[nr][nc] != 0) {
                         if (cur.cost < map[nr][nc] && 2 <= bridge) {
-                            bridges.add(new Coordinate(map[cur.start][cur.end], map[nr][nc], bridge));
+                            bridges.add(new Coordinate(cur.cost, map[nr][nc], bridge));
                         }
                         break;
                     }
                     ++bridge;
                 }
-            }
-        }
-    }
 
-    public static void dfs (int r, int c, int counter) {
-        map[r][c] = counter;
-        queue.add(new Coordinate(r, c, counter));
-        for (int dir=0; dir<4; ++dir) {
-            int nr = r + dr[dir];
-            int nc = c + dc[dir];
-            if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
-            if (map[nr][nc] == -1) dfs(nr, nc, counter);
+            }
         }
     }
      */
