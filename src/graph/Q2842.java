@@ -47,8 +47,7 @@ public class Q2842 {
         while (minIndex < numbers.size() && maxIndex < numbers.size()) {
             int min = numbers.get(minIndex);
             int max = numbers.get(maxIndex);
-            //System.out.println(min+","+max);
-            if (elevations[start.r][start.c] > max) {
+            if (elevations[start.r][start.c] > max || elevations[start.r][start.c] < min) {
                 ++maxIndex;
                 continue;
             }
@@ -89,7 +88,6 @@ public class Q2842 {
     }
      */
 }
-
 /*
 class Coordinate {
     int r, c;
