@@ -8,53 +8,43 @@ import java.util.StringTokenizer;
 public class Q14716 {
     /*
     public static int R, C;
-    public static int banner [][];
-    public static int dx [] = {-1, -1, -1, 0, 0, +1, +1, +1};
-    public static int dy [] = {-1, 0, +1, -1, +1, -1, 0, +1};
-    public static boolean visited [][];
-    public static void main (String args[]) throws IOException {
+    public static int[][] banner;
+    public static int[] dr = {-1, -1, -1, 0, 0, +1, +1, +1};
+    public static int[] dc = {-1, 0, +1, -1, +1, -1, 0, +1};
+
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        banner = new int [R][C];
-        visited = new boolean [R][C];
-        for (int i=0; i<R; ++i) {
+        banner = new int[R][C];
+        for (int r = 0; r < R; ++r) {
             st = new StringTokenizer(br.readLine());
-            for (int j=0; j<C; ++j) {
-                banner[i][j] = Integer.parseInt(st.nextToken());
+            for (int c = 0; c < C; ++c) {
+                if (Integer.parseInt(st.nextToken()) == 1) banner[r][c] = -1;
             }
         }
-        int count = 0;
-        for (int i=0; i<R; ++i) {
-            for (int j=0; j<C; ++j) {
-                if (!visited[i][j] && banner[i][j] == 1) {
-                    visited[i][j] = true;
-                    ++count;
-                    solve(i, j);
+        int counter = 0;
+        for (int r = 0; r < R; ++r) {
+            for (int c = 0; c < C; ++c) {
+                if (banner[r][c] == -1) {
+                    ++counter;
+                    dfs(r, c, counter);
                 }
             }
         }
-        System.out.println(count);
+        System.out.println(counter);
     }
 
-    public static void solve(int x, int y) {
-        for (int dir=0; dir<8; ++dir) {
-            int nx = x + dx[dir];
-            int ny = y + dy[dir];
+    public static void dfs(int r, int c, int counter) {
+        banner[r][c] = counter;
+        for (int dir = 0; dir < 8; ++dir) {
+            int nr = r + dr[dir];
+            int nc = c + dc[dir];
 
-            if (nx<0 || R<=nx || ny<0 || C<=ny) {
-                continue;
-            }
-            if (visited[nx][ny]) {
-                continue;
-            }
-            if (banner[nx][ny] == 0) {
-                continue;
-            }
-
-            visited[nx][ny] = true;
-            solve(nx, ny);
+            if (nr < 0 || R <= nr || nc < 0 || C <= nc) continue;
+            if (banner[nr][nc] != -1) continue;
+            dfs(nr, nc, counter);
         }
     }
      */
