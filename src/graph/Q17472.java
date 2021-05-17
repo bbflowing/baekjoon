@@ -5,17 +5,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+// 다리 만들기2
+
 public class Q17472 {
     /*
-    public static int R, C, islands;
+    public static int R, C, count;
     public static int[][] map;
+    public static Queue<Coordinate> queue;
     public static int[] dr = {-1, 1, 0, 0};
     public static int[] dc = {0, 0, -1, 1};
-    public static Queue<Coordinate> queue;
     public static PriorityQueue<Coordinate> bridges;
     public static int[] parents;
 
-    public static void main (String args[]) throws IOException {
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
@@ -24,12 +26,11 @@ public class Q17472 {
         for (int r=0; r<R; ++r) {
             st = new StringTokenizer(br.readLine());
             for (int c=0; c<C; ++c) {
-                if (Integer.parseInt(st.nextToken()) == 1)
-                map[r][c] = -1;
+                if (Integer.parseInt(st.nextToken()) == 1) map[r][c] = -1;
             }
         }
-        int counter = 0;
         queue = new ArrayDeque<>();
+        int counter = 0;
         for (int r=0; r<R; ++r) {
             for (int c=0; c<C; ++c) {
                 if (map[r][c] == -1) {
@@ -39,16 +40,64 @@ public class Q17472 {
             }
         }
         bridges = new PriorityQueue<>();
-        getDistances();
+        getDistance();
         parents = new int[counter+1];
-        islands = counter;
-        for (int i=1; i<=counter; ++i) parents[i] = i;
+        count = counter;
+        for (int i=1; i<counter+1; ++i) parents[i] = i;
         System.out.println(getMST());
     }
 
-    public static void dfs (int r, int c, int counter) {
+    public static int getMST() {
+        int answer = 0;
+        while (!bridges.isEmpty()) {
+            Coordinate cur = bridges.poll();
+            if (union(cur.start, cur.end)) {
+                --count;
+                answer += cur.number;
+            }
+        }
+        return count == 1 ? answer : -1;
+    }
+
+    public static boolean union(int island1, int island2) {
+        int parent1 = find(island1);
+        int parent2 = find(island2);
+
+        if (parent1 == parent2) return false;
+        else if (parent1 < parent2) parents[parent2] = parent1;
+        else parents[parent1] = parent2;
+        return true;
+    }
+
+    public static int find(int island) {
+        if (parents[island] == island) return island;
+        else return parents[island] = find(parents[island]);
+    }
+
+    public static void getDistance() {
+        while (!queue.isEmpty()) {
+            Coordinate cur = queue.poll();
+            for (int dir=0; dir<4; ++dir) {
+                int nr = cur.start; int nc = cur.end; int bridge = 0;
+                while (true) {
+                    nr += dr[dir];
+                    nc += dc[dir];
+
+                    if (nr<0 || R<=nr || nc<0 || C<=nc) break;
+                    if (map[nr][nc] != 0) {
+                        if (cur.number < map[nr][nc] && 2 <= bridge) bridges.add(new Coordinate(cur.number, map[nr][nc], bridge));
+                        break;
+                    }
+                    ++bridge;
+                }
+            }
+        }
+    }
+
+    public static void dfs(int r, int c, int counter) {
         map[r][c] = counter;
         queue.add(new Coordinate(r, c, counter));
+
         for (int dir=0; dir<4; ++dir) {
             int nr = r + dr[dir];
             int nc = c + dc[dir];
@@ -58,77 +107,22 @@ public class Q17472 {
             dfs(nr, nc, counter);
         }
     }
-
-    public static int find (int island) {
-        if (parents[island] == island) return island;
-        else return parents[island] = find(parents[island]);
-    }
-
-    public static boolean union (int island1, int island2) {
-        int parent1 = find(island1);
-        int parent2 = find(island2);
-
-        if (parent1 == parent2) {
-            return false;
-        } else if (parent1 < parent2) {
-            parents[parent2] = parent1;
-        } else {
-            parents[parent1] = parent2;
-        }
-        return true;
-    }
-
-    public static int getMST() {
-        int answer = 0;
-        while (!bridges.isEmpty()) {
-            Coordinate cur = bridges.poll();
-            if (union(cur.start, cur.end)) {
-                answer += cur.cost;
-                --islands;
-            }
-            if (islands == 1) return answer;
-        }
-        return -1;
-    }
-
-    public static void getDistances() {
-        while (!queue.isEmpty()) {
-            Coordinate cur = queue.poll();
-            for (int dir=0; dir<4; ++dir) {
-                int nr = cur.start; int nc = cur.end;
-                int bridge = 0;
-                while (true) {
-                    nr += dr[dir];
-                    nc += dc[dir];
-                    if (nr < 0 || R <= nr || nc < 0 || C <= nc) break;
-                    if (map[nr][nc] != 0) {
-                        if (cur.cost < map[nr][nc] && 2 <= bridge) {
-                            bridges.add(new Coordinate(cur.cost, map[nr][nc], bridge));
-                        }
-                        break;
-                    }
-                    ++bridge;
-                }
-
-            }
-        }
-    }
      */
 }
 
 /*
 class Coordinate implements Comparable<Coordinate> {
-    int start, end, cost;
+    int start, end, number;
 
-    Coordinate (int start, int end, int cost) {
+    Coordinate (int start, int end, int number) {
         this.start = start;
         this.end = end;
-        this.cost = cost;
+        this.number = number;
     }
 
     @Override
-    public int compareTo (Coordinate c) {
-        return this.cost - c.cost;
+    public int compareTo(Coordinate c) {
+        return this.number - c.number;
     }
 }
  */
