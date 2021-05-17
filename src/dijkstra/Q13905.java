@@ -34,7 +34,7 @@ public class Q13905 {
         dijkstra(begin, dst);
     }
 
-    public static void dijkstra(int begin, int dst) {
+    public static int dijkstra(int begin, int dst) {
         PriorityQueue<Pair> queue = new PriorityQueue<>();
         int[] visited = new int[N + 1];
         Arrays.fill(visited, -1);
@@ -46,10 +46,8 @@ public class Q13905 {
         }
         while (!queue.isEmpty()) {
             Pair p = queue.poll();
-            //System.out.println(p.end+","+p.cost);
             if (p.end == dst) {
-                System.out.println(p.cost);
-                return;
+                return p.cost;
             }
             for (int i = 0; i < bridges.get(p.end).size(); ++i) {
                 Pair next = bridges.get(p.end).get(i);
@@ -63,7 +61,7 @@ public class Q13905 {
 
             }
         }
-        System.out.println(0);
+        return 0;
     }
      */
 }
