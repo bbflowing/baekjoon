@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
+// 도시 분할 계획
+
 public class Q1647 {
     /*
     public static int N;
