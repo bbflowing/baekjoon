@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Q17244 {
+    /*
     public static int R, C, min;
     public static char[][] house;
     public static ArrayList<Coordinate> belongings;
@@ -102,8 +103,10 @@ public class Q17244 {
             }
         }
     }
+     */
 }
 
+/*
 class Coordinate {
     int r, c, distance;
 
@@ -118,3 +121,4 @@ class Coordinate {
         this.distance = distance;
     }
 }
+ */
