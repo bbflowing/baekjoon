@@ -1,94 +1,93 @@
 package graph;
-/*
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+//토마토
+
 public class Q7576 {
+    /*
+    public static int R, C;
+    public static int[][] box;
+    public static Queue<Coordinate> tomatoes;
+    public static boolean[][] visited;
 
-    public static Queue<Coordinate> queue;
-    public static int input [][];
-    public static boolean check [][];
-    public static int rank [][];
-    public static void main (String args[]) throws IOException {
-
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int M = Integer.parseInt(st.nextToken());
-        int N = Integer.parseInt(st.nextToken());
-        queue = new LinkedList<>();
-        check = new boolean [N][M];
-        rank = new int[N][M];
-        input = new int [N][M];
-        int counter = 0;
-        for (int i=0; i<N; ++i) {
+        C = Integer.parseInt(st.nextToken());
+        R = Integer.parseInt(st.nextToken());
+        box = new int[R][C];
+        tomatoes = new ArrayDeque<>();
+        visited = new boolean[R][C];
+        int unripe = 0;
+
+        for (int r = 0; r < R; ++r) {
             st = new StringTokenizer(br.readLine());
-            for (int j=0; j<M; ++j) {
-                input[i][j] = Integer.parseInt(st.nextToken());
-                if (input[i][j] == 1) {
-                    queue.add (new Coordinate(i, j));
-                    check[i][j] = true;
-                    rank[i][j] = 1;
-                    counter++;
+            for (int c = 0; c < C; ++c) {
+                box[r][c] = Integer.parseInt(st.nextToken());
+                if (box[r][c] == 1) {
+                    tomatoes.add(new Coordinate(r, c));
+                    visited[r][c] = true;
+                } else if (box[r][c] == 0) ++unripe;
+            }
+        }
+        int time = 0;
+        if (unripe != 0) {
+            int before = 0;
+            while (true) {
+                ++time;
+                before = unripe;
+                unripe = bfs(unripe);
+                if (unripe == 0 || unripe == before) {
+                    if (unripe == before) time = -1;
+                    break;
                 }
             }
         }
-        if (counter == N*M) {
-            System.out.println(0);
-        } else {
-            bfs(N, M);
-        }
-
+        System.out.println(time);
     }
-    public static void bfs(int N, int M) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
-        int counter = 0;
 
-        while (!queue.isEmpty()) {
-            Coordinate visited = queue.poll();
+    public static int bfs(int unripe) {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
 
-            for (int i=0; i<4; ++i) {
-                int targetX = visited.x + dx[i];
-                int targetY = visited.y + dy[i];
-                if (0 <= targetX && targetX < N && 0 <= targetY && targetY < M) {
-                    if (input[targetX][targetY] != -1 && !check[targetX][targetY]) {
-                        rank[targetX][targetY] = rank[visited.x][visited.y] + 1;
-                        check[targetX][targetY] = true;
-                        queue.add(new Coordinate(targetX, targetY));
-                    }
-                }
+        int size = tomatoes.size();
+        for (int i = 0; i < size; ++i) {
+            Coordinate cur = tomatoes.poll();
+            for (int dir = 0; dir < 4; ++dir) {
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
+
+                if (!check(nr, nc)) continue;
+                if (visited[nr][nc]) continue;
+                if (box[nr][nc] == -1) continue;
+                visited[nr][nc] = true;
+                tomatoes.add(new Coordinate(nr, nc));
+                --unripe;
             }
         }
-
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<M; ++j) {
-                if (rank[i][j] == 0 && input[i][j] != -1) {
-                    System.out.println(-1);
-                    System.exit(0);
-                } else {
-                    if (rank[i][j] > counter) {
-                        counter = rank[i][j];
-                    }
-                }
-            }
-        }
-        System.out.println(counter-1);
+        return unripe;
     }
+
+    public static boolean check(int r, int c) {
+        if (r < 0 || R <= r || c < 0 || C <= c) return false;
+        return true;
+    }
+     */
 }
 
-
+/*
 class Coordinate {
-    int x;
-    int y;
+    int r, c;
 
-    Coordinate(int x, int y) {
-        this.x = x;
-        this.y =y;
+    Coordinate(int r, int c) {
+        this.r = r;
+        this.c = c;
     }
 }
-
  */
