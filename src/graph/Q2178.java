@@ -1,46 +1,42 @@
 package graph;
 
+// 미로탐색
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q2178 {
     /*
-    public static int R, C;
-    public static int[][] maze;
+    public static int N, M;
+    public static char[][] maze;
 
-    public static void main (String args[]) throws IOException {
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        R = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
-        maze = new int[R][C];
-        String line = "";
-        for (int r=0; r<R; ++r) {
-            line = br.readLine();
-            for (int c=0; c<C; ++c) {
-                maze[r][c] = line.charAt(c) - '0';
-            }
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        maze = new char[N][M];
+        for (int row=0; row<N; ++row) {
+            String temp = br.readLine();
+            for (int col=0; col<M; ++col) maze[row][col] = temp.charAt(col);
         }
         bfs();
     }
 
-    public static void bfs () {
+    public static void bfs() {
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
-        boolean[][] visited = new boolean[R][C];
+        boolean[][] visited = new boolean[N][M];
+        Queue<Blank> queue = new ArrayDeque<>();
         visited[0][0] = true;
-        Queue<Coordinate> queue = new ArrayDeque<>();
-        queue.add(new Coordinate(0, 0, 1));
+        queue.add(new Blank(0, 0, 1));
 
         while (!queue.isEmpty()) {
-            Coordinate cur = queue.poll();
-            if (cur.r == R-1 && cur.c == C-1) {
+            Blank cur = queue.poll();
+            if (cur.r == N-1 && cur.c == M-1) {
                 System.out.println(cur.distance);
                 return;
             }
@@ -48,11 +44,11 @@ public class Q2178 {
                 int nr = cur.r + dr[dir];
                 int nc = cur.c + dc[dir];
 
-                if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+                if (nr<0 || N<=nr || nc<0 || M<=nc) continue;
                 if (visited[nr][nc]) continue;
-                if (maze[nr][nc] == 0) continue;
+                if (maze[nr][nc] == '0') continue;
+                queue.add(new Blank(nr, nc, cur.distance+1));
                 visited[nr][nc] = true;
-                queue.add(new Coordinate(nr, nc, cur.distance+1));
             }
         }
     }
@@ -60,12 +56,10 @@ public class Q2178 {
 }
 
 /*
-class Coordinate {
-    int r;
-    int c;
-    int distance;
+class Blank {
+    int r, c, distance;
 
-    Coordinate (int r, int c, int distance) {
+    Blank (int r, int c, int distance) {
         this.r = r;
         this.c = c;
         this.distance = distance;
