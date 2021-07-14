@@ -11,38 +11,36 @@ import java.util.StringTokenizer;
 
 public class Q7576 {
     /*
-    public static int R, C;
+    public static int M, N, unripe;
     public static int[][] box;
-    public static Queue<Coordinate> tomatoes;
-    public static boolean[][] visited;
+    public static Queue<Blank> queue;
+    public static boolean[][] check;
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        C = Integer.parseInt(st.nextToken());
-        R = Integer.parseInt(st.nextToken());
-        box = new int[R][C];
-        tomatoes = new ArrayDeque<>();
-        visited = new boolean[R][C];
-        int unripe = 0;
-
-        for (int r = 0; r < R; ++r) {
+        M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        box = new int[N][M];
+        queue = new ArrayDeque<>();
+        check = new boolean[N][M];
+        unripe = 0;
+        for (int r = 0; r < N; ++r) {
             st = new StringTokenizer(br.readLine());
-            for (int c = 0; c < C; ++c) {
+            for (int c = 0; c < M; ++c) {
                 box[r][c] = Integer.parseInt(st.nextToken());
                 if (box[r][c] == 1) {
-                    tomatoes.add(new Coordinate(r, c));
-                    visited[r][c] = true;
+                    queue.add(new Blank(r, c));
+                    check[r][c] = true;
                 } else if (box[r][c] == 0) ++unripe;
             }
         }
         int time = 0;
         if (unripe != 0) {
-            int before = 0;
             while (true) {
+                int before = unripe;
+                bfs();
                 ++time;
-                before = unripe;
-                unripe = bfs(unripe);
                 if (unripe == 0 || unripe == before) {
                     if (unripe == before) time = -1;
                     break;
@@ -52,40 +50,33 @@ public class Q7576 {
         System.out.println(time);
     }
 
-    public static int bfs(int unripe) {
+    public static int bfs() {
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
-
-        int size = tomatoes.size();
+        int size = queue.size();
         for (int i = 0; i < size; ++i) {
-            Coordinate cur = tomatoes.poll();
+            Blank cur = queue.poll();
             for (int dir = 0; dir < 4; ++dir) {
                 int nr = cur.r + dr[dir];
                 int nc = cur.c + dc[dir];
-
-                if (!check(nr, nc)) continue;
-                if (visited[nr][nc]) continue;
+                if (nr < 0 || N <= nr || nc < 0 || M <= nc) continue;
+                if (check[nr][nc]) continue;
                 if (box[nr][nc] == -1) continue;
-                visited[nr][nc] = true;
-                tomatoes.add(new Coordinate(nr, nc));
+                check[nr][nc] = true;
+                queue.add(new Blank(nr, nc));
                 --unripe;
             }
         }
         return unripe;
     }
-
-    public static boolean check(int r, int c) {
-        if (r < 0 || R <= r || c < 0 || C <= c) return false;
-        return true;
-    }
      */
 }
 
 /*
-class Coordinate {
+class Blank {
     int r, c;
 
-    Coordinate(int r, int c) {
+    Blank(int r, int c) {
         this.r = r;
         this.c = c;
     }
