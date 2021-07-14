@@ -1,68 +1,60 @@
 package graph;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
+// 단지번호 붙이기
+
+import java.io.*;
+import java.util.*;
 
 public class Q2667 {
     /*
     public static int N, size;
-    public static char map [][];
-    public static boolean visited [][];
-    public static int dx [] = {-1, 1, 0, 0};
-    public static int dy [] = {0, 0, -1, 1};
+    public static char[][] map;
+    public static int[][] check;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
+
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        map = new char [N][N];
-        visited = new boolean [N][N];
-        for (int i=0; i<N; ++i) {
-            String line = br.readLine();
-            for (int j=0; j<N; ++j) {
-                map[i][j] = line.charAt(j);
-            }
+        map = new char[N][N];
+        for (int row=0; row<N; ++row) {
+            String temp = br.readLine();
+            for (int col=0; col<N; ++col) map[row][col] = temp.charAt(col);
         }
-        ArrayList<Integer> result = new ArrayList<>();
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<N; ++j) {
-                if (!visited[i][j] && map[i][j] == '1') {
+        int counter = 0;
+        check = new int[N][N];
+        ArrayList<Integer> answer = new ArrayList<>();
+        for (int row=0; row<N; ++row) {
+            for (int col=0; col<N; ++col) {
+                if (map[row][col] == '1' && check[row][col] == 0) {
+                    ++counter;
                     size = 1;
-                    visited[i][j] = true;
-                    dfs(i, j);
-                    result.add(size);
+                    check[row][col] = counter;
+                    dfs(row, col, counter);
+                    answer.add(size);
                 }
             }
         }
-        Collections.sort(result);
-        System.out.println(result.size());
-        for (int i:result) {
-            System.out.println(i);
+        Collections.sort(answer);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        bw.append(String.valueOf(answer.size()));
+        bw.newLine();
+        for (int i=0; i<answer.size(); ++i) {
+            bw.append(String.valueOf(answer.get(i)));
+            bw.newLine();
         }
+        bw.flush();
     }
 
-    public static void dfs (int x, int y) {
+    public static void dfs(int r, int c, int counter) {
         for (int dir=0; dir<4; ++dir) {
-            int nx = x + dx[dir];
-            int ny = y + dy[dir];
-
-            if (nx<0 || N<=nx || ny<0 || N<=ny) {
-                continue;
-            }
-
-            if (visited[nx][ny]) {
-                continue;
-            }
-
-            if (map[nx][ny] == '0') {
-                continue;
-            }
-            visited[nx][ny] = true;
+            int nr = r + dr[dir];
+            int nc = c + dc[dir];
+            if (nr<0 || N<=nr || nc<0 || N<=nc) continue;
+            if (map[nr][nc] == '0' || check[nr][nc] != 0) continue;
+            check[nr][nc] = counter;
             ++size;
-            dfs(nx, ny);
+            dfs(nr, nc, counter);
         }
     }
      */
