@@ -1,75 +1,69 @@
 package graph;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
+// 나이트의 이동
+
 public class Q7562 {
     /*
-    public static int I;
-    public static boolean visited [][];
-    public static void main (String args[]) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine());
-        for (int t=0; t<T; ++t) {
-            I = Integer.parseInt(br.readLine());
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int startX = Integer.parseInt(st.nextToken());
-            int startY = Integer.parseInt(st.nextToken());
-            st = new StringTokenizer(br.readLine());
-            int endX = Integer.parseInt(st.nextToken());
-            int endY = Integer.parseInt(st.nextToken());
-            if (startX == endX && startY == endY) {
-                System.out.println(0);
-            } else {
-                bfs(startX, startY, endX, endY);
-            }
-        }
-    }
+    public static int N;
 
-    public static void bfs (int startX, int startY, int endX, int endY) {
-        int dx [] = {-1, -2, -2, -1, +1, +2, +2, +1};
-        int dy [] = {-2, -1, +1, +2, -2, -1, +1, +2};
-        boolean visited [][] = new boolean [I][I];
-        visited[startX][startY] = true;
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(startX, startY, 0));
+    public static void main(String args[]) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        int T = Integer.parseInt(br.readLine());
+        StringTokenizer st;
+        for (int t=0; t<T; ++t) {
+            N = Integer.parseInt(br.readLine());
+            st = new StringTokenizer(br.readLine());
+            int sr = Integer.parseInt(st.nextToken());
+            int sc = Integer.parseInt(st.nextToken());
+            st = new StringTokenizer(br.readLine());
+            int er = Integer.parseInt(st.nextToken());
+            int ec = Integer.parseInt(st.nextToken());
+            if (sr == er && sc == ec) bw.append("0");
+            else bw.append(bfs(sr, sc, er, ec));
+            bw.newLine();
+        }
+        bw.flush();
+    }
+    public static String bfs(int sr, int sc, int er, int ec) {
+        int[] dr = {-1, -2, -2, -1, +1, +2, +2, +1};
+        int[] dc = {-2, -1, +1, +2, -2, -1, +1, +2};
+        Queue<Blank> queue = new ArrayDeque<>();
+        queue.add(new Blank(sr, sc, 0));
+        boolean[][] visited = new boolean[N][N];
+        visited[sr][sc] = true;
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            if (c.x == endX && c.y == endY) {
-                System.out.println(c.times);
-                return;
-            }
-            for (int i = 0; i < 8; ++i) {
-                int nx = c.x + dx[i];
-                int ny = c.y + dy[i];
-
-                if (0 <= nx && nx < I && 0 <= ny && ny < I) {
-                    if (!visited[nx][ny]) {
-                        visited[nx][ny] = true;
-                        queue.add(new Coordinate(nx, ny, c.times+1));
-                    }
-                }
+            Blank cur = queue.poll();
+            if (cur.r == er && cur.c == ec) return String.valueOf(cur.times);
+            for (int dir=0; dir<8; ++dir) {
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
+                if (nr<0 || N<=nr || nc<0 || N<=nc) continue;
+                if (visited[nr][nc]) continue;
+                visited[nr][nc] = true;
+                queue.add(new Blank(nr, nc, cur.times+1));
             }
         }
+        return "";
     }
      */
 }
 
 /*
-class Coordinate {
-    int x;
-    int y;
-    int times;
+class Blank {
+    int r, c, times;
 
-    Coordinate (int x, int y, int times) {
-        this.x =x ;
-        this.y = y;
+    Blank(int r, int c, int times) {
+        this.r = r;
+        this.c = c;
         this.times = times;
     }
 }
