@@ -1,5 +1,7 @@
 package graph;
 
+// 아맞다우산
+
 import java.io.*;
 import java.util.*;
 
@@ -7,10 +9,8 @@ public class Q17244 {
     /*
     public static int R, C, answer;
     public static char[][] house;
-    public static ArrayList<Coordinate> belongings;
+    public static ArrayList<Location> belongings;
     public static int[][] distances;
-    public static int[] dr = {-1, 1, 0, 0};
-    public static int[] dc = {0, 0, -1, 1};
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,28 +20,25 @@ public class Q17244 {
         house = new char[R][C];
         belongings = new ArrayList<>();
         String line = "";
-        Coordinate start = null;
-        Coordinate end = null;
-
+        Location S = null; Location E = null;
         for (int r=0; r<R; ++r) {
             line = br.readLine();
             for (int c=0; c<C; ++c) {
                 house[r][c] = line.charAt(c);
-                if (house[r][c] == 'S') start = new Coordinate(r, c, 0);
-                else if (house[r][c] == 'E') end = new Coordinate(r, c, 0);
-                else if (house[r][c] == 'X') belongings.add(new Coordinate(r, c, 0));
+                if (house[r][c] == 'S') S = new Location(r, c, 0);
+                else if (house[r][c] == 'E') E = new Location(r, c, 0);
+                else if (house[r][c] == 'X') belongings.add(new Location(r, c, 0));
             }
         }
-        belongings.add(0, start);
-        belongings.add(end);
+        belongings.add(E);
+        belongings.add(0, S);
         distances = new int[belongings.size()][belongings.size()];
         for (int i=0; i<belongings.size()-1; ++i) {
-            Coordinate begin = belongings.get(i);
+            Location begin = belongings.get(i);
             for (int j=i+1; j<belongings.size(); ++j) {
-                Coordinate dst = belongings.get(j);
-                int answer = getDistance(begin, dst);
-                distances[i][j] = answer;
-                distances[j][i] = answer;
+                Location end = belongings.get(j);
+                distances[i][j] = bfs(begin, end);
+                distances[j][i] = distances[i][j];
             }
         }
         belongings.remove(0);
@@ -49,55 +46,58 @@ public class Q17244 {
         int[] result = new int[belongings.size()];
         boolean[] visited = new boolean[belongings.size()];
         answer = Integer.MAX_VALUE;
-        permutation(0, result, visited);
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        bw.append(String.valueOf(answer));
-        bw.flush();
+        permutation(result, visited, belongings.size(), 0);
+        System.out.println(answer);
     }
 
-    public static void permutation(int index, int[] result, boolean[] visited) {
-        if (index == belongings.size()) {
-            int[] route = new int[belongings.size()+2];
+    public static void permutation(int[] result, boolean[] visited, int N, int index) {
+        if (index == N) {
+            int[] route = new int[N+2];
             route[0] = 0;
-            for (int i=1; i<=belongings.size(); ++i) route[i] = result[i-1];
-            route[belongings.size()+1] = belongings.size()+1;
+            for (int i=1; i<N+1; ++i) route[i] = result[i-1];
+            route[N+1] = N+1;
             int temp = 0;
-            for (int i=0; i<route.length-1; ++i) {
+            for (int i=0; i<N+1; ++i) {
                 if (distances[route[i]][route[i+1]] == -1) return;
-                else temp += distances[route[i]][route[i+1]];
-                if (answer <= temp) return;
+                temp += distances[route[i]][route[i+1]];
+                if (temp > answer) return;
             }
             answer = temp;
             return;
         }
 
-        for (int i=0; i<belongings.size(); ++i) {
+        for (int i=0; i<N; ++i) {
             if (!visited[i]) {
-                visited[i] = true;
                 result[index] = i+1;
-                permutation(index+1, result, visited);
+                visited[i] = true;
+                permutation(result, visited, N, index+1);
                 visited[i] = false;
             }
         }
     }
 
-    public static int getDistance(Coordinate begin, Coordinate end) {
+    public static int bfs(Location begin, Location end) {
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        Queue<Location> queue = new ArrayDeque<>();
         boolean[][] visited = new boolean[R][C];
-        Queue<Coordinate> queue = new ArrayDeque<>();
         queue.add(begin);
         visited[begin.r][begin.c] = true;
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            if (c.r == end.r && c.c == end.c) return c.distance;
+            Location cur = queue.poll();
+            if (cur.r == end.r && cur.c == end.c) {
+                return cur.times;
+            }
             for (int dir=0; dir<4; ++dir) {
-                int nr = c.r + dr[dir];
-                int nc = c.c + dc[dir];
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
+
                 if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
                 if (visited[nr][nc]) continue;
                 if (house[nr][nc] == '#') continue;
-                queue.add(new Coordinate(nr, nc, c.distance+1));
                 visited[nr][nc] = true;
+                queue.add(new Location(nr, nc, cur.times+1));
             }
         }
         return -1;
@@ -106,13 +106,13 @@ public class Q17244 {
 }
 
 /*
-class Coordinate {
-    int r, c, distance;
+class Location {
+    int r, c, times;
 
-    Coordinate (int r, int c, int distance) {
+    Location(int r, int c, int times) {
         this.r = r;
         this.c = c;
-        this.distance = distance;
+        this.times = times;
     }
 }
  */
