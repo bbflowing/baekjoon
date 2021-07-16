@@ -1,105 +1,80 @@
 package graph;
 
+// 말이 되고 싶은 원숭이
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.Buffer;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Q1600 {
-    /*
-    public static int grid [][];
-    public static int R, C;
-    public static void main (String args[]) throws IOException {
+    public static int T, W, H;
+    public static int[][] world;
+
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int K = Integer.parseInt(br.readLine());
+        T = Integer.parseInt(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
-        C = Integer.parseInt(st.nextToken());
-        R = Integer.parseInt(st.nextToken());
-        grid = new int [R][C];
-        for (int i=0; i<R; ++i) {
+        H = Integer.parseInt(st.nextToken());
+        W = Integer.parseInt(st.nextToken());
+        world = new int[W][H];
+        for (int w = 0; w < W; ++w) {
             st = new StringTokenizer(br.readLine());
-            for (int j=0; j<C; ++j) {
-                grid[i][j] = Integer.parseInt(st.nextToken());
-            }
+            for (int h = 0; h < H; ++h) world[w][h] = Integer.parseInt(st.nextToken());
         }
-        bfs(K);
+        bfs();
     }
 
-    public static void bfs (int K) {
-        int dx [] = {-1, 1, 0, 0};
-        int dy [] = {0, 0, -1, 1};
+    public static void bfs() {
 
-        int knightX [] = {-1, -2, -2, -1, +1, +2, +2, +1};
-        int knightY [] = {-2, -1, +1, +2, -2, -1, +1, +2};
-
-        boolean visited [][][] = new boolean [K+1][R][C];
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(0, 0, 0, 0));
+        int[] dr = {-1, 1, 0, 0, -1, -2, -2, -1, +1, +2, +2, +1};
+        int[] dc = {0, 0, -1, 1, -2, -1, +1, +2, -2, -1, +1, +2};
+        boolean[][][] visited = new boolean[T + 1][W][H];
+        Queue<Location> queue = new ArrayDeque<>();
+        queue.add(new Location(0, 0, 0, 0));
         visited[0][0][0] = true;
-        int answer = 987_654_321;
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            if (c.x == R - 1 && c.y == C - 1) {
-                if (c.distance < answer) {
-                    answer = c.distance;
-                }
-                continue;
+            Location cur = queue.poll();
+            if (cur.r == W - 1 && cur.c == H - 1) {
+                System.out.println(cur.moves);
+                return;
+            }
+            for (int dir = 0; dir < 4; ++dir) {
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
+                if (nr < 0 || W <= nr || nc < 0 || H <= nc) continue;
+                if (world[nr][nc] == 1) continue;
+                if (visited[cur.horse][nr][nc]) continue;
+                visited[cur.horse][nr][nc] = true;
+                queue.add(new Location(cur.horse, nr, nc, cur.moves + 1));
             }
 
-            for (int i = 0; i < 4; ++i) {
-                int nx = c.x + dx[i];
-                int ny = c.y + dy[i];
-
-                if (nx < 0 || R <= nx || ny < 0 || C <= ny) {
-                    continue;
-                }
-                if (!visited[c.horse][nx][ny] && grid[nx][ny] == 0) {
-                    visited[c.horse][nx][ny] = true;
-                    queue.add(new Coordinate(nx, ny, c.horse, c.distance + 1));
-                }
-            }
-            if (c.horse + 1 <= K) {
-                for (int i = 0; i < 8; ++i) {
-                    int nx = c.x + knightX[i];
-                    int ny = c.y + knightY[i];
-
-                    if (nx < 0 || R <= nx || ny < 0 || C <= ny) {
-                        continue;
-                    }
-                    if (!visited[c.horse + 1][nx][ny] && grid[nx][ny] == 0) {
-                        visited[c.horse + 1][nx][ny] = true;
-                        queue.add(new Coordinate(nx, ny, c.horse + 1, c.distance + 1));
-                    }
+            if (cur.horse + 1 <= T) {
+                for (int dir = 4; dir < 12; ++dir) {
+                    int nr = cur.r + dr[dir];
+                    int nc = cur.c + dc[dir];
+                    if (nr < 0 || W <= nr || nc < 0 || H <= nc) continue;
+                    if (world[nr][nc] == 1) continue;
+                    if (visited[cur.horse + 1][nr][nc]) continue;
+                    visited[cur.horse + 1][nr][nc] = true;
+                    queue.add(new Location(cur.horse + 1, nr, nc, cur.moves + 1));
                 }
             }
         }
-        if (answer == 987_654_321) {
-            System.out.println(-1);
-        } else {
-            System.out.println(answer);
-        }
+        System.out.println(-1);
     }
-         */
+
 }
 
-/*
-class Coordinate {
-    int x;
-    int y;
-    int horse;
-    int distance;
+class Location {
+    int horse, r, c, moves;
 
-    Coordinate (int x, int y, int horse, int distance) {
-        this.x = x;
-        this.y = y;
+    Location(int horse, int r, int c, int moves) {
         this.horse = horse;
-        this.distance = distance;
+        this.r = r;
+        this.c = c;
+        this.moves = moves;
     }
 }
-
- */
