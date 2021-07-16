@@ -9,6 +9,7 @@ import java.nio.Buffer;
 import java.util.*;
 
 public class Q1600 {
+    /*
     public static int T, W, H;
     public static int[][] world;
 
@@ -65,9 +66,10 @@ public class Q1600 {
         }
         System.out.println(-1);
     }
-
+     */
 }
 
+/*
 class Location {
     int horse, r, c, moves;
 
@@ -78,3 +80,4 @@ class Location {
         this.moves = moves;
     }
 }
+ */
