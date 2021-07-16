@@ -5,92 +5,86 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+// 상범빌딩
+
 public class Q6593 {
     /*
-    public static int H, R, C;
+    public static int L, R, C;
     public static char[][][] building;
-    public static void main(String args[]) throws IOException {
+
+    public static void main(String args[]) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
         String line = "";
-        String fail = "Trapped!";
-        Coordinate start;
         while (true) {
-            st = new StringTokenizer(br.readLine());
-            H = Integer.parseInt(st.nextToken());
+            line = br.readLine();
+            if (line.equals("0 0 0")) break;
+            st = new StringTokenizer(line);
+            L = Integer.parseInt(st.nextToken());
             R = Integer.parseInt(st.nextToken());
             C = Integer.parseInt(st.nextToken());
-            if (H == 0 && R == 0 && C == 0) break;
-            building = new char[H][R][C];
-            start = null;
-            for (int h=0; h<H; ++h) {
+            building = new char[L][R][C];
+            Location S = null; Location E = null;
+            for (int l=0; l<L; ++l) {
                 for (int r=0; r<R; ++r) {
                     line = br.readLine();
                     for (int c=0; c<C; ++c) {
-                        building[h][r][c] = line.charAt(c);
-                        if (building[h][r][c] == 'S') start = new Coordinate(h, r, c);
+                        building[l][r][c] = line.charAt(c);
+                        if (building[l][r][c] == 'S') S = new Location(l, r, c);
+                        else if (building[l][r][c] == 'E') E = new Location(l, r, c);
                     }
                 }
                 line = br.readLine();
             }
-            int answer = bfs(start);
-
-            if (answer == -1) bw.append(fail);
-            else {
-                StringBuilder sb = new StringBuilder("Escaped in "+answer+" minute(s).");
-                bw.append(sb);
-            }
+            int result = bfs(S, E);
+            if (result == -1) bw.append("Trapped!");
+            else bw.append("Escaped in "+result+" minute(s).");
             bw.newLine();
         }
         bw.flush();
     }
 
-    public static int bfs(Coordinate start) {
-        Queue<Coordinate> queue = new ArrayDeque<>();
-        queue.add(start);
-        boolean[][][] visited = new boolean[H][R][C];
-        visited[start.h][start.r][start.c] = true;
-        int[] dh = {0, 0, 0, 0, -1, 1};
-        int[] dr = {-1, 1, 0, 0, 0, 0};
-        int[] dc = {0, 0, -1, 1, 0, 0};
-        int time = 0;
+    public static int bfs(Location S, Location E) {
+        int[] dl = {-1, 1, 0, 0, 0, 0};
+        int[] dr = {0, 0, -1, 1, 0, 0};
+        int[] dc = {0, 0, 0, 0, -1, 1};
+        Queue<Location> queue = new ArrayDeque<>();
+        boolean[][][] visited = new boolean[L][R][C];
+        queue.add(S);
+        visited[S.l][S.r][S.c] = true;
+        int minutes = 0;
+
         while (!queue.isEmpty()) {
-            int size = queue.size();
-            ++time;
-            for (int i = 0; i < size; ++i) {
-                Coordinate cur = queue.poll();
-                for (int dir=0; dir<6; ++dir) {
-                    int nh = cur.h + dh[dir];
+            int qs = queue.size();
+            ++minutes;
+            for (int i=0; i<qs; ++i) {
+                Location cur = queue.poll();
+                for (int dir = 0; dir < 6; ++dir) {
+                    int nl = cur.l + dl[dir];
                     int nr = cur.r + dr[dir];
                     int nc = cur.c + dc[dir];
 
-                    if (!check(nh, nr, nc)) continue;
-                    if (visited[nh][nr][nc]) continue;
-                    if (building[nh][nr][nc] == '#') continue;
-                    else if (building[nh][nr][nc] == 'E') return time;
-                    visited[nh][nr][nc] = true;
-                    queue.add(new Coordinate(nh, nr, nc));
-
+                    if (nl < 0 || L <= nl || nr < 0 || R <= nr || nc < 0 || C <= nc) continue;
+                    if (building[nl][nr][nc] == '#') continue;
+                    if (visited[nl][nr][nc]) continue;
+                    if (nl == E.l && nr == E.r && nc ==E.c) return minutes;
+                    visited[nl][nr][nc] = true;
+                    queue.add(new Location(nl, nr, nc));
                 }
             }
         }
         return -1;
     }
-
-    public static boolean check(int h, int r, int c) {
-        if (h<0 || H<=h || r<0 || R<=r || c<0 || C<=c) return false;
-        return true;
-    }
      */
 }
 
 /*
-class Coordinate {
-    int h, r, c;
+class Location {
+    int l, r, c;
 
-    Coordinate (int h, int r, int c) {
-        this.h = h;
+    Location(int l, int r, int c) {
+        this.l = l;
         this.r = r;
         this.c = c;
     }
