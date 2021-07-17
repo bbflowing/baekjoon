@@ -1,152 +1,147 @@
 package graph;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+// 구슬 탈출3
+
+import java.io.*;
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q15644 {
     /*
-    public static char input [][];
-    public static int dx [] = {-1, 1, 0, 0};
-    public static int dy [] = {0, 0, -1, 1}; // 0: north, 1: south, 2: west, 3: east
-    public static void main (String args[]) throws IOException {
+    public static int R, C;
+    public static boolean result;
+    public static char[][] board;
+    public static boolean[][][][] visited;
+    public static Queue<Location> queue;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
+    public static char[] direction = {'U', 'D', 'L', 'R'};
+
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        input = new char [N][M];
-        int blueX = 0; int blueY = 0;
-        int redX = 0; int redY = 0;
-        for (int i=0; i<N; ++i) {
-            String line = br.readLine();
-            for (int j=0; j<M; ++j) {
-                input[i][j] = line.charAt(j);
-                if (input[i][j] == 'B') {
-                    blueX = i; blueY = j;
-                } else if (input[i][j] == 'R') {
-                    redX = i; redY = j;
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        board = new char[R][C];
+        String line = "";
+        int redR = 0; int redC = 0;
+        int blueR = 0; int blueC = 0;
+        for (int r=0; r<R; ++r) {
+            line = br.readLine();
+            for (int c=0; c<C; ++c) {
+                board[r][c] = line.charAt(c);
+                if (board[r][c] == 'B') {
+                    blueR = r; blueC = c;
+                } else if (board[r][c] == 'R') {
+                    redR = r; redC = c;
                 }
             }
         }
-        bfs(blueX, blueY, redX, redY, N, M);
-    }
-
-    public static void bfs (int blueX, int blueY, int redX, int redY, int N, int M) {
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(blueX, blueY, redX, redY, 0, ""));
-        boolean check [][][][] = new boolean [N][M][N][M];
-        check[blueX][blueY][redX][redY] = true;
-        char route [] = {'U', 'D', 'L', 'R'};
-
-        while (!queue.isEmpty()) {
-            Coordinate current = queue.poll();
-            if (current.time >= 10) {
+        visited = new boolean[R][C][R][C];
+        queue = new ArrayDeque<>();
+        queue.add(new Location(redR, redC, blueR, blueC, ""));
+        visited[redR][redC][blueR][blueC] = true;
+        int times = 0;
+        result = false;
+        while (true) {
+            ++times;
+            String route = move();
+            if (result && times <= 10) {
+                bw.append(String.valueOf(times));
+                bw.newLine();
+                bw.append(route);
+                break;
+            } else if (times == 10) {
+                bw.append(String.valueOf(-1));
                 break;
             }
-            for (int direction=0; direction<4; ++direction) {
-                int nbx = current.blueX;
-                int nby = current.blueY;
-                int nrx = current.redX;
-                int nry = current.redY;
+        }
+        bw.flush();
+    }
 
-                Coordinate blue = move(nbx, nby, direction, N, M);
-                Coordinate red = move(nrx, nry, direction, N, M);
-                nbx = blue.blueX; nby = blue.blueY; nrx = red.blueX; nry = red.blueY;
-                if (input[nbx][nby] == 'O') {
-                    continue;
-                }
-                if (input[nrx][nry] == 'O') {
-                    System.out.println(current.time + 1);
-                    System.out.println(current.route + route[direction]);
-                    System.exit(0);
-                }
-                if (nbx == nrx && nby == nry) {
-                    if (direction == 0) { //north
-                        if (current.blueX < current.redX) {
-                            ++nrx;
-                        } else {
-                            ++nbx;
-                        }
-                    } else if (direction == 1) { //south
-                        if (current.blueX < current.redX) {
-                            --nbx;
-                        } else {
-                            --nrx;
-                        }
-                    } else if (direction == 2) { //west
-                        if (current.blueY < current.redY) {
-                            ++nry;
-                        } else {
-                            ++nby;
-                        }
-                    } else if (direction == 3) { //east
-                        if (current.blueY < current.redY) {
-                            --nby;
-                        } else {
-                            --nry;
-                        }
+    public static String move() {
+        int size = queue.size();
+        for (int i=0; i<size; ++i) {
+            Location cur = queue.poll();
+            for (int dir=0; dir<4; ++dir) {
+                int nbr = cur.br;
+                int nbc = cur.bc;
+                int nrr = cur.rr;
+                int nrc = cur.rc;
+                String nroute = cur.route;
+
+                while (true) {
+                    nbr += dr[dir];
+                    nbc += dc[dir];
+
+                    if (board[nbr][nbc] == 'O') break;
+                    else if (board[nbr][nbc] == '#') {
+                        if (dir == 0) ++nbr;
+                        else if (dir == 1) --nbr;
+                        else if (dir == 2) ++nbc;
+                        else --nbc;
+                        break;
                     }
                 }
-                if (check[nbx][nby][nrx][nry]) {
-                    continue;
+                if (board[nbr][nbc] == 'O') continue;
+
+                while (true) {
+                    nrr += dr[dir];
+                    nrc += dc[dir];
+
+                    if (board[nrr][nrc] == 'O') {
+                        result = true;
+                        return nroute+direction[dir];
+                    } else if (board[nrr][nrc] == '#') {
+                        if (dir == 0) ++nrr;
+                        else if (dir == 1) --nrr;
+                        else if (dir == 2) ++nrc;
+                        else --nrc;
+                        break;
+                    }
                 }
-                check[nbx][nby][nrx][nry] = true;
-                queue.add(new Coordinate(nbx, nby, nrx, nry, current.time + 1, current.route + route[direction]));
+
+                if (nbr == nrr && nbc == nrc) {
+                    if (dir == 0) {
+                        if (cur.br < cur.rr) ++nrr;
+                        else ++nbr;
+                    } else if (dir == 1) {
+                        if (cur.br < cur.rr) --nbr;
+                        else --nrr;
+                    } else if (dir == 2) {
+                        if (cur.bc < cur.rc) ++nrc;
+                        else ++nbc;
+                    } else {
+                        if (cur.bc < cur.rc) --nbc;
+                        else --nrc;
+                    }
+                }
+
+                if (!visited[nrr][nrc][nbr][nbc]) {
+                    visited[nrr][nrc][nbr][nbc] = true;
+                    nroute += direction[dir];
+                    queue.add(new Location(nrr, nrc, nbr, nbc, nroute));
+                }
             }
         }
-        System.out.println(-1);
+        return "";
     }
-    public static Coordinate move (int x, int y, int direction, int N, int M) {
-        int nx = x;
-        int ny = y;
-        //System.out.println(nx+", "+ny);
-        while (true) {
-            nx += dx[direction];
-            ny += dy[direction];
-            if (input[nx][ny] == 'O') {
-                break;
-            } else if (input[nx][ny] == '#') {
-                if (direction == 0) { //north
-                    ++nx;
-                } else if (direction == 1) { //south
-                    --nx;
-                } else if (direction == 2) { //west
-                    ++ny;
-                } else if (direction == 3) { //east
-                    --ny;
-                }
-                break;
-            }
-
-        }
-        return new Coordinate (nx, ny);
-    }
-
      */
 }
+
 /*
-class Coordinate {
-    int blueX;
-    int blueY;
-    int redX;
-    int redY;
-    int time;
+class Location {
+    int rr, rc, br, bc;
     String route;
 
-    Coordinate (int x, int y) {
-        this.blueX = x;
-        this.blueY = y;
-    }
-
-    Coordinate (int blueX, int blueY, int redX, int redY, int time, String route) {
-        this.blueX = blueX;
-        this.blueY = blueY;
-        this.redX = redX;
-        this.redY = redY;
-        this.time = time;
+    Location (int rr, int rc, int br, int bc, String route) {
+        this.rr = rr;
+        this.rc = rc;
+        this.br = br;
+        this.bc = bc;
         this.route = route;
     }
 }
