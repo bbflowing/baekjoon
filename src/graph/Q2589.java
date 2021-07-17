@@ -1,117 +1,74 @@
 package graph;
 
+// 보물섬
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q2589 {
     /*
     public static int R, C;
-    public static char map[][];
-    public static int groups[][];
-    public static int dx[] = {-1, 1, 0, 0};
-    public static int dy[] = {0, 0, -1, 1};
+    public static char[][] map;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
 
-    public static void main (String args[]) throws IOException {
+    public static void main(String args[]) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
         map = new char[R][C];
-        groups = new int[R][C];
-        for (int i=0; i<R; ++i) {
-            String line = br.readLine();
-            for(int j=0; j<C; ++j) {
-                map[i][j] = line.charAt(j);
+        ArrayList<Location> list = new ArrayList<>();
+        String line = "";
+        for (int r=0; r<R; ++r) {
+            line = br.readLine();
+            for (int c=0; c<C; ++c) {
+                map[r][c] = line.charAt(c);
+                if (map[r][c] == 'L') list.add(new Location(r, c, 0));
             }
         }
-        int counter = 0;
-        for (int i=0; i<R; ++i) {
-            for (int j=0; j<C; ++j) {
-                if (map[i][j] == 'L' && groups[i][j] == 0) {
-                    ++counter;
-                    groups[i][j] = counter;
-                    solve(i, j, counter);
-                }
-            }
-        }
-        int answer = -1;
-        for (int i=0; i<R; ++i) {
-            for (int j=0; j<C; ++j) {
-                if (groups[i][j] != 0) {
-                    int result = bfs(i, j, groups[i][j]);
-                    answer = result > answer ? result : answer;
-                }
-            }
-        }
+        int answer = 0;
+        for (Location l : list) answer = Math.max(bfs(l), answer);
         System.out.println(answer);
     }
 
-    public static int bfs (int x, int y, int group) {
-        boolean visited[][] = new boolean[R][C];
-        Queue<Coordinate> queue = new LinkedList<>();
-        queue.add(new Coordinate(x, y, 0));
-        visited[x][y] = true;
-        int max = -1;
+    public static int bfs(Location start) {
+        boolean[][] visited = new boolean[R][C];
+        visited[start.r][start.c] = true;
+        Queue<Location> queue = new ArrayDeque<>();
+        queue.add(start);
+        int answer = 0;
 
         while (!queue.isEmpty()) {
-            Coordinate c = queue.poll();
-            max = max < c.distance ? c.distance : max;
-
+            Location cur = queue.poll();
+            answer = Math.max(answer, cur.distance);
             for (int dir=0; dir<4; ++dir) {
-                int nx = c.x + dx[dir];
-                int ny = c.y + dy[dir];
-
-                if (nx<0 || R<=nx || ny<0 || C<=ny) {
-                    continue;
-                }
-                if (groups[nx][ny] != group) {
-                    continue;
-                }
-                if (visited[nx][ny]) {
-                    continue;
-                }
-                queue.add(new Coordinate(nx, ny, c.distance+1));
-                visited[nx][ny] = true;
+                int nr = cur.r + dr[dir];
+                int nc = cur.c + dc[dir];
+                if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+                if (visited[nr][nc]) continue;
+                if (map[nr][nc] == 'W') continue;
+                visited[nr][nc] = true;
+                queue.add(new Location(nr, nc, cur.distance+1));
             }
         }
-        return max;
-    }
-
-    public static void solve (int x, int y, int counter) {
-        for (int dir=0; dir<4; ++dir) {
-            int nx = x + dx[dir];
-            int ny = y + dy[dir];
-
-            if (nx<0 || R<=nx || ny<0 || C<=ny) {
-                continue;
-            }
-            if (groups[nx][ny] != 0) {
-                continue;
-            }
-            if (map[nx][ny] == 'W') {
-                continue;
-            }
-            groups[nx][ny] = counter;
-            solve(nx, ny, counter);
-        }
+        return answer;
     }
      */
 }
 
 /*
-class Coordinate {
-    int x;
-    int y;
-    int distance;
+class Location {
+    int r, c, distance;
 
-    Coordinate (int x, int y, int distance) {
-        this.x = x;
-        this.y = y;
+    Location(int r, int c, int distance) {
+        this.r = r;
+        this.c = c;
         this.distance = distance;
     }
 }
