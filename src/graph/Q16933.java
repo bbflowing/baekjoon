@@ -1,5 +1,7 @@
 package graph;
 
+// 벽 부수고 이동하기3
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -9,22 +11,19 @@ import java.util.*;
 public class Q16933 {
     /*
     public static int R, C;
-    public static int[][] map;
+    public static char[][] map;
 
-    public static void main (String args[]) throws IOException {
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st =new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
-        map = new int[R+1][C+1];
+        map = new char[R][C];
         String line = "";
-        for (int r=1; r<=R; ++r) {
+        for (int r=0; r<R; ++r) {
             line = br.readLine();
-            for (int c=1; c<=C; ++c) {
-                map[r][c] = line.charAt(c-1)-'0';
-
-            }
+            for (int c=0; c<C; ++c) map[r][c] = line.charAt(c);
         }
         bfs(K);
     }
@@ -32,53 +31,41 @@ public class Q16933 {
     public static void bfs(int K) {
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
-        int[][][][] visited = new int[2][K+1][R+1][C+1];
-        for (int i=0; i<2; ++i) {
-            for (int j=0; j<K+1; ++j) {
-                for (int k=0; k<R+1; ++k) Arrays.fill(visited[i][j][k], -1);
-            }
-        }
-        Queue<Coordinate> queue = new ArrayDeque<>();
-        queue.add(new Coordinate(0, 0,1, 1, 1));
-        visited[0][0][1][1] = 1;
+        Queue<Blank> queue = new ArrayDeque<>();
+        queue.add(new Blank(1, 0, 0, 0, 1));
+        boolean[][][][] visited = new boolean[2][K+1][R][C];
+        visited[1][0][0][0] = true;
 
         while (!queue.isEmpty()) {
-            Coordinate cur = queue.poll();
-            if (cur.r == R &&  cur.c == C) {
+            Blank cur = queue.poll();
+            if (cur.r == R-1 && cur.c == C-1) {
                 System.out.println(cur.distance);
                 return;
             }
             for (int dir=0; dir<4; ++dir) {
                 int nr = cur.r + dr[dir];
                 int nc = cur.c + dc[dir];
+                if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+                int nday = cur.day;
+                if (cur.day == 0) nday = 1;
+                else nday = 0;
 
-                if (nr<1 || R<nr || nc<1 || C<nc) continue;
-                if (cur.time == 0) {
-                    if (map[nr][nc] == 1 && cur.broken+1 <= K) {
-                        if (visited[1][cur.broken+1][nr][nc] == -1 ||
-                                cur.distance+1 < visited[1][cur.broken+1][nr][nc]) {
-                            visited[1][cur.broken+1][nr][nc] = cur.distance+1;
-                            queue.add(new Coordinate(1, cur.broken+1, nr, nc, cur.distance+1));
-                        }
-                    } else if (map[nr][nc] == 0) {
-                        if (visited[1][cur.broken][nr][nc] == -1 ||
-                            cur.distance+1 < visited[1][cur.broken][nr][nc]) {
-                            visited[1][cur.broken][nr][nc] = cur.distance+1;
-                            queue.add(new Coordinate(1, cur.broken, nr, nc, cur.distance+1));
-                        }
+                if (map[nr][nc] == '0') {
+                    if (!visited[nday][cur.broken][nr][nc]) {
+                        visited[nday][cur.broken][nr][nc] = true;
+                        queue.add(new Blank(nday, cur.broken, nr, nc, cur.distance+1));
                     }
                 } else {
-                    if (map[nr][nc] == 1 && cur.broken+1 <= K) {
-                        if (visited[1][cur.broken+1][nr][nc] == -1 ||
-                            cur.distance+1 < visited[1][cur.broken+1][nr][nc]) {
-                            visited[0][cur.broken][nr][nc] = cur.distance+1;
-                            queue.add(new Coordinate(0, cur.broken, cur.r, cur.c, cur.distance+1));
-                        }
-                    } else if (map[nr][nc] == 0) {
-                        if (visited[0][cur.broken][nr][nc] == -1 ||
-                            cur.distance+1 < visited[0][cur.broken][nr][nc]) {
-                            visited[0][cur.broken][nr][nc] = cur.distance+1;
-                            queue.add(new Coordinate(0, cur.broken, nr, nc, cur.distance+1));
+                    if (cur.broken+1 <= K) {
+                        if (cur.day == 1) {
+                            if (!visited[nday][cur.broken + 1][nr][nc]) {
+                                visited[nday][cur.broken + 1][nr][nc] = true;
+                                queue.add(new Blank(nday, cur.broken+1, nr, nc, cur.distance+1));
+                            }
+                        } else {
+                            if (!visited[1][cur.broken+1][nr][nc]) {
+                                queue.add(new Blank(nday, cur.broken, cur.r, cur.c, cur.distance+1));
+                            }
                         }
                     }
                 }
@@ -90,11 +77,11 @@ public class Q16933 {
 }
 
 /*
-class Coordinate {
-    int time, broken, r, c, distance;
+class Blank {
+    int r, c, day, broken, distance;
 
-    Coordinate (int time, int broken, int r, int c, int distance) {
-        this.time = time;
+    Blank (int day, int broken, int r, int c, int distance) {
+        this.day = day;
         this.broken = broken;
         this.r = r;
         this.c = c;
