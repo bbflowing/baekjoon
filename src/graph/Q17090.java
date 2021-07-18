@@ -14,7 +14,7 @@ public class Q17090 {
     public static char[][] maze;
     public static int[][] dp;
 
-    public static void main (String args[]) throws IOException {
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
@@ -32,23 +32,23 @@ public class Q17090 {
         int answer = 0;
         for (int r=0; r<R; ++r) {
             for (int c=0; c<C; ++c) {
-                if (dp[r][c] == 1) ++answer;
-                else if (dp[r][c] == -1) answer += solve(r, c);
+                if (dp[r][c] == -1) answer += dfs(r, c);
+                else if (dp[r][c] == 1) ++answer;
             }
         }
         System.out.println(answer);
     }
 
-    public static int solve (int r, int c) {
+    public static int dfs(int r, int c) {
         if (r<0 || R<=r || c<0 || C<=c) return 1;
         if (dp[r][c] != -1) return dp[r][c];
         dp[r][c] = 0;
         int nr = r; int nc = c;
         if (maze[r][c] == 'D') ++nr;
-        else if (maze[r][c] == 'U') --nr;
         else if (maze[r][c] == 'L') --nc;
-        else ++nc;
-        dp[r][c] = solve(nr, nc);
+        else if (maze[r][c] == 'R') ++nc;
+        else --nr;
+        dp[r][c] = dfs(nr, nc);
         return dp[r][c];
     }
      */
