@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class Q1981 {
+    /*
     public static int N;
     public static int[][] array;
     public static ArrayList<Integer> numbers;
@@ -73,8 +74,10 @@ public class Q1981 {
         }
         return false;
     }
+     */
 }
 
+/*
 class Location {
     int r, c;
 
@@ -83,3 +86,4 @@ class Location {
         this.c = c;
     }
 }
+ */
