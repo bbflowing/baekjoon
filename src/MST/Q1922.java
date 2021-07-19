@@ -11,41 +11,40 @@ import java.util.StringTokenizer;
 public class Q1922 {
     /*
     public static int N;
+    public static PriorityQueue<Line> queue;
     public static int[] parents;
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        int M = Integer.parseInt(br.readLine());
+        int E = Integer.parseInt(br.readLine());
+        queue = new PriorityQueue<>();
         StringTokenizer st;
-        PriorityQueue<Pair> queue = new PriorityQueue<>();
-        for (int i=0; i<M; ++i) {
+        for (int i=0; i<E; ++i) {
             st = new StringTokenizer(br.readLine());
             int start = Integer.parseInt(st.nextToken());
             int end = Integer.parseInt(st.nextToken());
-            if (start == end) continue;
             int cost = Integer.parseInt(st.nextToken());
-            queue.add(new Pair(start, end, cost));
+            queue.add(new Line(start, end, cost));
         }
         parents = new int[N+1];
         for (int i=1; i<N+1; ++i) parents[i] = i;
-        getMST(queue);
+        System.out.println(getMST());
     }
 
-    public static void getMST(PriorityQueue<Pair> queue) {
-        int answer = 0;
+    public static int getMST() {
         int count = N;
+        int cost = 0;
+
         while (!queue.isEmpty()) {
-            Pair p = queue.poll();
-            if (union(p.start, p.end)) {
+            Line cur = queue.poll();
+            if (union(cur.start, cur.end)) {
                 --count;
-                answer += p.cost;
-                if (count == 1) {
-                    System.out.println(answer);
-                    return;
-                }
+                cost += cur.cost;
             }
+            if (count == 1) return cost;
         }
+        return -1;
     }
 
     public static boolean union(int start, int end) {
@@ -58,26 +57,27 @@ public class Q1922 {
         return true;
     }
 
-    public static int find(int node) {
-        if (parents[node] == node) return node;
-        else return parents[node] = find(parents[node]);
+    public static int find(int computer) {
+        if (parents[computer] == computer) return computer;
+        else return parents[computer] = find(parents[computer]);
     }
      */
 }
 
 /*
-class Pair implements Comparable<Pair> {
+class Line implements Comparable<Line>{
     int start, end, cost;
 
-    Pair (int start, int end, int cost) {
+    Line(int start, int end, int cost) {
         this.start = start;
         this.end = end;
         this.cost = cost;
     }
 
     @Override
-    public int compareTo(Pair p) {
-        return this.cost - p.cost;
+    public int compareTo (Line l) {
+        if (this.cost > l.cost) return 1;
+        else return -1;
     }
 }
  */
