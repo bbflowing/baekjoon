@@ -3,6 +3,8 @@ package MST;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
@@ -11,6 +13,7 @@ import java.util.StringTokenizer;
 public class Q1197 {
     /*
     public static int V;
+    public static PriorityQueue<Node> queue;
     public static int[] parents;
 
     public static void main(String args[]) throws IOException {
@@ -18,41 +21,41 @@ public class Q1197 {
         StringTokenizer st = new StringTokenizer(br.readLine());
         V = Integer.parseInt(st.nextToken());
         int E = Integer.parseInt(st.nextToken());
-        PriorityQueue<Pair> queue = new PriorityQueue<>();
+        queue = new PriorityQueue<>();
         for (int i=0; i<E; ++i) {
             st = new StringTokenizer(br.readLine());
             int start = Integer.parseInt(st.nextToken());
             int end = Integer.parseInt(st.nextToken());
             int cost = Integer.parseInt(st.nextToken());
-            queue.add(new Pair(start, end, cost));
+            queue.add(new Node(start, end, cost));
         }
         parents = new int[V+1];
         for (int i=1; i<V+1; ++i) parents[i] = i;
-        System.out.println(getMST(queue));
+        System.out.println(getMST());
     }
 
-    public static int getMST(PriorityQueue<Pair> queue) {
-        int total = 0;
+    public static int getMST() {
         int count = V;
+        int cost = 0;
         while (!queue.isEmpty()) {
-            Pair p = queue.poll();
-            if (union(p.start, p.end)) {
-                total += p.cost;
+            Node cur = queue.poll();
+            if (union(cur.start, cur.end)) {
+                cost += cur.cost;
                 --count;
-                if (count == 1) break;
             }
+            if (count == 1) return cost;
         }
-        return total;
+        return -1;
     }
 
     public static int find(int node) {
         if (parents[node] == node) return node;
-        return parents[node] = find(parents[node]);
+        else return parents[node] = find(parents[node]);
     }
 
-    public static boolean union(int node1, int node2) {
-        int parent1 = find(node1);
-        int parent2 = find(node2);
+    public static boolean union(int start, int end) {
+        int parent1 = find(start);
+        int parent2 = find(end);
 
         if (parent1 == parent2) return false;
         else if (parent1 < parent2) parents[parent2] = parent1;
@@ -63,18 +66,19 @@ public class Q1197 {
 }
 
 /*
-class Pair implements Comparable<Pair> {
+class Node implements Comparable<Node>{
     int start, end, cost;
 
-    Pair (int start, int end, int cost) {
+    Node (int start, int end, int cost) {
         this.start = start;
         this.end = end;
         this.cost = cost;
     }
 
     @Override
-    public int compareTo(Pair p) {
-        return this.cost - p.cost;
+    public int compareTo (Node n) {
+        if (this.cost > n.cost) return 1;
+        else return -1;
     }
 }
  */
