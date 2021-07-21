@@ -13,74 +13,79 @@ import java.util.StringTokenizer;
 public class Q4179 {
     /*
     public static int R, C;
-    public static char[][] map;
+    public static char[][] maze;
+    public static Queue<Location> pq;
+    public static Queue<Location> fq;
+    public static boolean[][] pv;
+    public static boolean[][] fv;
+    public static int[] dr = {-1, 1, 0, 0};
+    public static int[] dc = {0, 0, -1, 1};
 
-    public static void main(String args[]) throws IOException{
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
+        maze = new char[R][C];
+        pq = new ArrayDeque<>();
+        fq = new ArrayDeque<>();
+        pv = new boolean[R][C];
+        fv = new boolean[R][C];
         String line = "";
-        map = new char[R][C];
-        Queue<Location> fq = new ArrayDeque<>();
-        Queue<Location> pq = new ArrayDeque<>();
-        boolean[][] fv = new boolean[R][C];
-        boolean[][] pv = new boolean[R][C];
-
         for (int r=0; r<R; ++r) {
             line = br.readLine();
             for (int c=0; c<C; ++c) {
-                map[r][c] = line.charAt(c);
-                if (map[r][c] == 'J') {
+                maze[r][c] = line.charAt(c);
+                if (maze[r][c] == 'J') {
                     pq.add(new Location(r, c));
                     pv[r][c] = true;
-                } else if (map[r][c] == 'F') {
+                } else if (maze[r][c] == 'F') {
                     fq.add(new Location(r, c));
                     fv[r][c] = true;
                 }
             }
         }
-        bfs(fq, pq, fv, pv);
-    }
-
-    public static void bfs(Queue<Location> fq, Queue<Location> pq, boolean[][] fv, boolean[][] pv) {
-        int[] dr = {-1, 1, 0, 0};
-        int[] dc = {0, 0, -1, 1};
         int time = 0;
-
         while (!pq.isEmpty()) {
             ++time;
-            int fs = fq.size();
-            for (int i=0; i<fs; ++i) {
-                Location f = fq.poll();
-                for (int dir=0; dir<4; ++dir) {
-                    int nfr = f.r + dr[dir];
-                    int nfc = f.c + dc[dir];
-                    if (nfr<0 || R<=nfr || nfc<0 || C<=nfc) continue;
-                    if (fv[nfr][nfc]) continue;
-                    if (map[nfr][nfc] == '#') continue;
-                    fv[nfr][nfc] = true;
-                    fq.add(new Location(nfr, nfc));
-                }
-            }
-            int ps = pq.size();
-            for (int i=0; i<ps; ++i) {
-                Location p = pq.poll();
-                for (int dir=0; dir<4; ++dir) {
-                    int npr = p.r + dr[dir];
-                    int npc = p.c + dc[dir];
-                    if (npr<0 || R<=npr || npc<0 || C<=npc) {
-                        System.out.println(time);
-                        return;
-                    }
-                    if (fv[npr][npc] || pv[npr][npc]) continue;
-                    if (map[npr][npc] == '#') continue;
-                    pv[npr][npc] = true;
-                    pq.add(new Location(npr, npc));
-                }
+            int result = bfs();
+            if (result == -1 || result == 1) {
+                if (result == -1) System.out.println("IMPOSSIBLE");
+                else System.out.println(time);
+                break;
             }
         }
-        System.out.println("IMPOSSIBLE");
+    }
+
+    public static int bfs() {
+        int fs = fq.size();
+        for (int i=0; i<fs; ++i) {
+            Location cur = fq.poll();
+            for (int dir=0; dir<4; ++dir) {
+                int nfr = cur.r + dr[dir];
+                int nfc = cur.c + dc[dir];
+                if (nfr<0 || R<=nfr || nfc<0 || C<=nfc) continue;
+                if (maze[nfr][nfc] == '#') continue;
+                if (fv[nfr][nfc]) continue;
+                fq.add(new Location(nfr, nfc));
+                fv[nfr][nfc] = true;
+            }
+        }
+        int ps = pq.size();
+        for (int i=0; i<ps; ++i) {
+            Location cur = pq.poll();
+            for (int dir=0; dir<4; ++dir) {
+                int npr = cur.r + dr[dir];
+                int npc = cur.c + dc[dir];
+                if (npr<0 || R<=npr || npc<0 || C<=npc) return 1;
+                if (maze[npr][npc] == '#') continue;
+                if (fv[npr][npc] || pv[npr][npc]) continue;
+                pq.add(new Location(npr, npc));
+                pv[npr][npc] = true;
+            }
+        }
+        if (pq.isEmpty()) return -1;
+        return 0;
     }
      */
 }
