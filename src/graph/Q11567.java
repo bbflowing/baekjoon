@@ -9,7 +9,6 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Q11567 {
-    /*
     public static int R, C;
     public static char[][] road;
 
@@ -73,10 +72,8 @@ public class Q11567 {
         }
         return false;
     }
-     */
 }
 
-/*
 class Location {
     int r, c, br, bc;
 
@@ -87,4 +84,3 @@ class Location {
         this.bc = bc;
     }
 }
- */
