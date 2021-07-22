@@ -15,55 +15,52 @@ public class Q6087 {
         R = Integer.parseInt(st.nextToken());
         map = new char[R][C];
         String line = "";
-        Coordinate start = null;
-        Coordinate end = null;
-        for (int r=0; r<R; ++r) {
+        Location first = null;
+        Location second = null;
+        for (int r = 0; r < R; ++r) {
             line = br.readLine();
-            for (int c=0; c<C; ++c) {
+            for (int c = 0; c < C; ++c) {
                 map[r][c] = line.charAt(c);
                 if (map[r][c] == 'C') {
-                    if (start == null) start = new Coordinate(r, c, -1, 0);
-                    else end = new Coordinate(r, c, -1,0);
+                    if (first == null) first = new Location(r, c, -1, 0);
+                    else second = new Location(r, c, -1, 0);
                 }
             }
         }
-        bfs(start, end);
+        bfs(first, second);
     }
 
-    public static void bfs (Coordinate start, Coordinate end) {
-        int[][] visited = new int[R][C];
-        for (int r=0; r<R; ++r) Arrays.fill(visited[r], -1);
-        PriorityQueue<Coordinate> queue = new PriorityQueue<>();
-        for (int i=0; i<4; ++i) {
-            queue.add(new Coordinate(start.r, start.c, i, 0));
-        }
-        visited[start.r][start.c] = 0;
+    public static void bfs(Location first, Location second) {
+        PriorityQueue<Location> queue = new PriorityQueue<>();
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
+        int[][][] dp = new int[4][R][C];
+        for (int i=0; i<4; ++i) {
+            for (int r=0; r<R; ++r) Arrays.fill(dp[i][r], -1);
+        }
+        for (int dir=0; dir<4; ++dir) {
+            dp[dir][first.r][first.c] = 0;
+            queue.add(new Location(first.r, first.c, dir, 0));
+        }
+        int answer = Integer.MAX_VALUE;
 
         while (!queue.isEmpty()) {
-            Coordinate cur = queue.poll();
-            if (cur.r == end.r && cur.c == end.c) {
-                System.out.println(cur.changes);
+            Location cur = queue.poll();
+            if (cur.r == second.r && cur.c == second.c) {
+                System.out.println(cur.mirrors);
                 return;
             }
-            for (int dir=0; dir<4; ++dir) {
+            for (int dir = 0; dir < 4; ++dir) {
                 int nr = cur.r + dr[dir];
                 int nc = cur.c + dc[dir];
 
-                if (nr<0 || R<=nr || nc<0 || C<=nc) continue;
+                if (nr < 0 || R <= nr || nc < 0 || C <= nc) continue;
                 if (map[nr][nc] == '*') continue;
-
-                if (cur.direction == dir) {
-                    if (cur.changes <= visited[nr][nc] || visited[nr][nc] == -1) {
-                        visited[nr][nc] = cur.changes;
-                        queue.add(new Coordinate(nr, nc, cur.direction, cur.changes));
-                    }
-                } else {
-                    if (cur.changes+1 <= visited[nr][nc] || visited[nr][nc] == -1) {
-                        visited[nr][nc] = cur.changes+1;
-                        queue.add(new Coordinate(nr, nc, dir, cur.changes+1));
-                    }
+                int nmirrors = cur.mirrors;
+                if (dir != cur.before) ++nmirrors;
+                if (dp[dir][nr][nc] == -1 || nmirrors <= dp[dir][nr][nc]) {
+                    dp[dir][nr][nc] = nmirrors;
+                    queue.add(new Location(nr, nc, dir, nmirrors));
                 }
             }
         }
@@ -72,19 +69,20 @@ public class Q6087 {
 }
 
 /*
-class Coordinate implements Comparable<Coordinate> {
-    int r, c, direction, changes;
+class Location implements Comparable<Location> {
+    int r, c, before, mirrors;
 
-    Coordinate (int r, int c, int direction, int changes) {
+    Location(int r, int c, int before, int mirrors) {
         this.r = r;
         this.c = c;
-        this.direction = direction;
-        this.changes = changes;
+        this.before = before;
+        this.mirrors = mirrors;
     }
 
     @Override
-    public int compareTo (Coordinate c) {
-        return this.changes - c.changes;
+    public int compareTo(Location l) {
+        if (this.mirrors > l.mirrors) return 1;
+        else return -1;
     }
 }
  */
